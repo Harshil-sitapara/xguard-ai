@@ -13,54 +13,35 @@ XGuard-AI focuses on three things that are hard to combine in traditional IDS to
 
 ## Architecture
 
-Note: Mermaid diagrams render in GitHub and any Markdown viewer with Mermaid enabled. If your IDE preview shows code blocks instead of diagrams, enable Mermaid support (for VS Code, install the "Markdown Preview Mermaid Support" extension) or use the ASCII fallback below.
-
-ASCII fallback:
-```
-CICIDS2017
-   |
-   v
-Preprocess -> Train (RF/XGB/LSTM) -> Evaluate/SHAP -> ml/models
-                                   |                |
-Kafka Producer -> Kafka Topic -> Backend Consumer -> DB (Postgres)
-                                      |             |
-                                      v             v
-                                   WebSocket      REST API
-                                      \             /
-                                       \           /
-                                        v         v
-                                        Next.js Dashboard
-```
-
 ```mermaid
 graph TB
   subgraph Data
-    D1[CICIDS2017 CSV/Parquet]
+    D1["CICIDS2017 CSV/Parquet"]
   end
 
-  subgraph ML[ML Pipeline]
-    P1[Preprocess & Feature Engineering]
-    P2[Train Models: RF / XGBoost / LSTM]
-    P3[Evaluate & SHAP]
-    M1[Model Artifacts in ml/models]
+  subgraph ML["ML Pipeline"]
+    P1["Preprocess & Feature Engineering"]
+    P2["Train Models: RF / XGBoost / LSTM"]
+    P3["Evaluate & SHAP"]
+    M1["Model Artifacts in ml/models"]
   end
 
   subgraph Streaming
-    K1[Kafka Topic: network-traffic]
-    KP[Kafka Producer (kafka/producer.py)]
+    K1["Kafka Topic: network-traffic"]
+    KP["Kafka Producer (kafka/producer.py)"]
   end
 
   subgraph Backend
-    B1[FastAPI API]
-    B2[Inference Service]
-    B3[SHAP Explainer Service]
-    B4[Kafka Consumer Task]
+    B1["FastAPI API"]
+    B2["Inference Service"]
+    B3["SHAP Explainer Service"]
+    B4["Kafka Consumer Task"]
     DB[(PostgreSQL)]
-    WS[WebSocket /alerts/live]
+    WS["WebSocket /alerts/live"]
   end
 
   subgraph Frontend
-    FE[Next.js Dashboard]
+    FE["Next.js Dashboard"]
   end
 
   D1 --> P1 --> P2 --> P3 --> M1
@@ -77,14 +58,6 @@ graph TB
 ## End-to-End Flow
 
 ### Sequence: Real-Time Streaming Alerts
-ASCII fallback:
-```
-Producer -> Kafka -> Backend Consumer -> Inference
-                                   -> SHAP (if attack)
-                                   -> Postgres
-                                   -> WebSocket -> Dashboard
-```
-
 ```mermaid
 sequenceDiagram
   participant Producer as Kafka Producer
@@ -110,11 +83,6 @@ sequenceDiagram
 ```
 
 ### Sequence: On-Demand Prediction API
-ASCII fallback:
-```
-Client -> POST /predict -> Inference -> Postgres -> Response
-```
-
 ```mermaid
 sequenceDiagram
   participant Client
@@ -282,7 +250,3 @@ Rotate `API_SECRET_KEY` in production and scope `CORS_ORIGINS` to approved domai
 - `docs/SETUP.md`: full local setup guide
 - `docs/API.md`: API reference
 - `docs/MODEL_GUIDE.md`: model selection and retraining
-
-## License
-
-This repository is part of an academic MCA project. Add a license file if you intend to reuse or distribute this code.
