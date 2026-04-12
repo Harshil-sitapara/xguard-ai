@@ -44,6 +44,13 @@ async def explain(prediction_id: str, db: AsyncSession = Depends(get_db)):
             top_features=pred.shap_json.get("top_features", []),
         )
 
+    # Check if explainer is available
+    if not explainer_service._loaded:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="SHAP explainer not available. Generate SHAP background data by running: python scripts/run_pipeline.py --step shap"
+        )
+    
     # Compute on demand for benign predictions (not pre-computed)
     shap_result = await explainer_service.explain(
         pred.id,
