@@ -18,7 +18,7 @@ env/
 # ML artefacts (large, reproduced by pipeline)
 ml/data/raw/
 ml/data/processed/
-ml/models/
+# ml/models/ - REMOVED: models are needed for deployment
 
 # Large datasets
 CIC-IDS-2017 - dataset/
