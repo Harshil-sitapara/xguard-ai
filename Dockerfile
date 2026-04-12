@@ -12,8 +12,8 @@ RUN apt-get update && apt-get install -y \
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy ML models (must exist)
-COPY ml/models /app/models
+# Create models directory (will be populated at runtime if needed)
+RUN mkdir -p /app/models
 
 # Copy backend application code
 COPY backend/app /app/app
