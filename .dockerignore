@@ -1,0 +1,39 @@
+# Git
+.git
+.gitignore
+.github
+
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+.next
+
+# Python
+__pycache__
+*.py[cod]
+.venv
+venv
+*.egg-info
+
+# ML
+ml/data/raw
+ml/data/processed
+ml/notebooks
+
+# Documentation
+docs
+*.md
+
+# IDE
+.vscode
+.idea
+.DS_Store
+
+# CI/CD
+.github
+.gitlab-ci.yml
+
+# Misc
+.env.local
+.env.*.local
