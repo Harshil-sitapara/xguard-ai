@@ -39,11 +39,11 @@ async def lifespan(app: FastAPI):
     # Load ML model + SHAP explainer (CRITICAL)
     try:
         inference_service.load(settings.models_path)
-        explainer_service.load(settings.models_path)
+        explainer_service.load(settings.models_path)  # Non-critical if fails
         logger.info("✓ ML models loaded successfully")
     except Exception as e:
         logger.error(f"❌ Failed to load ML models: {e}")
-        raise  # MUST have models
+        raise  # MUST have inference model for predictions
 
     # Initialize database engine (non-critical - continues if fails)
     db_initialized = init_db()

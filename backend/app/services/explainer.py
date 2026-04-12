@@ -42,17 +42,33 @@ class ExplainerService:
         self._explainer: shap.TreeExplainer | None = None
         self._feature_names: list[str] = []
         self._label_encoder = None
+        self._loaded: bool = False
 
     def load(self, models_path: Path) -> None:
-        xgb_dir = models_path / "xgboost"
-        model = xgb.Booster()
-        model.load_model(str(xgb_dir / "model.json"))
+        """Load SHAP explainer. Non-critical - predictions work without it."""
+        try:
+            xgb_dir = models_path / "xgboost"
+            model = xgb.Booster()
+            model.load_model(str(xgb_dir / "model.json"))
 
-        bg_data = joblib.load(str(xgb_dir / "shap_background.pkl"))
-        self._feature_names = bg_data["feature_names"]
-        self._explainer = shap.TreeExplainer(model, data=bg_data["background"])
-        self._label_encoder = joblib.load(str(models_path / "preprocessor" / "label_encoder.pkl"))
-        logger.info("SHAP explainer loaded (background=%d rows)", len(bg_data["background"]))
+            # Try to load SHAP background data (optional)
+            bg_path = xgb_dir / "shap_background.pkl"
+            if not bg_path.exists():
+                logger.warning(f"⚠ SHAP background file not found: {bg_path}")
+                logger.info("  Explanations will not be available (predictions still work)")
+                self._loaded = False
+                return
+
+            bg_data = joblib.load(str(bg_path))
+            self._feature_names = bg_data["feature_names"]
+            self._explainer = shap.TreeExplainer(model, data=bg_data["background"])
+            self._label_encoder = joblib.load(str(models_path / "preprocessor" / "label_encoder.pkl"))
+            self._loaded = True
+            logger.info("✓ SHAP explainer loaded (background=%d rows)", len(bg_data["background"]))
+        except Exception as e:
+            logger.warning(f"⚠ Failed to load SHAP explainer: {e}")
+            logger.info("  Predictions will work without detailed explanations")
+            self._loaded = False
 
     def _explain_sync(
         self,
@@ -61,6 +77,9 @@ class ExplainerService:
         label: str,
         scaler,
     ) -> SHAPResult:
+        if not self._loaded:
+            raise RuntimeError("SHAP explainer not loaded - background data missing")
+        
         vec = np.array(
             [raw_features.get(f, 0.0) for f in self._feature_names], dtype=np.float32
         ).reshape(1, -1)
