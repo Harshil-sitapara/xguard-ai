@@ -18,7 +18,7 @@ from app.api.v1.router import api_router
 from app.core.config import settings
 from app.core.logging import setup_logging
 from app.db.base import Base
-from app.db.session import engine
+from app.db.session import engine, init_db
 from app.services.explainer import explainer_service
 from app.services.inference import inference_service
 from app.services.kafka_consumer import consume_forever
@@ -36,18 +36,36 @@ async def lifespan(app: FastAPI):
     # ── Startup ───────────────────────────────────────────────────────────
     logger.info("XGuard-AI starting …")
 
-    # Run DB migrations (create tables if not exist)
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    logger.info("Database tables ready")
+    # Load ML model + SHAP explainer (CRITICAL)
+    try:
+        inference_service.load(settings.models_path)
+        explainer_service.load(settings.models_path)
+        logger.info("✓ ML models loaded successfully")
+    except Exception as e:
+        logger.error(f"❌ Failed to load ML models: {e}")
+        raise  # MUST have models
 
-    # Load ML model + SHAP explainer
-    inference_service.load(settings.models_path)
-    explainer_service.load(settings.models_path)
+    # Initialize database engine (non-critical - continues if fails)
+    db_initialized = init_db()
+    if not db_initialized:
+        logger.info("  Database will be unavailable for this session")
 
-    # Start Kafka consumer as background task
-    _consumer_task = asyncio.create_task(consume_forever())
-    logger.info("Kafka consumer task started")
+    # Run DB migrations if available
+    if engine is not None:
+        try:
+            async with engine.begin() as conn:
+                await conn.run_sync(Base.metadata.create_all)
+            logger.info("✓ Database tables ready")
+        except Exception as e:
+            logger.warning(f"⚠ Database migration failed (non-critical): {e}")
+    
+    # Start Kafka consumer as background task (non-critical)
+    try:
+        _consumer_task = asyncio.create_task(consume_forever())
+        logger.info("✓ Kafka consumer started")
+    except Exception as e:
+        logger.warning(f"⚠ Kafka consumer failed (non-critical): {e}")
+        _consumer_task = None
 
     yield
 
@@ -58,7 +76,13 @@ async def lifespan(app: FastAPI):
             await _consumer_task
         except asyncio.CancelledError:
             pass
-    await engine.dispose()
+    
+    if engine is not None:
+        try:
+            await engine.dispose()
+        except Exception as e:
+            logger.warning(f"⚠ Error disposing engine: {e}")
+    
     logger.info("XGuard-AI shutdown complete")
 
 
