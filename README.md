@@ -5,7 +5,6 @@ colorFrom: blue
 colorTo: indigo
 sdk: docker
 pinned: true
-app_file: backend/main.py
 ---
 
 # XGuard-AI
