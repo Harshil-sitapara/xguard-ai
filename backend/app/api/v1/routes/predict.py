@@ -4,7 +4,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_db
@@ -41,6 +41,7 @@ async def _run_prediction(req: PredictRequest, db: AsyncSession) -> PredictionRe
 @limiter.limit("30/minute")
 async def predict(
     req: PredictRequest,
+    request: Request,
     db: AsyncSession = Depends(get_db),
     token: VerifiedToken = Depends(verify_api_key),
 ):
@@ -57,6 +58,7 @@ async def predict(
 @limiter.limit("10/minute")
 async def predict_batch(
     req: BatchPredictRequest,
+    request: Request,
     db: AsyncSession = Depends(get_db),
     token: VerifiedToken = Depends(verify_api_key),
 ):

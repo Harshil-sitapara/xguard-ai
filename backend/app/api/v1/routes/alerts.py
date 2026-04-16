@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 
-from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, Query, Request, WebSocket, WebSocketDisconnect
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -22,6 +22,7 @@ router = APIRouter(prefix="/alerts", tags=["Alerts"])
 @router.get("")
 @limiter.limit("50/minute")
 async def list_alerts(
+    request: Request,
     page: int = Query(1, ge=1),
     page_size: int = Query(50, ge=1, le=200),
     attack_type: str | None = Query(None),
