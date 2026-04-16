@@ -33,7 +33,7 @@ export interface ShapResult {
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY || "";
+const API_KEY = process.env.NEXT_PUBLIC_API_TOKEN || "";
 
 export const fetchHistory = async (page = 1, pageSize = 50): Promise<AlertsResponse> => {
   const rs = await fetch(`${API_URL}/alerts?page=${page}&page_size=${pageSize}`, {

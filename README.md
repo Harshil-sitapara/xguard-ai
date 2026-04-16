@@ -170,7 +170,7 @@ See `.env.example` for defaults.
 ### Frontend `.env.local`
 - `NEXT_PUBLIC_API_URL`: `http://localhost:8000/api/v1`
 - `NEXT_PUBLIC_WS_URL`: `ws://localhost:8000/api/v1`
-- `NEXT_PUBLIC_API_KEY`: must match `API_SECRET_KEY`
+- `NEXT_PUBLIC_API_TOKEN`: must match `API_SECRET_KEY`
 
 ## ML Pipeline
 
@@ -245,7 +245,7 @@ pytest
   - Ensure `ml/models` exists and is mounted to `/app/models` in Docker.
 - No live updates:
   - Confirm `kafka` is healthy and the producer is sending to `network-traffic`.
-  - Check `NEXT_PUBLIC_WS_URL` and `NEXT_PUBLIC_API_KEY`.
+  - Check `NEXT_PUBLIC_WS_URL` and `NEXT_PUBLIC_API_TOKEN`.
 - `403 Invalid or missing API key`:
   - Ensure frontend and API use the same `API_SECRET_KEY`.
 
