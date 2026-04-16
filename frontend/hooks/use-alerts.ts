@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { Alert, fetchHistory } from "@/lib/api";
 
 const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000/api/v1";
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY || "";
+const API_KEY = process.env.NEXT_PUBLIC_API_TOKEN || "";
 
 export const useAlerts = () => {
   const [alerts, setAlerts] = useState<Alert[]>([]);
