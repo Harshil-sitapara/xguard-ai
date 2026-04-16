@@ -23,8 +23,15 @@ def init_db():
         return False
     
     try:
+        # Configure SSL for asyncpg (Supabase requires SSL)
+        connect_args = {
+            "ssl": "require",  # Enforce SSL for security
+            "server_settings": {"jit": "off"}  # Disable JIT for compatibility
+        }
+        
         engine = create_async_engine(
             settings.database_url,
+            connect_args=connect_args,
             pool_size=10,
             max_overflow=20,
             echo=settings.environment == "development",
@@ -47,7 +54,7 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     if not AsyncSessionLocal:
         raise RuntimeError(
             "Database not configured. Set DATABASE_URL with correct format: "
-            "postgresql+asyncpg://user:pass@host:port/db?sslmode=require"
+            "postgresql+asyncpg://user:pass@host:port/db"
         )
     async with AsyncSessionLocal() as session:
         yield session

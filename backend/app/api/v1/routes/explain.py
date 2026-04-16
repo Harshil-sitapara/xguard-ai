@@ -9,7 +9,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_db
-from app.core.security import verify_api_key
+from app.core.rate_limiter import limiter
+from app.core.security import TokenScope, VerifiedToken, verify_api_key
 from app.db.models.prediction import Prediction
 from app.services.explainer import explainer_service
 from app.services.inference import inference_service
@@ -25,9 +26,19 @@ class ExplainResponse(BaseModel):
     top_features: list[dict]
 
 
-@router.get("/{prediction_id}", response_model=ExplainResponse, dependencies=[Depends(verify_api_key)])
-async def explain(prediction_id: str, db: AsyncSession = Depends(get_db)):
+@router.get("/{prediction_id}", response_model=ExplainResponse)
+@limiter.limit("20/minute")
+async def explain(
+    prediction_id: str,
+    db: AsyncSession = Depends(get_db),
+    token: VerifiedToken = Depends(verify_api_key),
+):
     """Return SHAP feature attributions for a stored prediction."""
+    if not token.has_permission(TokenScope.EXPLAIN):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="This endpoint requires explain scope.",
+        )
     result = await db.execute(
         select(Prediction).where(Prediction.id == prediction_id)
     )

@@ -8,7 +8,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_db
-from app.core.security import verify_api_key
+from app.core.rate_limiter import limiter
+from app.core.security import TokenScope, VerifiedToken, verify_api_key
 from app.db.models.prediction import Prediction
 from app.schemas.prediction import (
     BatchPredictRequest, BatchPredictionResponse,
@@ -36,14 +37,34 @@ async def _run_prediction(req: PredictRequest, db: AsyncSession) -> PredictionRe
     return PredictionResponse.model_validate(pred)
 
 
-@router.post("", response_model=PredictionResponse, dependencies=[Depends(verify_api_key)])
-async def predict(req: PredictRequest, db: AsyncSession = Depends(get_db)):
+@router.post("", response_model=PredictionResponse)
+@limiter.limit("30/minute")
+async def predict(
+    req: PredictRequest,
+    db: AsyncSession = Depends(get_db),
+    token: VerifiedToken = Depends(verify_api_key),
+):
     """Classify a single network flow and return label + confidence."""
+    if not token.has_permission(TokenScope.PREDICT):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="This endpoint requires predict scope.",
+        )
     return await _run_prediction(req, db)
 
 
-@router.post("/batch", response_model=BatchPredictionResponse, dependencies=[Depends(verify_api_key)])
-async def predict_batch(req: BatchPredictRequest, db: AsyncSession = Depends(get_db)):
+@router.post("/batch", response_model=BatchPredictionResponse)
+@limiter.limit("10/minute")
+async def predict_batch(
+    req: BatchPredictRequest,
+    db: AsyncSession = Depends(get_db),
+    token: VerifiedToken = Depends(verify_api_key),
+):
     """Classify up to 1000 network flows in one request."""
+    if not token.has_permission(TokenScope.PREDICT):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="This endpoint requires predict scope.",
+        )
     results = [await _run_prediction(r, db) for r in req.records]
     return BatchPredictionResponse(results=results, total=len(results))
