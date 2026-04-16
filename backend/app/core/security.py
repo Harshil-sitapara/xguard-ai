@@ -3,7 +3,7 @@ from __future__ import annotations
 from enum import Enum
 from typing import Optional
 
-from fastapi import HTTPException, Request, Security, status
+from fastapi import Depends, HTTPException, Request, Security, status
 from fastapi.security import APIKeyHeader
 
 from app.core.config import settings
@@ -36,8 +36,8 @@ class VerifiedToken:
 
 
 async def verify_api_key(
+    request: Request,
     api_key: str | None = Security(_api_key_header),
-    request: Optional[Request] = None,
 ) -> VerifiedToken:
     """
     Dependency: validates X-API-Key header and returns token info.
@@ -49,7 +49,7 @@ async def verify_api_key(
             detail="Missing API key. Pass X-API-Key header.",
         )
 
-    client_origin = request.client.host if request else "unknown"
+    client_origin = request.client.host if request.client else "unknown"
 
     # Admin token (full access)
     if api_key == settings.api_secret_key:
