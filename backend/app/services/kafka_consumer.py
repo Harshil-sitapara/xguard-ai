@@ -13,6 +13,7 @@ import uuid
 from datetime import datetime, timezone
 
 from aiokafka import AIOKafkaConsumer
+from aiokafka.errors import KafkaConnectionError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
@@ -115,7 +116,7 @@ async def consume_forever() -> None:
         finally:
             await consumer.stop()
             logger.info("Kafka consumer stopped")
-    except (OSError, ConnectionError, asyncio.TimeoutError) as e:
+    except (KafkaConnectionError, OSError, ConnectionError, asyncio.TimeoutError) as e:
         logger.warning(f"⚠ Kafka connection failed (running without streaming): {type(e).__name__}: {e}")
         logger.info("  Predictions via REST API endpoints will still work")
         # Keep the task alive but don't crash the app
