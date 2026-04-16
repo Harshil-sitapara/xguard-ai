@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -30,6 +30,7 @@ class ExplainResponse(BaseModel):
 @limiter.limit("20/minute")
 async def explain(
     prediction_id: str,
+    request: Request,
     db: AsyncSession = Depends(get_db),
     token: VerifiedToken = Depends(verify_api_key),
 ):
