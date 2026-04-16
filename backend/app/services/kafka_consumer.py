@@ -91,22 +91,35 @@ async def _process_message(raw: dict) -> None:
 
 
 async def consume_forever() -> None:
-    consumer = AIOKafkaConsumer(
-        settings.kafka_topic_traffic,
-        bootstrap_servers=settings.kafka_bootstrap_servers,
-        group_id=settings.kafka_group_id,
-        value_deserializer=lambda v: json.loads(v.decode("utf-8")),
-        auto_offset_reset="latest",
-        enable_auto_commit=True,
-    )
-    await consumer.start()
-    logger.info("Kafka consumer started — topic: %s", settings.kafka_topic_traffic)
+    """
+    Connect to Kafka and consume messages from network-traffic topic.
+    Gracefully handles connection failures and continues on errors.
+    """
     try:
-        async for msg in consumer:
-            try:
-                await _process_message(msg.value)
-            except Exception as exc:
-                logger.error("Error processing Kafka message: %s", exc, exc_info=True)
-    finally:
-        await consumer.stop()
-        logger.info("Kafka consumer stopped")
+        consumer = AIOKafkaConsumer(
+            settings.kafka_topic_traffic,
+            bootstrap_servers=settings.kafka_bootstrap_servers,
+            group_id=settings.kafka_group_id,
+            value_deserializer=lambda v: json.loads(v.decode("utf-8")),
+            auto_offset_reset="latest",
+            enable_auto_commit=True,
+        )
+        await consumer.start()
+        logger.info("✓ Kafka consumer started — topic: %s", settings.kafka_topic_traffic)
+        try:
+            async for msg in consumer:
+                try:
+                    await _process_message(msg.value)
+                except Exception as exc:
+                    logger.error("Error processing Kafka message: %s", exc, exc_info=True)
+        finally:
+            await consumer.stop()
+            logger.info("Kafka consumer stopped")
+    except (OSError, ConnectionError, asyncio.TimeoutError) as e:
+        logger.warning(f"⚠ Kafka connection failed (running without streaming): {type(e).__name__}: {e}")
+        logger.info("  Predictions via REST API endpoints will still work")
+        # Keep the task alive but don't crash the app
+        await asyncio.sleep(float('inf'))  # Sleep forever (will be cancelled at shutdown)
+    except Exception as e:
+        logger.error(f"❌ Unexpected error in Kafka consumer: {e}", exc_info=True)
+        raise

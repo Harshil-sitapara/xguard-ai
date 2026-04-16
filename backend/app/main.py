@@ -17,11 +17,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.router import api_router
 from app.core.config import settings
 from app.core.logging import setup_logging
+from app.core.rate_limiter import limiter, RATE_LIMIT_AVAILABLE
 from app.db.base import Base
 from app.db.session import engine, init_db
 from app.services.explainer import explainer_service
 from app.services.inference import inference_service
 from app.services.kafka_consumer import consume_forever
+
+# Rate limiting imports (optional)
+if RATE_LIMIT_AVAILABLE:
+    from slowapi import _rate_limit_exceeded_handler
+    from slowapi.errors import RateLimitExceeded
 
 setup_logging()
 logger = logging.getLogger(__name__)
@@ -60,12 +66,18 @@ async def lifespan(app: FastAPI):
             logger.warning(f"⚠ Database migration failed (non-critical): {e}")
     
     # Start Kafka consumer as background task (non-critical)
-    try:
-        _consumer_task = asyncio.create_task(consume_forever())
-        logger.info("✓ Kafka consumer started")
-    except Exception as e:
-        logger.warning(f"⚠ Kafka consumer failed (non-critical): {e}")
-        _consumer_task = None
+    _consumer_task = asyncio.create_task(consume_forever())
+    
+    def handle_consumer_exception(task: asyncio.Task) -> None:
+        """Handle exceptions from the consumer task without crashing the app."""
+        if task.cancelled():
+            return
+        exc = task.exception()
+        if exc:
+            logger.error(f"Kafka consumer task exception: {exc}")
+    
+    _consumer_task.add_done_callback(handle_consumer_exception)
+    logger.info("Kafka consumer task scheduled")
 
     yield
 
@@ -94,6 +106,14 @@ app = FastAPI(
     redoc_url="/redoc",
     lifespan=lifespan,
 )
+
+# ── Rate Limiting ─────────────────────────────────────────────────────────
+if RATE_LIMIT_AVAILABLE and settings.rate_limit_enabled:
+    app.state.limiter = limiter
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+    logger.info("✓ Rate limiting enabled")
+else:
+    logger.info("⚠ Rate limiting disabled (slowapi not installed or RATE_LIMIT_ENABLED=false)")
 
 app.add_middleware(
     CORSMiddleware,
