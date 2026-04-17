@@ -31,18 +31,31 @@ def _normalize_database_url(raw_url: str) -> tuple[str, dict]:
     )
     return normalized_url, connect_args
 
-def init_db():
+
+def fallback_database_url(raw_url: str, *, database_name: str = "postgres") -> str:
+    """Swap the database name while preserving host, creds, and query params."""
+    parts = urlsplit(raw_url)
+    path = f"/{database_name}"
+    return urlunsplit((parts.scheme, parts.netloc, path, parts.query, parts.fragment))
+
+
+def is_missing_database_error(exc: Exception) -> bool:
+    return 'does not exist' in str(exc).lower()
+
+
+def init_db(database_url: str | None = None):
     """Initialize database engine and session factory. Called during app startup."""
     global engine, AsyncSessionLocal
+    raw_database_url = database_url or settings.database_url
     
-    if not settings.database_url:
+    if not raw_database_url:
         logger.warning("⚠ DATABASE_URL not configured - running without persistence")
         return False
     
     try:
-        database_url, connect_args = _normalize_database_url(settings.database_url)
+        normalized_url, connect_args = _normalize_database_url(raw_database_url)
         engine = create_async_engine(
-            database_url,
+            normalized_url,
             connect_args=connect_args,
             pool_size=10,
             max_overflow=20,

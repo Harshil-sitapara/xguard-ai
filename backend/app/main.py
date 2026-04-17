@@ -35,6 +35,40 @@ logger = logging.getLogger(__name__)
 _consumer_task: asyncio.Task | None = None
 
 
+async def _prepare_database() -> bool:
+    """Initialize the DB engine and ensure tables exist, with Supabase fallback."""
+    if not db_session.init_db():
+        logger.info("  Database will be unavailable for this session")
+        return False
+
+    if db_session.engine is None:
+        logger.info("  Database engine is unavailable for this session")
+        return False
+
+    try:
+        async with db_session.engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        logger.info("✓ Database tables ready")
+        return True
+    except Exception as e:
+        logger.warning(f"⚠ Database migration failed (non-critical): {e}")
+
+        if db_session.is_missing_database_error(e):
+            fallback_url = db_session.fallback_database_url(settings.database_url)
+            logger.warning("⚠ Falling back to Supabase default database 'postgres'")
+            if db_session.init_db(fallback_url) and db_session.engine is not None:
+                try:
+                    async with db_session.engine.begin() as conn:
+                        await conn.run_sync(Base.metadata.create_all)
+                    logger.info("✓ Database tables ready (fallback database)")
+                    return True
+                except Exception as fallback_exc:
+                    logger.warning(
+                        f"⚠ Fallback database migration failed (non-critical): {fallback_exc}"
+                    )
+        return False
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global _consumer_task
@@ -51,19 +85,8 @@ async def lifespan(app: FastAPI):
         logger.error(f"❌ Failed to load ML models: {e}")
         raise  # MUST have inference model for predictions
 
-    # Initialize database engine (non-critical - continues if fails)
-    db_initialized = db_session.init_db()
-    if not db_initialized:
-        logger.info("  Database will be unavailable for this session")
-
-    # Run DB migrations if available
-    if db_session.engine is not None:
-        try:
-            async with db_session.engine.begin() as conn:
-                await conn.run_sync(Base.metadata.create_all)
-            logger.info("✓ Database tables ready")
-        except Exception as e:
-            logger.warning(f"⚠ Database migration failed (non-critical): {e}")
+    # Initialize database engine and create tables (non-critical)
+    await _prepare_database()
     
     # Start Kafka consumer as background task (non-critical)
     _consumer_task = asyncio.create_task(consume_forever())
