@@ -5,6 +5,8 @@ from collections.abc import AsyncGenerator
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 from typing import Optional
 
+from fastapi import HTTPException, status
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.core.config import settings
@@ -22,12 +24,16 @@ def _normalize_database_url(raw_url: str) -> tuple[str, dict]:
     query = dict(parse_qsl(parts.query, keep_blank_values=True))
     connect_args: dict = {"server_settings": {"jit": "off"}}
 
+    scheme = parts.scheme
+    if scheme in {"postgres", "postgresql"}:
+        scheme = "postgresql+asyncpg"
+
     sslmode = query.pop("sslmode", None)
     if sslmode:
         connect_args["ssl"] = sslmode
 
     normalized_url = urlunsplit(
-        (parts.scheme, parts.netloc, parts.path, urlencode(query), parts.fragment)
+        (scheme, parts.netloc, parts.path, urlencode(query), parts.fragment)
     )
     return normalized_url, connect_args
 
@@ -77,9 +83,28 @@ def init_db(database_url: str | None = None):
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """Get async database session. Raises error if database not available."""
     if not AsyncSessionLocal:
-        raise RuntimeError(
-            "Database not configured. Set DATABASE_URL with correct format: "
-            "postgresql+asyncpg://user:pass@host:port/db?sslmode=require"
+        if not init_db() and settings.database_url:
+            init_db(fallback_database_url(settings.database_url))
+
+    if not AsyncSessionLocal:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Database is unavailable. Check DATABASE_URL configuration.",
         )
-    async with AsyncSessionLocal() as session:
-        yield session
+
+    async def _open_verified_session() -> AsyncGenerator[AsyncSession, None]:
+        async with AsyncSessionLocal() as session:
+            await session.execute(text("SELECT 1"))
+            yield session
+
+    try:
+        async for session in _open_verified_session():
+            yield session
+    except Exception as exc:
+        if settings.database_url and is_missing_database_error(exc):
+            fallback_url = fallback_database_url(settings.database_url)
+            if init_db(fallback_url) and AsyncSessionLocal:
+                async for session in _open_verified_session():
+                    yield session
+                return
+        raise
