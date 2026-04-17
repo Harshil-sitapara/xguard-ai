@@ -157,4 +157,21 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
                 async for session in _open_verified_session():
                     yield session
                 return
-        raise
+        logger.warning("Database session unavailable: %s", exc)
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Database is unavailable.",
+        ) from exc
+
+
+async def get_optional_db() -> AsyncGenerator[AsyncSession | None, None]:
+    """Yield a database session when available, otherwise fall back to None."""
+    try:
+        async for session in get_db():
+            yield session
+            return
+    except HTTPException as exc:
+        if exc.status_code != status.HTTP_503_SERVICE_UNAVAILABLE:
+            raise
+        logger.warning("Continuing without database access: %s", exc.detail)
+        yield None

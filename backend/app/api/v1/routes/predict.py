@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_db
+from app.api.deps import get_optional_db
 from app.core.rate_limiter import limiter
 from app.core.security import TokenScope, VerifiedToken, verify_api_key
 from app.db.models.prediction import Prediction
@@ -20,10 +20,26 @@ from app.services.inference import inference_service
 router = APIRouter(prefix="/predict", tags=["Prediction"])
 
 
-async def _run_prediction(req: PredictRequest, db: AsyncSession) -> PredictionResponse:
+async def _run_prediction(
+    req: PredictRequest, db: AsyncSession | None
+) -> PredictionResponse:
     result = await inference_service.predict(req.features)
+    prediction_id = str(uuid.uuid4())
+    created_at = datetime.now(timezone.utc)
+
+    if db is None:
+        return PredictionResponse(
+            id=prediction_id,
+            label=result.label,
+            confidence=result.confidence,
+            is_attack=result.is_attack,
+            created_at=created_at,
+            source_ip=req.source_ip,
+            destination_ip=req.destination_ip,
+        )
+
     pred = Prediction(
-        id=str(uuid.uuid4()),
+        id=prediction_id,
         label=result.label,
         confidence=result.confidence,
         is_attack=result.is_attack,
@@ -42,7 +58,7 @@ async def _run_prediction(req: PredictRequest, db: AsyncSession) -> PredictionRe
 async def predict(
     req: PredictRequest,
     request: Request,
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession | None = Depends(get_optional_db),
     token: VerifiedToken = Depends(verify_api_key),
 ):
     """Classify a single network flow and return label + confidence."""
@@ -65,7 +81,7 @@ async def predict(
 async def predict_batch(
     req: BatchPredictRequest,
     request: Request,
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession | None = Depends(get_optional_db),
     token: VerifiedToken = Depends(verify_api_key),
 ):
     """Classify up to 1000 network flows in one request."""

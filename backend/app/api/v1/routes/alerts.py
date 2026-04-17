@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, Query, Request, WebSocket, WebSocketDisc
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_db
+from app.api.deps import get_optional_db
 from app.core.rate_limiter import limiter
 from app.core.security import TokenScope, VerifiedToken, verify_api_key
 from app.db.models.alert import Alert
@@ -26,7 +26,7 @@ async def list_alerts(
     page: int = Query(1, ge=1),
     page_size: int = Query(50, ge=1, le=200),
     attack_type: str | None = Query(None),
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession | None = Depends(get_optional_db),
     token: VerifiedToken = Depends(verify_api_key),
 ) -> AlertsListResponse:
     """Paginated alert history with optional attack_type filter."""
@@ -36,6 +36,15 @@ async def list_alerts(
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="This endpoint requires alerts scope.",
+            )
+        if db is None:
+            logger.warning("Alerts requested while database is unavailable")
+            return AlertsListResponse(
+                alerts=[],
+                total=0,
+                total_predictions=0,
+                page=page,
+                page_size=page_size,
             )
         q = select(Alert).order_by(Alert.created_at.desc())
         count_q = select(func.count()).select_from(Alert)
