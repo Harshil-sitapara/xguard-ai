@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from collections.abc import AsyncGenerator
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+from urllib.parse import parse_qsl, quote, unquote, urlencode, urlsplit, urlunsplit
 from typing import Optional
 
 from fastapi import HTTPException, status
@@ -18,31 +18,81 @@ engine: Optional[object] = None
 AsyncSessionLocal: Optional[object] = None
 
 
-def _normalize_database_url(raw_url: str) -> tuple[str, dict]:
-    """Translate URL query params unsupported by asyncpg into connect_args."""
-    parts = urlsplit(raw_url)
-    query = dict(parse_qsl(parts.query, keep_blank_values=True))
-    connect_args: dict = {"server_settings": {"jit": "off"}}
+def _parse_database_url(raw_url: str) -> dict:
+    scheme, sep, remainder = raw_url.partition("://")
+    if not sep:
+        raise ValueError("DATABASE_URL must include a scheme")
 
-    scheme = parts.scheme
+    body, _, fragment = remainder.partition("#")
+    body, _, query_string = body.partition("?")
+    netloc, _, database = body.rpartition("/")
+    if not netloc or not database:
+        raise ValueError("DATABASE_URL must include a database name")
+
+    auth, at, host_port = netloc.rpartition("@")
+    username = ""
+    password = ""
+    if at:
+        username, _, password = auth.partition(":")
+    else:
+        host_port = netloc
+
+    host, colon, port = host_port.rpartition(":")
+    if not colon:
+        host = host_port
+        port = ""
+
+    return {
+        "scheme": scheme,
+        "username": unquote(username),
+        "password": unquote(password),
+        "host": host,
+        "port": port,
+        "database": database,
+        "query": dict(parse_qsl(query_string, keep_blank_values=True)),
+        "fragment": fragment,
+    }
+
+
+def _build_database_url(parts: dict) -> str:
+    scheme = parts["scheme"]
     if scheme in {"postgres", "postgresql"}:
         scheme = "postgresql+asyncpg"
+
+    auth = ""
+    if parts["username"]:
+        auth = quote(parts["username"], safe="")
+        if parts["password"]:
+            auth = f"{auth}:{quote(parts['password'], safe='')}"
+        auth += "@"
+
+    host = parts["host"]
+    port = f":{parts['port']}" if parts["port"] else ""
+    path = f"/{parts['database']}"
+    query = urlencode(parts["query"])
+    return urlunsplit((scheme, f"{auth}{host}{port}", path, query, parts["fragment"]))
+
+
+def _normalize_database_url(raw_url: str) -> tuple[str, dict]:
+    """Translate URL query params unsupported by asyncpg into connect_args."""
+    parts = _parse_database_url(raw_url)
+    query = dict(parts["query"])
+    connect_args: dict = {"server_settings": {"jit": "off"}}
 
     sslmode = query.pop("sslmode", None)
     if sslmode:
         connect_args["ssl"] = sslmode
 
-    normalized_url = urlunsplit(
-        (scheme, parts.netloc, parts.path, urlencode(query), parts.fragment)
-    )
+    parts["query"] = query
+    normalized_url = _build_database_url(parts)
     return normalized_url, connect_args
 
 
 def fallback_database_url(raw_url: str, *, database_name: str = "postgres") -> str:
     """Swap the database name while preserving host, creds, and query params."""
-    parts = urlsplit(raw_url)
-    path = f"/{database_name}"
-    return urlunsplit((parts.scheme, parts.netloc, path, parts.query, parts.fragment))
+    parts = _parse_database_url(raw_url)
+    parts["database"] = database_name
+    return _build_database_url(parts)
 
 
 def is_missing_database_error(exc: Exception) -> bool:
