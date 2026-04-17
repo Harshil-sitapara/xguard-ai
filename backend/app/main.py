@@ -19,7 +19,7 @@ from app.core.config import settings
 from app.core.logging import setup_logging
 from app.core.rate_limiter import limiter, RATE_LIMIT_AVAILABLE
 from app.db.base import Base
-from app.db.session import engine, init_db
+from app.db import session as db_session
 from app.services.explainer import explainer_service
 from app.services.inference import inference_service
 from app.services.kafka_consumer import consume_forever
@@ -52,14 +52,14 @@ async def lifespan(app: FastAPI):
         raise  # MUST have inference model for predictions
 
     # Initialize database engine (non-critical - continues if fails)
-    db_initialized = init_db()
+    db_initialized = db_session.init_db()
     if not db_initialized:
         logger.info("  Database will be unavailable for this session")
 
     # Run DB migrations if available
-    if engine is not None:
+    if db_session.engine is not None:
         try:
-            async with engine.begin() as conn:
+            async with db_session.engine.begin() as conn:
                 await conn.run_sync(Base.metadata.create_all)
             logger.info("✓ Database tables ready")
         except Exception as e:
@@ -89,9 +89,9 @@ async def lifespan(app: FastAPI):
         except asyncio.CancelledError:
             pass
     
-    if engine is not None:
+    if db_session.engine is not None:
         try:
-            await engine.dispose()
+            await db_session.engine.dispose()
         except Exception as e:
             logger.warning(f"⚠ Error disposing engine: {e}")
     
