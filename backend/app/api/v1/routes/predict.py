@@ -46,12 +46,18 @@ async def predict(
     token: VerifiedToken = Depends(verify_api_key),
 ):
     """Classify a single network flow and return label + confidence."""
-    if not token.has_permission(TokenScope.PREDICT):
+    try:
+        if not token.has_permission(TokenScope.PREDICT):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="This endpoint requires predict scope.",
+            )
+        return await _run_prediction(req, db)
+    except Exception as exc:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="This endpoint requires predict scope.",
-        )
-    return await _run_prediction(req, db)
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(exc),
+        ) from exc
 
 
 @router.post("/batch", response_model=BatchPredictionResponse)

@@ -30,31 +30,39 @@ async def list_alerts(
     token: VerifiedToken = Depends(verify_api_key),
 ) -> AlertsListResponse:
     """Paginated alert history with optional attack_type filter."""
-    if not token.has_permission(TokenScope.ALERTS):
+    try:
+        if not token.has_permission(TokenScope.ALERTS):
+            from fastapi import HTTPException, status
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="This endpoint requires alerts scope.",
+            )
+        q = select(Alert).order_by(Alert.created_at.desc())
+        count_q = select(func.count()).select_from(Alert)
+        pred_count_q = select(func.count()).select_from(Prediction)
+        
+        if attack_type:
+            q = q.where(Alert.attack_type == attack_type)
+            count_q = count_q.where(Alert.attack_type == attack_type)
+
+        total = (await db.execute(count_q)).scalar_one()
+        total_predictions = (await db.execute(pred_count_q)).scalar_one()
+        
+        rows = (await db.execute(q.offset((page - 1) * page_size).limit(page_size))).scalars().all()
+        return AlertsListResponse(
+            alerts=[AlertResponse.model_validate(r) for r in rows],
+            total=total,
+            total_predictions=total_predictions,
+            page=page,
+            page_size=page_size,
+        )
+    except Exception as exc:
+        logger.exception("Alerts endpoint failed")
         from fastapi import HTTPException, status
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="This endpoint requires alerts scope.",
-        )
-    q = select(Alert).order_by(Alert.created_at.desc())
-    count_q = select(func.count()).select_from(Alert)
-    pred_count_q = select(func.count()).select_from(Prediction)
-    
-    if attack_type:
-        q = q.where(Alert.attack_type == attack_type)
-        count_q = count_q.where(Alert.attack_type == attack_type)
-
-    total = (await db.execute(count_q)).scalar_one()
-    total_predictions = (await db.execute(pred_count_q)).scalar_one()
-    
-    rows = (await db.execute(q.offset((page - 1) * page_size).limit(page_size))).scalars().all()
-    return AlertsListResponse(
-        alerts=[AlertResponse.model_validate(r) for r in rows],
-        total=total,
-        total_predictions=total_predictions,
-        page=page,
-        page_size=page_size,
-    )
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(exc),
+        ) from exc
 
 
 @router.websocket("/live")
