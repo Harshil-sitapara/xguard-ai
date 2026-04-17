@@ -19,6 +19,7 @@ from app.core.config import settings
 from app.core.logging import setup_logging
 from app.core.rate_limiter import limiter, RATE_LIMIT_AVAILABLE
 from app.db.base import Base
+from app.db.models import Alert, Prediction  # noqa: F401
 from app.db import session as db_session
 from app.services.explainer import explainer_service
 from app.services.inference import inference_service
