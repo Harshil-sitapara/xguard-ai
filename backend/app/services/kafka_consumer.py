@@ -1,8 +1,8 @@
 """
-XGuard-AI â€” Kafka Consumer Background Task
+XGuard-AI Kafka consumer background task.
 
-Subscribes to the 'network-traffic' topic.
-For each message: predict â†’ explain â†’ persist to DB â†’ broadcast via WebSocket.
+Subscribes to the `network-traffic` topic and keeps retrying until the local
+broker is ready.
 """
 from __future__ import annotations
 
@@ -14,7 +14,6 @@ from datetime import datetime, timezone
 
 from aiokafka import AIOKafkaConsumer
 from aiokafka.errors import KafkaConnectionError
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.db.models.alert import Alert
@@ -36,7 +35,7 @@ async def _process_message(raw: dict) -> None:
     pred_id = str(uuid.uuid4())
 
     shap_data: dict = {}
-    reason: str = ""
+    reason = ""
     if result.is_attack:
         shap_result = await explainer_service.explain(
             pred_id, features, result.label, inference_service._scaler
@@ -72,10 +71,9 @@ async def _process_message(raw: dict) -> None:
                 destination_ip=dest_ip,
             )
             db.add(alert)
-            
+
         await db.commit()
 
-        # Broadcast ALL traffic to connected WebSocket clients
         payload = {
             "id": pred_id,
             "prediction_id": pred_id,
@@ -93,20 +91,44 @@ async def _process_message(raw: dict) -> None:
 
 async def consume_forever() -> None:
     """
-    Connect to Kafka and consume messages from network-traffic topic.
-    Gracefully handles connection failures and continues on errors.
+    Connect to Kafka and consume messages from the configured topic.
+
+    When the broker is not ready yet, keep retrying instead of parking forever.
     """
-    try:
-        consumer = AIOKafkaConsumer(
-            settings.kafka_topic_traffic,
-            bootstrap_servers=settings.kafka_bootstrap_servers,
-            group_id=settings.kafka_group_id,
-            value_deserializer=lambda v: json.loads(v.decode("utf-8")),
-            auto_offset_reset="latest",
-            enable_auto_commit=True,
-        )
-        await consumer.start()
-        logger.info("âœ“ Kafka consumer started â€” topic: %s", settings.kafka_topic_traffic)
+    retry_delay = max(float(settings.kafka_retry_delay_seconds), 1.0)
+    attempt = 0
+
+    while True:
+        try:
+            consumer = AIOKafkaConsumer(
+                settings.kafka_topic_traffic,
+                bootstrap_servers=settings.kafka_bootstrap_servers,
+                group_id=settings.kafka_group_id,
+                value_deserializer=lambda v: json.loads(v.decode("utf-8")),
+                auto_offset_reset="latest",
+                enable_auto_commit=True,
+            )
+            await consumer.start()
+            attempt = 0
+            logger.info("Kafka consumer started - topic: %s", settings.kafka_topic_traffic)
+        except asyncio.CancelledError:
+            raise
+        except (KafkaConnectionError, OSError, ConnectionError, asyncio.TimeoutError) as exc:
+            attempt += 1
+            logger.warning(
+                "Kafka connection attempt %s failed: %s: %s",
+                attempt,
+                type(exc).__name__,
+                exc,
+            )
+            logger.info("Retrying Kafka connection in %.1f seconds", retry_delay)
+            await asyncio.sleep(retry_delay)
+            continue
+        except Exception as exc:
+            logger.error("Unexpected error while starting Kafka consumer: %s", exc, exc_info=True)
+            await asyncio.sleep(retry_delay)
+            continue
+
         try:
             async for msg in consumer:
                 try:
@@ -116,11 +138,6 @@ async def consume_forever() -> None:
         finally:
             await consumer.stop()
             logger.info("Kafka consumer stopped")
-    except (KafkaConnectionError, OSError, ConnectionError, asyncio.TimeoutError) as e:
-        logger.warning(f"âš  Kafka connection failed (running without streaming): {type(e).__name__}: {e}")
-        logger.info("  Predictions via REST API endpoints will still work")
-        # Keep the task alive but don't crash the app
-        await asyncio.sleep(float('inf'))  # Sleep forever (will be cancelled at shutdown)
-    except Exception as e:
-        logger.error(f"âŒ Unexpected error in Kafka consumer: {e}", exc_info=True)
-        raise
+
+        logger.info("Kafka consumer loop ended, reconnecting in %.1f seconds", retry_delay)
+        await asyncio.sleep(retry_delay)
