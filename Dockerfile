@@ -1,30 +1,26 @@
-FROM python:3.11-slim
-
-ARG KAFKA_VERSION=3.8.1
-ARG SCALA_VERSION=2.13
+FROM apache/kafka:3.8.1
 
 WORKDIR /app
 
-# Install Python deps, Java runtime, and tini for multi-process signal handling.
+USER root
+
+# Add Python and tini on top of the official Kafka image.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     bash \
     curl \
     gcc \
-    openjdk-17-jre-headless \
     procps \
+    python3 \
+    python3-pip \
     tini \
-    wget \
     && rm -rf /var/lib/apt/lists/*
+
+RUN ln -sf /usr/bin/python3 /usr/local/bin/python \
+    && ln -sf /usr/bin/pip3 /usr/local/bin/pip
 
 # Copy requirements first (for better caching)
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Install a local single-node Kafka broker in KRaft mode.
-RUN wget -q "https://archive.apache.org/dist/kafka/${KAFKA_VERSION}/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz" -O /tmp/kafka.tgz \
-    && tar -xzf /tmp/kafka.tgz -C /opt \
-    && ln -s "/opt/kafka_${SCALA_VERSION}-${KAFKA_VERSION}" /opt/kafka \
-    && rm /tmp/kafka.tgz
 
 # Copy ML models and preprocessor artifacts
 COPY ml/models /app/models
