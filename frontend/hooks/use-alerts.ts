@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { Alert, fetchHistory } from "@/lib/api";
-
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000/api/v1";
-const API_KEY = process.env.NEXT_PUBLIC_API_TOKEN || "";
+import { Alert, fetchHistory, getWebSocketBaseUrl } from "@/lib/api";
 
 export const useAlerts = () => {
   const [alerts, setAlerts] = useState<Alert[]>([]);
@@ -40,39 +37,50 @@ export const useAlerts = () => {
         if (mounted) setLoading(false);
       });
 
-    const socket = new WebSocket(`${WS_URL}/alerts/live`);
-    ws.current = socket;
+    const socketUrl = `${getWebSocketBaseUrl()}/alerts/live`;
+    let socket: WebSocket | null = null;
 
-    socket.onopen = () => setConnected(true);
-    socket.onclose = () => setConnected(false);
+    try {
+      socket = new WebSocket(socketUrl);
+      ws.current = socket;
 
-    socket.onmessage = (event) => {
-      try {
-        const newAlert: Alert = JSON.parse(event.data);
-        if (mounted) {
-          setAlerts((prev) => [newAlert, ...prev].slice(0, 500));
-          setTotalIngested((prev) => prev + 1);
+      socket.onopen = () => setConnected(true);
+      socket.onerror = (event) => {
+        console.error("WebSocket error:", event);
+      };
+      socket.onclose = () => setConnected(false);
 
-          const isAttack = newAlert.is_attack ?? (newAlert.attack_type && newAlert.attack_type !== "Benign");
-          const type = isAttack ? newAlert.attack_type : "Benign";
+      socket.onmessage = (event) => {
+        try {
+          const newAlert: Alert = JSON.parse(event.data);
+          if (mounted) {
+            setAlerts((prev) => [newAlert, ...prev].slice(0, 500));
+            setTotalIngested((prev) => prev + 1);
 
-          setAttackDistribution((prev) => ({
-            ...prev,
-            [type]: (prev[type] || 0) + 1
-          }));
+            const isAttack = newAlert.is_attack ?? (newAlert.attack_type && newAlert.attack_type !== "Benign");
+            const type = isAttack ? newAlert.attack_type : "Benign";
 
-          if (isAttack) {
-            setTotalAttacks((prev) => prev + 1);
+            setAttackDistribution((prev) => ({
+              ...prev,
+              [type]: (prev[type] || 0) + 1
+            }));
+
+            if (isAttack) {
+              setTotalAttacks((prev) => prev + 1);
+            }
           }
+        } catch (err) {
+          console.error("WS Parse error", err);
         }
-      } catch (err) {
-        console.error("WS Parse error", err);
-      }
-    };
+      };
+    } catch (err) {
+      console.error(`WebSocket init error for ${socketUrl}:`, err);
+      setConnected(false);
+    }
 
     return () => {
       mounted = false;
-      socket.close();
+      socket?.close();
     };
   }, []);
 
