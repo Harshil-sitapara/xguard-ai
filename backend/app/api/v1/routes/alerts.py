@@ -3,11 +3,11 @@ from __future__ import annotations
 
 import logging
 
-from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, Query, Request, WebSocket, WebSocketDisconnect
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_db
+from app.api.deps import get_optional_db
 from app.core.rate_limiter import limiter
 from app.core.security import TokenScope, VerifiedToken, verify_api_key
 from app.db.models.alert import Alert
@@ -22,38 +22,60 @@ router = APIRouter(prefix="/alerts", tags=["Alerts"])
 @router.get("")
 @limiter.limit("50/minute")
 async def list_alerts(
+    request: Request,
     page: int = Query(1, ge=1),
     page_size: int = Query(50, ge=1, le=200),
     attack_type: str | None = Query(None),
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession | None = Depends(get_optional_db),
     token: VerifiedToken = Depends(verify_api_key),
 ) -> AlertsListResponse:
     """Paginated alert history with optional attack_type filter."""
-    if not token.has_permission(TokenScope.ALERTS):
-        from fastapi import HTTPException, status
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="This endpoint requires alerts scope.",
-        )
-    q = select(Alert).order_by(Alert.created_at.desc())
-    count_q = select(func.count()).select_from(Alert)
-    pred_count_q = select(func.count()).select_from(Prediction)
-    
-    if attack_type:
-        q = q.where(Alert.attack_type == attack_type)
-        count_q = count_q.where(Alert.attack_type == attack_type)
+    try:
+        if not token.has_permission(TokenScope.ALERTS):
+            from fastapi import HTTPException, status
 
-    total = (await db.execute(count_q)).scalar_one()
-    total_predictions = (await db.execute(pred_count_q)).scalar_one()
-    
-    rows = (await db.execute(q.offset((page - 1) * page_size).limit(page_size))).scalars().all()
-    return AlertsListResponse(
-        alerts=[AlertResponse.model_validate(r) for r in rows],
-        total=total,
-        total_predictions=total_predictions,
-        page=page,
-        page_size=page_size,
-    )
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="This endpoint requires alerts scope.",
+            )
+        if db is None:
+            logger.warning("Alerts requested while database is unavailable")
+            return AlertsListResponse(
+                alerts=[],
+                total=0,
+                total_predictions=0,
+                page=page,
+                page_size=page_size,
+            )
+        q = select(Alert).order_by(Alert.created_at.desc())
+        count_q = select(func.count()).select_from(Alert)
+        pred_count_q = select(func.count()).select_from(Prediction)
+
+        if attack_type:
+            q = q.where(Alert.attack_type == attack_type)
+            count_q = count_q.where(Alert.attack_type == attack_type)
+
+        total = (await db.execute(count_q)).scalar_one()
+        total_predictions = (await db.execute(pred_count_q)).scalar_one()
+
+        rows = (
+            await db.execute(q.offset((page - 1) * page_size).limit(page_size))
+        ).scalars().all()
+        return AlertsListResponse(
+            alerts=[AlertResponse.model_validate(r) for r in rows],
+            total=total,
+            total_predictions=total_predictions,
+            page=page,
+            page_size=page_size,
+        )
+    except Exception as exc:
+        logger.exception("Alerts endpoint failed")
+        from fastapi import HTTPException, status
+
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(exc),
+        ) from exc
 
 
 @router.websocket("/live")

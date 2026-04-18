@@ -3,12 +3,12 @@ from __future__ import annotations
 
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import get_db
+from app.api.deps import get_optional_db
 from app.core.rate_limiter import limiter
 from app.core.security import TokenScope, VerifiedToken, verify_api_key
 from app.db.models.prediction import Prediction
@@ -30,7 +30,8 @@ class ExplainResponse(BaseModel):
 @limiter.limit("20/minute")
 async def explain(
     prediction_id: str,
-    db: AsyncSession = Depends(get_db),
+    request: Request,
+    db: AsyncSession | None = Depends(get_optional_db),
     token: VerifiedToken = Depends(verify_api_key),
 ):
     """Return SHAP feature attributions for a stored prediction."""
@@ -38,6 +39,11 @@ async def explain(
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="This endpoint requires explain scope.",
+        )
+    if db is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Database is unavailable for explanation lookup.",
         )
     result = await db.execute(
         select(Prediction).where(Prediction.id == prediction_id)

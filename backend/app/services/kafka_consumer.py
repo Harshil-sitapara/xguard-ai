@@ -1,8 +1,8 @@
 """
-XGuard-AI — Kafka Consumer Background Task
+XGuard-AI â€” Kafka Consumer Background Task
 
 Subscribes to the 'network-traffic' topic.
-For each message: predict → explain → persist to DB → broadcast via WebSocket.
+For each message: predict â†’ explain â†’ persist to DB â†’ broadcast via WebSocket.
 """
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ import uuid
 from datetime import datetime, timezone
 
 from aiokafka import AIOKafkaConsumer
+from aiokafka.errors import KafkaConnectionError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
@@ -105,7 +106,7 @@ async def consume_forever() -> None:
             enable_auto_commit=True,
         )
         await consumer.start()
-        logger.info("✓ Kafka consumer started — topic: %s", settings.kafka_topic_traffic)
+        logger.info("âœ“ Kafka consumer started â€” topic: %s", settings.kafka_topic_traffic)
         try:
             async for msg in consumer:
                 try:
@@ -115,11 +116,11 @@ async def consume_forever() -> None:
         finally:
             await consumer.stop()
             logger.info("Kafka consumer stopped")
-    except (OSError, ConnectionError, asyncio.TimeoutError) as e:
-        logger.warning(f"⚠ Kafka connection failed (running without streaming): {type(e).__name__}: {e}")
+    except (KafkaConnectionError, OSError, ConnectionError, asyncio.TimeoutError) as e:
+        logger.warning(f"âš  Kafka connection failed (running without streaming): {type(e).__name__}: {e}")
         logger.info("  Predictions via REST API endpoints will still work")
         # Keep the task alive but don't crash the app
         await asyncio.sleep(float('inf'))  # Sleep forever (will be cancelled at shutdown)
     except Exception as e:
-        logger.error(f"❌ Unexpected error in Kafka consumer: {e}", exc_info=True)
+        logger.error(f"âŒ Unexpected error in Kafka consumer: {e}", exc_info=True)
         raise
