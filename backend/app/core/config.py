@@ -24,6 +24,8 @@ class Settings(BaseSettings):
     kafka_topic_traffic: str = "network-traffic"
     kafka_topic_alerts: str = "ids-alerts"
     kafka_group_id: str = "xguard-consumer"
+    kafka_enabled: bool = True
+    kafka_retry_delay_seconds: float = 5.0
 
     # Security - API Keys
     api_secret_key: str = "dev_secret_change_in_production"
