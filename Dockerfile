@@ -1,33 +1,46 @@
-FROM python:3.11-slim
+FROM apache/kafka:3.8.1 AS kafka
+
+FROM eclipse-temurin:17-jre-jammy
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    gcc \
+# Add Python and tini on top of the official Kafka image.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    bash \
     curl \
+    gcc \
+    procps \
+    python3 \
+    python3-pip \
+    tini \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first (for better caching)
+RUN ln -sf /usr/bin/python3 /usr/local/bin/python \
+    && ln -sf /usr/bin/pip3 /usr/local/bin/pip
+
+COPY --from=kafka /opt/kafka /opt/kafka
+
+# Copy requirements first for better caching.
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy ML models and preprocessor artifacts
+# Copy ML models and preprocessor artifacts.
 COPY ml/models /app/models
 
-# Copy backend application code
+# Copy backend application code and runtime scripts.
 COPY backend/app /app/app
+COPY space /app/space
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
-ENV PORT=7860
+RUN chmod +x /app/space/start-space.sh
 
-# Expose port (HF Spaces uses 7860 by default)
+ENV PYTHONUNBUFFERED=1 \
+    PORT=7860 \
+    KAFKA_BOOTSTRAP_SERVERS=127.0.0.1:9092
+
 EXPOSE 7860
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=3 \
     CMD curl -f http://localhost:7860/api/v1/health || exit 1
 
-# Run FastAPI app on port 7860 for HF Spaces
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "7860"]
+ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["/app/space/start-space.sh"]
