@@ -72,17 +72,20 @@ async def lifespan(app: FastAPI):
 
     await _prepare_database()
 
-    _consumer_task = asyncio.create_task(consume_forever())
+    if settings.kafka_enabled:
+        _consumer_task = asyncio.create_task(consume_forever())
 
-    def handle_consumer_exception(task: asyncio.Task) -> None:
-        if task.cancelled():
-            return
-        exc = task.exception()
-        if exc:
-            logger.error(f"Kafka consumer task exception: {exc}")
+        def handle_consumer_exception(task: asyncio.Task) -> None:
+            if task.cancelled():
+                return
+            exc = task.exception()
+            if exc:
+                logger.error(f"Kafka consumer task exception: {exc}")
 
-    _consumer_task.add_done_callback(handle_consumer_exception)
-    logger.info("Kafka consumer task scheduled")
+        _consumer_task.add_done_callback(handle_consumer_exception)
+        logger.info("Kafka consumer task scheduled")
+    else:
+        logger.info("Kafka consumer disabled via configuration")
 
     yield
 
