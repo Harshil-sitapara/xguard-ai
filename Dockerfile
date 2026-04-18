@@ -1,8 +1,8 @@
-FROM apache/kafka:3.8.1
+FROM apache/kafka:3.8.1 AS kafka
+
+FROM eclipse-temurin:17-jre-jammy
 
 WORKDIR /app
-
-USER root
 
 # Add Python and tini on top of the official Kafka image.
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN ln -sf /usr/bin/python3 /usr/local/bin/python \
     && ln -sf /usr/bin/pip3 /usr/local/bin/pip
+
+COPY --from=kafka /opt/kafka /opt/kafka
 
 # Copy requirements first (for better caching)
 COPY backend/requirements.txt .
