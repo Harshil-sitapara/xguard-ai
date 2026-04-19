@@ -20,25 +20,24 @@ RUN ln -sf /usr/bin/python3 /usr/local/bin/python \
 
 COPY --from=kafka /opt/kafka /opt/kafka
 
-# Copy requirements first (for better caching)
+# Copy requirements first for better caching.
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy ML models and preprocessor artifacts
+# Copy ML models and preprocessor artifacts.
 COPY ml/models /app/models
 
-# Copy backend application code and runtime scripts
+# Copy backend application code and runtime scripts.
 COPY backend/app /app/app
+COPY kafka /app/kafka
 COPY space /app/space
 
 RUN chmod +x /app/space/start-space.sh
 
-# Set environment variables
 ENV PYTHONUNBUFFERED=1 \
     PORT=7860 \
     KAFKA_BOOTSTRAP_SERVERS=127.0.0.1:9092
 
-# Expose port (HF Spaces uses 7860 by default)
 EXPOSE 7860
 
 # Health check

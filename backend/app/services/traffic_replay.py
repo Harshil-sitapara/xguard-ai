@@ -39,7 +39,7 @@ class TrafficReplayManager:
         self._state = ReplayState()
 
     def _enabled(self) -> bool:
-        return settings.traffic_replay_enabled and settings.environment != "production"
+        return settings.traffic_replay_enabled
 
     def _dataset_path(self) -> Path:
         return settings.traffic_replay_dataset
@@ -50,6 +50,9 @@ class TrafficReplayManager:
     def _scaler_path(self) -> Path:
         return settings.models_path / "preprocessor" / "scaler.pkl"
 
+    def _background_path(self) -> Path:
+        return settings.models_path / "xgboost" / "shap_background.pkl"
+
     def _is_running(self) -> bool:
         return self._process is not None and self._process.returncode is None
 
@@ -57,27 +60,38 @@ class TrafficReplayManager:
         dataset_path = self._dataset_path()
         producer_script = self._producer_script()
         scaler_path = self._scaler_path()
+        background_path = self._background_path()
+        has_labeled_dataset = dataset_path.exists()
+        has_background_fallback = background_path.exists()
 
         available = (
             self._enabled()
             and settings.kafka_enabled
-            and dataset_path.exists()
             and producer_script.exists()
             and scaler_path.exists()
+            and (has_labeled_dataset or has_background_fallback)
         )
 
         if not self._enabled():
-            message = "Traffic replay is disabled in this environment."
+            message = "Traffic replay is disabled by configuration."
         elif not settings.kafka_enabled:
             message = "Kafka is disabled, so replay cannot publish traffic."
-        elif not dataset_path.exists():
-            message = f"Held-out test dataset not found at {dataset_path}."
         elif not producer_script.exists():
             message = f"Kafka producer script not found at {producer_script}."
         elif not scaler_path.exists():
             message = f"Replay scaler not found at {scaler_path}."
-        else:
+        elif has_labeled_dataset:
             message = "Ready to replay the held-out 20% test split."
+        elif has_background_fallback:
+            message = (
+                "Ready to replay bundled model background traffic "
+                "(held-out test split is not packaged in this deployment)."
+            )
+        else:
+            message = (
+                f"Held-out test dataset not found at {dataset_path}, and no bundled "
+                f"background replay source was found at {background_path}."
+            )
 
         return ReplayState(
             running=False,
@@ -121,6 +135,14 @@ class TrafficReplayManager:
             dataset_path = self._dataset_path()
             scaler_path = self._scaler_path()
             producer_script = self._producer_script()
+            background_path = self._background_path()
+            using_labeled_dataset = dataset_path.exists()
+
+            if attack_only and not using_labeled_dataset:
+                raise RuntimeError(
+                    "Attack-only replay requires the labeled held-out dataset, which is "
+                    "not packaged in this deployment."
+                )
 
             command = [
                 sys.executable,
@@ -132,6 +154,8 @@ class TrafficReplayManager:
                 "--single-pass",
                 "--scaler-path",
                 str(scaler_path),
+                "--background-path",
+                str(background_path),
             ]
             if limit > 0:
                 command.extend(["--max-messages", str(limit)])
@@ -141,6 +165,7 @@ class TrafficReplayManager:
             env = os.environ.copy()
             env["KAFKA_BOOTSTRAP_SERVERS"] = settings.kafka_bootstrap_servers
             env["KAFKA_TOPIC_TRAFFIC"] = settings.kafka_topic_traffic
+            env["MODELS_DIR"] = str(settings.models_path)
             env["PYTHONUNBUFFERED"] = "1"
 
             try:
@@ -163,7 +188,8 @@ class TrafficReplayManager:
                 attack_only=attack_only,
                 started_at=datetime.now(timezone.utc).isoformat(),
                 message=(
-                    f"Replaying held-out traffic at {rate if rate > 0 else 'max'} msg/s"
+                    f"Replaying {'held-out test traffic' if using_labeled_dataset else 'bundled background traffic'} "
+                    f"at {rate if rate > 0 else 'max'} msg/s"
                     + (" (attacks only)." if attack_only else ".")
                 ),
             )
