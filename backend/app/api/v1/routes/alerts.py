@@ -71,7 +71,6 @@ async def list_alerts(
     except Exception as exc:
         logger.exception("Alerts endpoint failed")
         from fastapi import HTTPException, status
-
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(exc),
