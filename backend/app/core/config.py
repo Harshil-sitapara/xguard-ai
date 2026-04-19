@@ -44,10 +44,26 @@ class Settings(BaseSettings):
     # Model
     best_model_type: str = "xgboost"
     models_dir: str = "/app/models"
+    traffic_replay_enabled: bool = True
+    traffic_replay_dataset_path: str | None = None
 
     @property
     def models_path(self) -> Path:
         return Path(self.models_dir)
+
+    @property
+    def app_root(self) -> Path:
+        current = Path(__file__).resolve()
+        for parent in current.parents:
+            if (parent / "ml").exists():
+                return parent
+        return current.parents[3]
+
+    @property
+    def traffic_replay_dataset(self) -> Path:
+        if self.traffic_replay_dataset_path:
+            return Path(self.traffic_replay_dataset_path)
+        return self.app_root / "ml" / "data" / "processed" / "test.parquet"
 
 
 @lru_cache
