@@ -32,15 +32,6 @@ export interface ShapResult {
   top_features: ShapFeature[];
 }
 
-export type DemoScenario = "benign" | "attack" | "mixed";
-
-export interface DemoSimulationResponse {
-  accepted: boolean;
-  scenario: DemoScenario;
-  count: number;
-  interval_ms: number;
-}
-
 const DEFAULT_API_URL = "http://localhost:8000/api/v1";
 const API_KEY = process.env.NEXT_PUBLIC_API_TOKEN || "";
 
@@ -116,30 +107,5 @@ export const fetchExplanation = async (id: string): Promise<ShapResult> => {
     headers: { "X-API-Key": API_KEY }
   });
   if (!rs.ok) throw new Error("Failed to fetch SHAP explanation");
-  return rs.json();
-};
-
-export const simulateDemoTraffic = async (
-  scenario: DemoScenario,
-  count: number,
-  intervalMs = 500
-): Promise<DemoSimulationResponse> => {
-  const rs = await fetch(`${getApiBaseUrl()}/demo/simulate`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-API-Key": API_KEY
-    },
-    body: JSON.stringify({
-      scenario,
-      count,
-      interval_ms: intervalMs
-    })
-  });
-
-  if (!rs.ok) {
-    throw new Error("Failed to start demo traffic");
-  }
-
   return rs.json();
 };

@@ -3,7 +3,6 @@
 import { useAlerts } from "@/hooks/use-alerts";
 import { StatCards } from "@/components/dashboard/stat-cards";
 import { AttackChart } from "@/components/dashboard/attack-chart";
-import { DemoControls } from "@/components/dashboard/demo-controls";
 import { LiveFeed } from "@/components/dashboard/live-feed";
 import { ShapDialog } from "@/components/dashboard/shap-dialog";
 import Image from "next/image";
@@ -74,10 +73,6 @@ export default function Dashboard() {
           </div>
           <span className="text-xs font-medium uppercase tracking-widest text-neutral-300">{connected ? "Kafka Stream Active" : "Disconnected"}</span>
         </div>
-      </div>
-
-      <div className="mb-6">
-        <DemoControls />
       </div>
 
       {/* Top Metrics */}
