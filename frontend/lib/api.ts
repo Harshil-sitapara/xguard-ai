@@ -32,6 +32,26 @@ export interface ShapResult {
   top_features: ShapFeature[];
 }
 
+export interface TrafficReplayStatus {
+  running: boolean;
+  enabled: boolean;
+  available: boolean;
+  rate: number;
+  limit: number;
+  attack_only: boolean;
+  started_at: string | null;
+  finished_at: string | null;
+  last_error: string | null;
+  message: string;
+  environment: string;
+}
+
+export interface StartTrafficReplayRequest {
+  rate: number;
+  limit: number;
+  attack_only: boolean;
+}
+
 const DEFAULT_API_URL = "http://localhost:8000/api/v1";
 const API_KEY = process.env.NEXT_PUBLIC_API_TOKEN || "";
 
@@ -76,6 +96,18 @@ const upgradeForSecurePage = (
   return `${secureProtocol}://${value.slice(`${insecureProtocol}://`.length)}`;
 };
 
+const readErrorMessage = async (response: Response, fallback: string) => {
+  try {
+    const data = await response.json();
+    if (typeof data?.detail === "string") {
+      return data.detail;
+    }
+  } catch {
+    // Ignore JSON parsing errors and return the fallback message.
+  }
+  return fallback;
+};
+
 export const getApiBaseUrl = () => {
   const configuredUrl = process.env.NEXT_PUBLIC_API_URL || DEFAULT_API_URL;
   return stripTrailingSlash(
@@ -98,7 +130,7 @@ export const fetchHistory = async (page = 1, pageSize = 50): Promise<AlertsRespo
   const rs = await fetch(`${getApiBaseUrl()}/alerts?page=${page}&page_size=${pageSize}`, {
     headers: { "X-API-Key": API_KEY }
   });
-  if (!rs.ok) throw new Error("Failed to fetch alerts history");
+  if (!rs.ok) throw new Error(await readErrorMessage(rs, "Failed to fetch alerts history"));
   return rs.json();
 };
 
@@ -106,6 +138,40 @@ export const fetchExplanation = async (id: string): Promise<ShapResult> => {
   const rs = await fetch(`${getApiBaseUrl()}/explain/${id}`, {
     headers: { "X-API-Key": API_KEY }
   });
-  if (!rs.ok) throw new Error("Failed to fetch SHAP explanation");
+  if (!rs.ok) throw new Error(await readErrorMessage(rs, "Failed to fetch SHAP explanation"));
+  return rs.json();
+};
+
+export const fetchReplayStatus = async (): Promise<TrafficReplayStatus> => {
+  const rs = await fetch(`${getApiBaseUrl()}/replay/status`, {
+    headers: { "X-API-Key": API_KEY }
+  });
+  if (!rs.ok) throw new Error(await readErrorMessage(rs, "Failed to fetch replay status"));
+  return rs.json();
+};
+
+export const startTrafficReplay = async (
+  body: StartTrafficReplayRequest
+): Promise<TrafficReplayStatus> => {
+  const rs = await fetch(`${getApiBaseUrl()}/replay/start`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-Key": API_KEY
+    },
+    body: JSON.stringify(body)
+  });
+  if (!rs.ok) {
+    throw new Error(await readErrorMessage(rs, "Failed to start traffic replay"));
+  }
+  return rs.json();
+};
+
+export const stopTrafficReplay = async (): Promise<TrafficReplayStatus> => {
+  const rs = await fetch(`${getApiBaseUrl()}/replay/stop`, {
+    method: "POST",
+    headers: { "X-API-Key": API_KEY }
+  });
+  if (!rs.ok) throw new Error(await readErrorMessage(rs, "Failed to stop traffic replay"));
   return rs.json();
 };

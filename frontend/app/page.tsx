@@ -5,8 +5,9 @@ import { StatCards } from "@/components/dashboard/stat-cards";
 import { AttackChart } from "@/components/dashboard/attack-chart";
 import { LiveFeed } from "@/components/dashboard/live-feed";
 import { ShapDialog } from "@/components/dashboard/shap-dialog";
+import { TrafficReplayControls } from "@/components/dashboard/traffic-replay-controls";
+import Image from "next/image";
 import { useState } from "react";
-import { Shield } from "lucide-react";
 
 export default function Dashboard() {
   const { alerts, totalIngested, totalAttacks, attackDistribution, loading, connected } = useAlerts();
@@ -15,29 +16,57 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-neutral-950 text-neutral-400">
-        Initializing XGuard-AI Dashboard...
+        <div className="flex flex-col items-center gap-6 text-center">
+          <div className="relative">
+            <div className="absolute inset-0 rounded-full bg-cyan-400/20 blur-3xl animate-pulse" />
+            <Image
+              src="/brand/small.png"
+              alt="XGuard-AI logo"
+              width={120}
+              height={120}
+              priority
+              className="relative h-[120px] w-[120px] drop-shadow-lg"
+            />
+          </div>
+          <div className="space-y-3">
+            <p className="text-lg font-semibold text-cyan-100">XGuard AI</p>
+            <div className="flex items-center gap-2 justify-center">
+              <div className="h-2 w-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+              <div className="h-2 w-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+              <div className="h-2 w-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+            </div>
+            <p className="text-sm text-neutral-500">Initializing threat detection system...</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-neutral-100 p-8 font-sans selection:bg-rose-500/30">
+    <main className="min-h-screen bg-neutral-950 p-8 font-sans text-neutral-100 selection:bg-cyan-400/20">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-neutral-100 to-neutral-500 bg-clip-text text-transparent flex items-center gap-3">
-            <Shield className="w-8 h-8 text-indigo-500" />
-            XGuard-AI
-          </h1>
-          <p className="text-neutral-500 text-sm mt-1">Real-time XGBoost Threat Detection & SHAP Explainer</p>
+      <div className="mb-8 flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+        <div className="flex items-center gap-4">
+          <Image
+            src="/brand/log_with_name.png"
+            alt="XGuard-AI"
+            width={280}
+            height={70}
+            priority
+            className="h-auto w-auto max-w-sm"
+          />
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-neutral-900/50 border border-neutral-800 backdrop-blur-sm shadow-sm">
+        <div className="flex items-center gap-2 self-start rounded-full border border-neutral-800 bg-neutral-900/50 px-4 py-2 shadow-sm backdrop-blur-sm">
           <div className="relative flex h-3 w-3">
             {connected && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>}
             <span className={`relative inline-flex rounded-full h-3 w-3 ${connected ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
           </div>
-          <span className="text-xs font-medium text-neutral-300 uppercase tracking-widest">{connected ? "Kafka Stream Active" : "Disconnected"}</span>
+          <span className="text-xs font-medium uppercase tracking-widest text-neutral-300">{connected ? "Kafka Stream Active" : "Disconnected"}</span>
         </div>
+      </div>
+
+      <div className="mb-6">
+        <TrafficReplayControls />
       </div>
 
       {/* Top Metrics */}
