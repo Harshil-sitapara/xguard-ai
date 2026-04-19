@@ -4,6 +4,7 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
+    curl \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
@@ -16,6 +17,7 @@ COPY ml/models /app/models
 
 # Copy app code
 COPY backend/app /app/app
+COPY kafka /app/kafka
 
 # Expose port
 EXPOSE 8000
