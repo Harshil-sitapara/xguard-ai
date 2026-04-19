@@ -3,10 +3,11 @@
 import { useAlerts } from "@/hooks/use-alerts";
 import { StatCards } from "@/components/dashboard/stat-cards";
 import { AttackChart } from "@/components/dashboard/attack-chart";
+import { DemoControls } from "@/components/dashboard/demo-controls";
 import { LiveFeed } from "@/components/dashboard/live-feed";
 import { ShapDialog } from "@/components/dashboard/shap-dialog";
+import Image from "next/image";
 import { useState } from "react";
-import { Shield } from "lucide-react";
 
 export default function Dashboard() {
   const { alerts, totalIngested, totalAttacks, attackDistribution, loading, connected } = useAlerts();
@@ -15,29 +16,68 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-neutral-950 text-neutral-400">
-        Initializing XGuard-AI Dashboard...
+        <div className="flex flex-col items-center gap-4 text-center">
+          <Image
+            src="/brand/xguard-mark.svg"
+            alt="XGuard-AI logo"
+            width={84}
+            height={84}
+            priority
+            className="h-[84px] w-[84px]"
+          />
+          <div className="space-y-1">
+            <p className="text-xs font-semibold uppercase tracking-[0.45em] text-cyan-200/70">XGuard-AI</p>
+            <p>Initializing dashboard...</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-neutral-100 p-8 font-sans selection:bg-rose-500/30">
+    <main className="min-h-screen bg-neutral-950 p-8 font-sans text-neutral-100 selection:bg-cyan-400/20">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-neutral-100 to-neutral-500 bg-clip-text text-transparent flex items-center gap-3">
-            <Shield className="w-8 h-8 text-indigo-500" />
-            XGuard-AI
-          </h1>
-          <p className="text-neutral-500 text-sm mt-1">Real-time XGBoost Threat Detection & SHAP Explainer</p>
+      <div className="mb-8 flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+        <div className="flex items-center gap-4">
+          <div className="relative shrink-0">
+            <div className="absolute inset-0 rounded-[2rem] bg-cyan-400/15 blur-2xl" />
+            <Image
+              src="/brand/xguard-mark.svg"
+              alt="XGuard-AI"
+              width={88}
+              height={88}
+              priority
+              className="relative h-[76px] w-[76px] md:h-[88px] md:w-[88px]"
+            />
+          </div>
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-3xl font-semibold tracking-[0.22em] text-white md:text-4xl">
+                <span className="bg-gradient-to-r from-cyan-200 via-sky-300 to-emerald-300 bg-clip-text text-transparent">
+                  X
+                </span>
+                GUARD
+              </h1>
+              <span className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.38em] text-cyan-200">
+                AI
+              </span>
+            </div>
+            <p className="max-w-2xl text-sm text-neutral-500 md:text-[0.95rem]">
+              Explainable intrusion detection for live network defense and analyst-ready threat intelligence.
+            </p>
+          </div>
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-neutral-900/50 border border-neutral-800 backdrop-blur-sm shadow-sm">
+        <div className="flex items-center gap-2 self-start rounded-full border border-neutral-800 bg-neutral-900/50 px-4 py-2 shadow-sm backdrop-blur-sm">
           <div className="relative flex h-3 w-3">
             {connected && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>}
             <span className={`relative inline-flex rounded-full h-3 w-3 ${connected ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
           </div>
-          <span className="text-xs font-medium text-neutral-300 uppercase tracking-widest">{connected ? "Kafka Stream Active" : "Disconnected"}</span>
+          <span className="text-xs font-medium uppercase tracking-widest text-neutral-300">{connected ? "Kafka Stream Active" : "Disconnected"}</span>
         </div>
+      </div>
+
+      <div className="mb-6">
+        <DemoControls />
       </div>
 
       {/* Top Metrics */}
