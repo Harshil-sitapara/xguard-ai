@@ -39,6 +39,7 @@ TOPIC = os.getenv("KAFKA_TOPIC_TRAFFIC", "network-traffic")
 PROCESSED_DIR = os.getenv("PROCESSED_DIR", "../ml/data/processed")
 MODELS_DIR = os.getenv("MODELS_DIR", "../ml/models")
 DEFAULT_SCALER_PATH = Path(MODELS_DIR) / "preprocessor" / "scaler.pkl"
+DEFAULT_BACKGROUND_PATH = Path(MODELS_DIR) / "xgboost" / "shap_background.pkl"
 
 SAMPLE_IPS = [
     "192.168.1.10",
@@ -61,32 +62,63 @@ def _prepare_rows(
     attack_only: bool,
     scaler_path: Path | None,
     max_messages: int,
-) -> list[dict]:
-    logger.info("Loading dataset from %s ...", dataset_path)
-    df = pd.read_parquet(dataset_path)
-    feature_cols = [column for column in df.columns if column != "Label"]
-
-    if attack_only:
-        df = df[df["Label"] != 0]
-        logger.info("Attack-only mode: %d rows", len(df))
-
-    if df.empty:
-        raise RuntimeError("No rows available for the selected replay filters.")
-
-    if max_messages > 0:
-        sample_size = min(max_messages, len(df))
-        df = df.sample(n=sample_size)
-        logger.info("Prepared %d sampled replay rows", sample_size)
-
+    background_path: Path | None,
+) -> tuple[list[dict], str]:
     if not scaler_path or not scaler_path.exists():
         raise FileNotFoundError(f"Replay scaler not found at {scaler_path}.")
 
     scaler = joblib.load(scaler_path)
-    unscaled = scaler.inverse_transform(df[feature_cols])
-    df = pd.DataFrame(unscaled, columns=feature_cols, index=df.index).assign(Label=df["Label"].values)
-    logger.info("Inverse-transformed replay rows using scaler at %s", scaler_path)
 
-    return df[feature_cols].to_dict(orient="records")
+    if dataset_path.exists():
+        logger.info("Loading dataset from %s ...", dataset_path)
+        df = pd.read_parquet(dataset_path)
+        feature_cols = [column for column in df.columns if column != "Label"]
+
+        if attack_only:
+            df = df[df["Label"] != 0]
+            logger.info("Attack-only mode: %d rows", len(df))
+
+        if df.empty:
+            raise RuntimeError("No rows available for the selected replay filters.")
+
+        if max_messages > 0:
+            sample_size = min(max_messages, len(df))
+            df = df.sample(n=sample_size)
+            logger.info("Prepared %d sampled replay rows", sample_size)
+
+        unscaled = scaler.inverse_transform(df[feature_cols])
+        df = pd.DataFrame(unscaled, columns=feature_cols, index=df.index).assign(Label=df["Label"].values)
+        logger.info("Inverse-transformed replay rows using scaler at %s", scaler_path)
+        return df[feature_cols].to_dict(orient="records"), "held-out test split"
+
+    if attack_only:
+        raise RuntimeError(
+            "Attack-only replay requires the labeled held-out dataset. "
+            "Bundled background traffic does not include labels."
+        )
+
+    if not background_path or not background_path.exists():
+        raise FileNotFoundError(
+            f"Replay dataset not found at {dataset_path}, and no background replay source was found at {background_path}."
+        )
+
+    logger.info("Held-out dataset missing, loading background replay rows from %s ...", background_path)
+    background_bundle = joblib.load(background_path)
+    feature_names = background_bundle.get("feature_names")
+    background_rows = background_bundle.get("background")
+    if feature_names is None or background_rows is None:
+        raise RuntimeError("Background replay bundle is missing feature names or row data.")
+
+    df = pd.DataFrame(background_rows, columns=feature_names)
+    if max_messages > 0:
+        sample_size = min(max_messages, len(df))
+        df = df.sample(n=sample_size)
+        logger.info("Prepared %d sampled background replay rows", sample_size)
+
+    unscaled = scaler.inverse_transform(df[feature_names])
+    df = pd.DataFrame(unscaled, columns=feature_names, index=df.index)
+    logger.info("Inverse-transformed background replay rows using scaler at %s", scaler_path)
+    return df.to_dict(orient="records"), "bundled model background"
 
 
 async def produce(
@@ -96,8 +128,15 @@ async def produce(
     max_messages: int,
     single_pass: bool,
     scaler_path: Path | None,
+    background_path: Path | None,
 ) -> None:
-    rows = _prepare_rows(dataset_path, attack_only, scaler_path, max_messages)
+    rows, source_name = _prepare_rows(
+        dataset_path,
+        attack_only,
+        scaler_path,
+        max_messages,
+        background_path,
+    )
 
     producer = AIOKafkaProducer(
         bootstrap_servers=BOOTSTRAP,
@@ -105,9 +144,10 @@ async def produce(
     )
     await producer.start()
     logger.info(
-        "Producer started -> topic: %s | rate: %s msg/s",
+        "Producer started -> topic: %s | rate: %s msg/s | source: %s",
         TOPIC,
         rate if rate > 0 else "unlimited",
+        source_name,
     )
 
     sent = 0
@@ -165,6 +205,12 @@ def main() -> None:
         default=DEFAULT_SCALER_PATH,
         help="Scaler artefact used to inverse-transform processed rows before publishing",
     )
+    parser.add_argument(
+        "--background-path",
+        type=Path,
+        default=DEFAULT_BACKGROUND_PATH,
+        help="Fallback background-row bundle used when the labeled replay dataset is unavailable",
+    )
     args = parser.parse_args()
     asyncio.run(
         produce(
@@ -174,6 +220,7 @@ def main() -> None:
             max_messages=args.max_messages,
             single_pass=args.single_pass,
             scaler_path=args.scaler_path,
+            background_path=args.background_path,
         )
     )
 

@@ -130,6 +130,7 @@ export function TrafficReplayControls() {
 
   const running = status?.running ?? false;
   const canControl = Boolean(status?.enabled && status?.available);
+  const isHeldOutReplay = status?.message?.toLowerCase().includes("held-out") ?? false;
   const toneClass = status?.last_error
     ? "border-rose-900/60 bg-rose-950/10 text-rose-200"
     : running
@@ -149,8 +150,10 @@ export function TrafficReplayControls() {
             </CardTitle>
             <CardDescription className="max-w-2xl text-[0.72rem] text-inherit/75">
               {running
-                ? "Replaying the held-out 20% test split through Kafka."
-                : "Use the real held-out test data, not a fake demo feed."}
+                ? isHeldOutReplay
+                  ? "Replaying the held-out evaluation split through Kafka."
+                  : "Replaying bundled traffic through the live Kafka pipeline."
+                : "Replay packaged traffic through the live backend pipeline."}
             </CardDescription>
           </div>
           <div className="flex flex-wrap items-center gap-2 md:justify-end">

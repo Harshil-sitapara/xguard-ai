@@ -55,8 +55,12 @@ class Settings(BaseSettings):
     def app_root(self) -> Path:
         current = Path(__file__).resolve()
         for parent in current.parents:
-            if (parent / "ml").exists():
+            if (parent / "kafka").exists():
                 return parent
+            if (parent / "backend").exists() and (parent / "ml").exists():
+                return parent
+        if Path("/app").exists():
+            return Path("/app")
         return current.parents[3]
 
     @property
