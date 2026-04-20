@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.6.0
@@ -54,19 +52,25 @@ services:
 
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: xguard-backend
     ports:
       - "8000:8000"
     env_file:
       - .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://xguard:xguard_secret@postgres:5432/xguard
+      KAFKA_GROUP_ID: xguard-consumer-local
     depends_on:
       kafka:
         condition: service_healthy
       postgres:
         condition: service_healthy
     volumes:
+      - ./backend/app:/app/app
+      - ./kafka:/app/kafka:ro
+      - ./ml/data/processed:/app/ml/data/processed:ro
       - ./ml/models:/app/models:ro
     restart: unless-stopped
 

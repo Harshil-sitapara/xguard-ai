@@ -42,11 +42,11 @@ def init_db(database_url: str | None = None):
     """Initialize database engine and session factory. Called during app startup."""
     global engine, AsyncSessionLocal
     raw_database_url = database_url or settings.database_url
-    
+
     if not raw_database_url:
         logger.warning("⚠ DATABASE_URL not configured - running without persistence")
         return False
-    
+
     try:
         normalized_url, connect_args = _normalize_database_url(raw_database_url)
         engine = create_async_engine(
