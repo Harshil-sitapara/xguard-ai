@@ -61,13 +61,23 @@ async def explain(
             top_features=pred.shap_json.get("top_features", []),
         )
 
-    # Check if explainer is available
+    # Fall back gracefully when the deployment does not have SHAP assets loaded.
+    # This keeps the dialog usable for replayed alerts instead of surfacing a 500/503.
     if not explainer_service._loaded:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="SHAP explainer not available. Generate SHAP background data by running: python scripts/run_pipeline.py --step shap"
+        logger.warning(
+            "SHAP explainer unavailable for prediction %s; returning placeholder explanation",
+            prediction_id,
         )
-    
+        return ExplainResponse(
+            prediction_id=pred.id,
+            label=pred.label,
+            reason=(
+                "Detailed SHAP explanations are unavailable in this deployment because the "
+                "background SHAP artefact did not load. Predictions and alerts still work."
+            ),
+            top_features=[],
+        )
+
     # Compute on demand for benign predictions (not pre-computed)
     shap_result = await explainer_service.explain(
         pred.id,

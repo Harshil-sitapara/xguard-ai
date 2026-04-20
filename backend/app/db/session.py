@@ -106,4 +106,4 @@ async def get_optional_db() -> AsyncGenerator[AsyncSession | None, None]:
         if exc.status_code != status.HTTP_503_SERVICE_UNAVAILABLE:
             raise
         logger.warning("Continuing without database access: %s", exc.detail)
-        yield None
+        return
