@@ -1,9 +1,9 @@
 """
-XGuard-AI FastAPI Application
+XGuard-AI FastAPI application.
 
 Lifespan:
-  startup  → load model artefacts, run DB migrations, start Kafka consumer
-  shutdown → cancel consumer task
+  startup -> load model artefacts, run DB migrations, start Kafka consumer
+  shutdown -> cancel consumer task
 """
 from __future__ import annotations
 
@@ -17,15 +17,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.router import api_router
 from app.core.config import settings
 from app.core.logging import setup_logging
-from app.core.rate_limiter import limiter, RATE_LIMIT_AVAILABLE
+from app.core.rate_limiter import RATE_LIMIT_AVAILABLE, limiter
+from app.db import session as db_session
 from app.db.base import Base
 from app.db.models import Alert, Prediction  # noqa: F401
-from app.db import session as db_session
 from app.services.explainer import explainer_service
 from app.services.inference import inference_service
 from app.services.kafka_consumer import consume_forever
 
-# Rate limiting imports (optional)
 if RATE_LIMIT_AVAILABLE:
     from slowapi import _rate_limit_exceeded_handler
     from slowapi.errors import RateLimitExceeded
@@ -39,20 +38,20 @@ _consumer_task: asyncio.Task | None = None
 async def _prepare_database() -> bool:
     """Initialize the DB engine and ensure tables exist."""
     if not db_session.init_db():
-        logger.info("  Database will be unavailable for this session")
+        logger.info("Database will be unavailable for this session")
         return False
 
     if db_session.engine is None:
-        logger.info("  Database engine is unavailable for this session")
+        logger.info("Database engine is unavailable for this session")
         return False
 
     try:
         async with db_session.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
-        logger.info("✓ Database tables ready")
+        logger.info("Database tables ready")
         return True
-    except Exception as e:
-        logger.warning(f"⚠ Database migration failed (non-critical): {e}")
+    except Exception as exc:
+        logger.warning(f"Database migration failed (non-critical): {exc}")
         return False
 
 
@@ -60,14 +59,14 @@ async def _prepare_database() -> bool:
 async def lifespan(app: FastAPI):
     global _consumer_task
 
-    logger.info("XGuard-AI starting …")
+    logger.info("XGuard-AI starting ...")
 
     try:
         inference_service.load(settings.models_path)
         explainer_service.load(settings.models_path)
-        logger.info("✓ ML models loaded successfully")
-    except Exception as e:
-        logger.error(f"❌ Failed to load ML models: {e}")
+        logger.info("ML models loaded successfully")
+    except Exception as exc:
+        logger.error(f"Failed to load ML models: {exc}")
         raise
 
     await _prepare_database()
@@ -99,8 +98,8 @@ async def lifespan(app: FastAPI):
     if db_session.engine is not None:
         try:
             await db_session.engine.dispose()
-        except Exception as e:
-            logger.warning(f"⚠ Error disposing engine: {e}")
+        except Exception as exc:
+            logger.warning(f"Error disposing engine: {exc}")
 
     logger.info("XGuard-AI shutdown complete")
 
@@ -117,9 +116,9 @@ app = FastAPI(
 if RATE_LIMIT_AVAILABLE and settings.rate_limit_enabled:
     app.state.limiter = limiter
     app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-    logger.info("✓ Rate limiting enabled")
+    logger.info("Rate limiting enabled")
 else:
-    logger.info("⚠ Rate limiting disabled (slowapi not installed or RATE_LIMIT_ENABLED=false)")
+    logger.info("Rate limiting disabled (slowapi not installed or RATE_LIMIT_ENABLED=false)")
 
 app.add_middleware(
     CORSMiddleware,

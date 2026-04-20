@@ -33,6 +33,7 @@ async def list_alerts(
     try:
         if not token.has_permission(TokenScope.ALERTS):
             from fastapi import HTTPException, status
+
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="This endpoint requires alerts scope.",
@@ -49,15 +50,17 @@ async def list_alerts(
         q = select(Alert).order_by(Alert.created_at.desc())
         count_q = select(func.count()).select_from(Alert)
         pred_count_q = select(func.count()).select_from(Prediction)
-        
+
         if attack_type:
             q = q.where(Alert.attack_type == attack_type)
             count_q = count_q.where(Alert.attack_type == attack_type)
 
         total = (await db.execute(count_q)).scalar_one()
         total_predictions = (await db.execute(pred_count_q)).scalar_one()
-        
-        rows = (await db.execute(q.offset((page - 1) * page_size).limit(page_size))).scalars().all()
+
+        rows = (
+            await db.execute(q.offset((page - 1) * page_size).limit(page_size))
+        ).scalars().all()
         return AlertsListResponse(
             alerts=[AlertResponse.model_validate(r) for r in rows],
             total=total,
