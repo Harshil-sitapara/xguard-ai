@@ -11,9 +11,12 @@ function ThemeProvider({
     <NextThemesProvider
       attribute="class"
       defaultTheme="dark"
-      forcedTheme="dark"
       enableSystem={false}
-      disableTransitionOnChange
+      enableColorScheme={false}
+      disableTransitionOnChange={false}
+      forcedTheme={undefined}
+      storageKey="xguard-theme"
+      themes={["light", "dark"]}
       {...props}
     >
       <ThemeHotkey />
