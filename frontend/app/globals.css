@@ -119,11 +119,21 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
+  }
   body {
-    @apply bg-background text-foreground;
-    }
+    @apply bg-background text-foreground transition-colors duration-300;
+  }
   html {
     @apply font-sans;
-    }
+  }
+  
+  /* Smooth theme transitions */
+  html, body, * {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  /* Prevent transition flash on page load */
+  html {
+    --scroll-behavior: auto;
+  }
 }
