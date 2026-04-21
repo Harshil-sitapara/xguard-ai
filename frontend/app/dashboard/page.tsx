@@ -16,7 +16,7 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-white dark:bg-neutral-950 text-neutral-600 dark:text-neutral-400 transition-colors duration-300">
+      <div className="flex h-screen w-full items-center justify-center bg-background text-muted-foreground transition-colors duration-300">
         <div className="flex flex-col items-center gap-6 text-center">
           <div className="relative">
             <div className="absolute inset-0 rounded-full bg-cyan-400/20 blur-3xl animate-pulse" />
@@ -36,7 +36,7 @@ export default function DashboardPage() {
               <div className="h-2 w-2 bg-cyan-500 dark:bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
               <div className="h-2 w-2 bg-cyan-500 dark:bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
             </div>
-            <p className="text-sm text-neutral-500 dark:text-neutral-500">Initializing threat detection system...</p>
+            <p className="text-sm text-muted-foreground">Initializing threat detection system...</p>
           </div>
         </div>
       </div>
@@ -44,7 +44,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white dark:bg-neutral-950 p-8 font-sans text-neutral-900 dark:text-neutral-100 selection:bg-cyan-400/20 transition-colors duration-300">
+    <main className="min-h-screen bg-background p-8 font-sans text-foreground selection:bg-cyan-400/20 transition-colors duration-300">
       {/* Header */}
       <div className="mb-8 flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
         <div className="flex items-center gap-4">
@@ -58,12 +58,12 @@ export default function DashboardPage() {
           />
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 px-4 py-2 shadow-sm backdrop-blur-sm transition-colors duration-300">
+          <div className="flex items-center gap-2 rounded-full border border-border bg-card/50 px-4 py-2 shadow-sm backdrop-blur-sm transition-colors duration-300">
             <div className="relative flex h-3 w-3">
               {connected && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>}
               <span className={`relative inline-flex rounded-full h-3 w-3 ${connected ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
             </div>
-            <span className="text-xs font-medium uppercase tracking-widest text-neutral-600 dark:text-neutral-300 transition-colors duration-300">{connected ? "Kafka Stream Active" : "Disconnected"}</span>
+            <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground transition-colors duration-300">{connected ? "Kafka Stream Active" : "Disconnected"}</span>
           </div>
           <ThemeToggle />
         </div>
@@ -86,8 +86,8 @@ export default function DashboardPage() {
         {/* Right Col: Live Feed */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">Live Network Packets</h2>
-            <span className="text-xs text-neutral-500 dark:text-neutral-500">Click any row for SHAP analysis</span>
+            <h2 className="text-lg font-semibold tracking-tight text-foreground">Live Network Packets</h2>
+            <span className="text-xs text-muted-foreground">Click any row for SHAP analysis</span>
           </div>
           <LiveFeed alerts={alerts} onSelectAlert={setSelectedAlertId} />
         </div>
