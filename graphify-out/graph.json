@@ -9,7 +9,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\test_inference.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_test_inference_py",
-      "community": 38,
+      "community": 39,
       "norm_label": "test_inference.py"
     },
     {
@@ -18,7 +18,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\alembic\\env.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_alembic_env_py",
-      "community": 2,
+      "community": 8,
       "norm_label": "env.py"
     },
     {
@@ -27,7 +27,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\alembic\\env.py",
       "source_location": "L23",
       "id": "env_run_migrations_offline",
-      "community": 2,
+      "community": 8,
       "norm_label": "run_migrations_offline()"
     },
     {
@@ -36,7 +36,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\alembic\\env.py",
       "source_location": "L34",
       "id": "env_do_run_migrations",
-      "community": 2,
+      "community": 8,
       "norm_label": "do_run_migrations()"
     },
     {
@@ -45,7 +45,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\alembic\\env.py",
       "source_location": "L40",
       "id": "env_run_migrations_online",
-      "community": 1,
+      "community": 8,
       "norm_label": "run_migrations_online()"
     },
     {
@@ -53,7 +53,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/alembic/env.py",
       "source_location": "L1",
-      "community": 2,
+      "community": 8,
       "norm_label": "alembic environment \u2014 async sqlalchemy setup.",
       "id": "env_rationale_1"
     },
@@ -63,7 +63,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\main.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_main_py",
-      "community": 2,
+      "community": 1,
       "norm_label": "main.py"
     },
     {
@@ -72,7 +72,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\main.py",
       "source_location": "L38",
       "id": "main_prepare_database",
-      "community": 2,
+      "community": 1,
       "norm_label": "_prepare_database()"
     },
     {
@@ -81,7 +81,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\main.py",
       "source_location": "L59",
       "id": "main_lifespan",
-      "community": 2,
+      "community": 1,
       "norm_label": "lifespan()"
     },
     {
@@ -89,7 +89,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/main.py",
       "source_location": "L1",
-      "community": 2,
+      "community": 1,
       "norm_label": "xguard-ai fastapi application  lifespan:   startup  \u2192 load model artefacts, run",
       "id": "main_rationale_1"
     },
@@ -98,7 +98,7 @@
       "file_type": "rationale",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\main.py",
       "source_location": "L39",
-      "community": 2,
+      "community": 1,
       "norm_label": "initialize the db engine and ensure tables exist.",
       "id": "main_rationale_39"
     },
@@ -108,7 +108,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\__init__.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_init_py",
-      "community": 39,
+      "community": 40,
       "norm_label": "__init__.py"
     },
     {
@@ -117,7 +117,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\deps.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_api_deps_py",
-      "community": 40,
+      "community": 41,
       "norm_label": "deps.py"
     },
     {
@@ -126,7 +126,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\__init__.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_api_init_py",
-      "community": 41,
+      "community": 42,
       "norm_label": "__init__.py"
     },
     {
@@ -135,7 +135,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\router.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_api_v1_router_py",
-      "community": 42,
+      "community": 43,
       "norm_label": "router.py"
     },
     {
@@ -144,7 +144,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\__init__.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_api_v1_init_py",
-      "community": 43,
+      "community": 44,
       "norm_label": "__init__.py"
     },
     {
@@ -153,7 +153,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\alerts.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_api_v1_routes_alerts_py",
-      "community": 1,
+      "community": 0,
       "norm_label": "alerts.py"
     },
     {
@@ -162,7 +162,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\alerts.py",
       "source_location": "L24",
       "id": "alerts_list_alerts",
-      "community": 1,
+      "community": 0,
       "norm_label": "list_alerts()"
     },
     {
@@ -171,7 +171,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\alerts.py",
       "source_location": "L81",
       "id": "alerts_alerts_live",
-      "community": 1,
+      "community": 0,
       "norm_label": "alerts_live()"
     },
     {
@@ -179,7 +179,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/api/v1/routes/alerts.py",
       "source_location": "L1",
-      "community": 1,
+      "community": 0,
       "norm_label": "alerts: rest history + websocket live stream.",
       "id": "alerts_rationale_1"
     },
@@ -188,7 +188,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/api/v1/routes/alerts.py",
       "source_location": "L32",
-      "community": 1,
+      "community": 0,
       "norm_label": "paginated alert history with optional attack_type filter.",
       "id": "alerts_rationale_32"
     },
@@ -197,7 +197,7 @@
       "file_type": "rationale",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\alerts.py",
       "source_location": "L82",
-      "community": 1,
+      "community": 0,
       "norm_label": "websocket endpoint \u2014 streams real-time alert json as events arrive.",
       "id": "alerts_rationale_82"
     },
@@ -225,7 +225,7 @@
       "source_file": "",
       "source_location": "",
       "id": "basemodel",
-      "community": 0,
+      "community": 4,
       "norm_label": "basemodel"
     },
     {
@@ -261,25 +261,25 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\health.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_api_v1_routes_health_py",
-      "community": 14,
+      "community": 15,
       "norm_label": "health.py"
     },
     {
       "label": "HealthResponse",
       "file_type": "code",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\health.py",
-      "source_location": "L16",
+      "source_location": "L17",
       "id": "health_healthresponse",
-      "community": 14,
+      "community": 15,
       "norm_label": "healthresponse"
     },
     {
       "label": "health()",
       "file_type": "code",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\health.py",
-      "source_location": "L24",
+      "source_location": "L27",
       "id": "health_health",
-      "community": 14,
+      "community": 15,
       "norm_label": "health()"
     },
     {
@@ -287,18 +287,18 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/api/v1/routes/health.py",
       "source_location": "L1",
-      "community": 14,
+      "community": 15,
       "norm_label": "get /api/v1/health \u2014 liveness and readiness check.",
       "id": "health_rationale_1"
     },
     {
       "label": "Returns service health. No auth required \u2014 suitable for load balancer checks.",
       "file_type": "rationale",
-      "source_file": "D:/MCA Project/ids-final/backend/app/api/v1/routes/health.py",
-      "source_location": "L25",
-      "community": 14,
-      "norm_label": "returns service health. no auth required \u2014 suitable for load balancer checks.",
-      "id": "health_rationale_25"
+      "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\health.py",
+      "source_location": "L28",
+      "id": "health_rationale_28",
+      "community": 15,
+      "norm_label": "returns service health. no auth required \u2014 suitable for load balancer checks."
     },
     {
       "label": "predict.py",
@@ -306,7 +306,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\predict.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_api_v1_routes_predict_py",
-      "community": 0,
+      "community": 4,
       "norm_label": "predict.py"
     },
     {
@@ -315,7 +315,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\predict.py",
       "source_location": "L23",
       "id": "predict_run_prediction",
-      "community": 0,
+      "community": 4,
       "norm_label": "_run_prediction()"
     },
     {
@@ -324,7 +324,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\predict.py",
       "source_location": "L58",
       "id": "predict_predict",
-      "community": 0,
+      "community": 4,
       "norm_label": "predict()"
     },
     {
@@ -333,7 +333,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\predict.py",
       "source_location": "L81",
       "id": "predict_predict_batch",
-      "community": 0,
+      "community": 4,
       "norm_label": "predict_batch()"
     },
     {
@@ -341,7 +341,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/api/v1/routes/predict.py",
       "source_location": "L1",
-      "community": 0,
+      "community": 4,
       "norm_label": "post /api/v1/predict  \u2014 single and batch prediction endpoints.",
       "id": "predict_rationale_1"
     },
@@ -350,7 +350,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/api/v1/routes/predict.py",
       "source_location": "L64",
-      "community": 0,
+      "community": 4,
       "norm_label": "classify a single network flow and return label + confidence.",
       "id": "predict_rationale_64"
     },
@@ -359,7 +359,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/api/v1/routes/predict.py",
       "source_location": "L87",
-      "community": 0,
+      "community": 4,
       "norm_label": "classify up to 1000 network flows in one request.",
       "id": "predict_rationale_87"
     },
@@ -369,7 +369,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\replay.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_api_v1_routes_replay_py",
-      "community": 3,
+      "community": 2,
       "norm_label": "replay.py"
     },
     {
@@ -378,7 +378,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\replay.py",
       "source_location": "L13",
       "id": "replay_replaystartrequest",
-      "community": 3,
+      "community": 0,
       "norm_label": "replaystartrequest"
     },
     {
@@ -387,7 +387,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\replay.py",
       "source_location": "L19",
       "id": "replay_replaystatusresponse",
-      "community": 3,
+      "community": 2,
       "norm_label": "replaystatusresponse"
     },
     {
@@ -396,7 +396,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\replay.py",
       "source_location": "L33",
       "id": "replay_allow_replay_control",
-      "community": 3,
+      "community": 2,
       "norm_label": "_allow_replay_control()"
     },
     {
@@ -405,7 +405,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\replay.py",
       "source_location": "L39",
       "id": "replay_to_response",
-      "community": 3,
+      "community": 2,
       "norm_label": "_to_response()"
     },
     {
@@ -414,7 +414,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\replay.py",
       "source_location": "L45",
       "id": "replay_replay_status",
-      "community": 3,
+      "community": 2,
       "norm_label": "replay_status()"
     },
     {
@@ -423,7 +423,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\replay.py",
       "source_location": "L59",
       "id": "replay_replay_start",
-      "community": 3,
+      "community": 2,
       "norm_label": "replay_start()"
     },
     {
@@ -432,7 +432,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\replay.py",
       "source_location": "L85",
       "id": "replay_replay_stop",
-      "community": 3,
+      "community": 2,
       "norm_label": "replay_stop()"
     },
     {
@@ -441,7 +441,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\__init__.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_api_v1_routes_init_py",
-      "community": 44,
+      "community": 45,
       "norm_label": "__init__.py"
     },
     {
@@ -450,7 +450,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\core\\config.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_core_config_py",
-      "community": 10,
+      "community": 11,
       "norm_label": "config.py"
     },
     {
@@ -459,7 +459,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\core\\config.py",
       "source_location": "L10",
       "id": "config_settings",
-      "community": 10,
+      "community": 11,
       "norm_label": "settings"
     },
     {
@@ -468,7 +468,7 @@
       "source_file": "",
       "source_location": "",
       "id": "basesettings",
-      "community": 10,
+      "community": 11,
       "norm_label": "basesettings"
     },
     {
@@ -477,7 +477,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\core\\config.py",
       "source_location": "L51",
       "id": "config_models_path",
-      "community": 10,
+      "community": 11,
       "norm_label": "models_path()"
     },
     {
@@ -486,7 +486,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\core\\config.py",
       "source_location": "L55",
       "id": "config_app_root",
-      "community": 10,
+      "community": 11,
       "norm_label": "app_root()"
     },
     {
@@ -495,7 +495,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\core\\config.py",
       "source_location": "L67",
       "id": "config_traffic_replay_dataset",
-      "community": 10,
+      "community": 11,
       "norm_label": "traffic_replay_dataset()"
     },
     {
@@ -504,7 +504,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\core\\config.py",
       "source_location": "L74",
       "id": "config_get_settings",
-      "community": 10,
+      "community": 11,
       "norm_label": "get_settings()"
     },
     {
@@ -513,7 +513,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\core\\logging.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_core_logging_py",
-      "community": 24,
+      "community": 25,
       "norm_label": "logging.py"
     },
     {
@@ -522,7 +522,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\core\\logging.py",
       "source_location": "L9",
       "id": "logging_setup_logging",
-      "community": 24,
+      "community": 25,
       "norm_label": "setup_logging()"
     },
     {
@@ -531,7 +531,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\core\\rate_limiter.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_core_rate_limiter_py",
-      "community": 15,
+      "community": 16,
       "norm_label": "rate_limiter.py"
     },
     {
@@ -540,7 +540,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\core\\rate_limiter.py",
       "source_location": "L13",
       "id": "rate_limiter_dummylimiter",
-      "community": 15,
+      "community": 16,
       "norm_label": "dummylimiter"
     },
     {
@@ -549,7 +549,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\core\\rate_limiter.py",
       "source_location": "L14",
       "id": "rate_limiter_dummylimiter_limit",
-      "community": 15,
+      "community": 16,
       "norm_label": ".limit()"
     },
     {
@@ -557,7 +557,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/core/rate_limiter.py",
       "source_location": "L1",
-      "community": 15,
+      "community": 16,
       "norm_label": "rate limiting configuration for fastapi endpoints",
       "id": "rate_limiter_rationale_1"
     },
@@ -566,7 +566,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/core/rate_limiter.py",
       "source_location": "L15",
-      "community": 15,
+      "community": 16,
       "norm_label": "no-op decorator if slowapi unavailable",
       "id": "rate_limiter_rationale_15"
     },
@@ -594,7 +594,7 @@
       "source_file": "",
       "source_location": "",
       "id": "str",
-      "community": 0,
+      "community": 4,
       "norm_label": "str"
     },
     {
@@ -630,7 +630,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\core\\security.py",
       "source_location": "L30",
       "id": "security_verifiedtoken_has_permission",
-      "community": 0,
+      "community": 4,
       "norm_label": ".has_permission()"
     },
     {
@@ -674,7 +674,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/core/security.py",
       "source_location": "L31",
-      "community": 0,
+      "community": 4,
       "norm_label": "check if token has required permission",
       "id": "security_rationale_31"
     },
@@ -702,7 +702,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\core\\__init__.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_core_init_py",
-      "community": 45,
+      "community": 46,
       "norm_label": "__init__.py"
     },
     {
@@ -711,7 +711,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\db\\base.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_db_base_py",
-      "community": 2,
+      "community": 1,
       "norm_label": "base.py"
     },
     {
@@ -720,7 +720,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\db\\base.py",
       "source_location": "L4",
       "id": "base_base",
-      "community": 2,
+      "community": 1,
       "norm_label": "base"
     },
     {
@@ -729,7 +729,7 @@
       "source_file": "",
       "source_location": "",
       "id": "declarativebase",
-      "community": 2,
+      "community": 1,
       "norm_label": "declarativebase"
     },
     {
@@ -737,7 +737,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/db/base.py",
       "source_location": "L5",
-      "community": 2,
+      "community": 1,
       "norm_label": "sqlalchemy declarative base shared by all orm models.",
       "id": "base_rationale_5"
     },
@@ -747,7 +747,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\db\\session.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_db_session_py",
-      "community": 2,
+      "community": 1,
       "norm_label": "session.py"
     },
     {
@@ -756,7 +756,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\db\\session.py",
       "source_location": "L21",
       "id": "session_normalize_database_url",
-      "community": 2,
+      "community": 1,
       "norm_label": "_normalize_database_url()"
     },
     {
@@ -765,7 +765,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\db\\session.py",
       "source_location": "L41",
       "id": "session_init_db",
-      "community": 2,
+      "community": 1,
       "norm_label": "init_db()"
     },
     {
@@ -774,7 +774,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\db\\session.py",
       "source_location": "L72",
       "id": "session_get_db",
-      "community": 2,
+      "community": 1,
       "norm_label": "get_db()"
     },
     {
@@ -783,7 +783,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\db\\session.py",
       "source_location": "L99",
       "id": "session_get_optional_db",
-      "community": 2,
+      "community": 1,
       "norm_label": "get_optional_db()"
     },
     {
@@ -791,7 +791,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/db/session.py",
       "source_location": "L22",
-      "community": 2,
+      "community": 1,
       "norm_label": "translate url query params unsupported by asyncpg into connect_args.",
       "id": "session_rationale_22"
     },
@@ -800,7 +800,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/db/session.py",
       "source_location": "L42",
-      "community": 2,
+      "community": 1,
       "norm_label": "initialize database engine and session factory. called during app startup.",
       "id": "session_rationale_42"
     },
@@ -809,7 +809,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/db/session.py",
       "source_location": "L73",
-      "community": 2,
+      "community": 1,
       "norm_label": "get async database session. raises error if database not available.",
       "id": "session_rationale_73"
     },
@@ -818,7 +818,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/db/session.py",
       "source_location": "L100",
-      "community": 2,
+      "community": 1,
       "norm_label": "yield a database session when available, otherwise fall back to none.",
       "id": "session_rationale_100"
     },
@@ -828,7 +828,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\db\\__init__.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_db_init_py",
-      "community": 46,
+      "community": 47,
       "norm_label": "__init__.py"
     },
     {
@@ -837,7 +837,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\db\\models\\alert.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_db_models_alert_py",
-      "community": 1,
+      "community": 0,
       "norm_label": "alert.py"
     },
     {
@@ -846,7 +846,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\db\\models\\alert.py",
       "source_location": "L12",
       "id": "alert_alert",
-      "community": 1,
+      "community": 0,
       "norm_label": "alert"
     },
     {
@@ -855,7 +855,7 @@
       "source_file": "",
       "source_location": "",
       "id": "base",
-      "community": 1,
+      "community": 0,
       "norm_label": "base"
     },
     {
@@ -864,7 +864,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\db\\models\\prediction.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_db_models_prediction_py",
-      "community": 1,
+      "community": 0,
       "norm_label": "prediction.py"
     },
     {
@@ -873,7 +873,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\db\\models\\prediction.py",
       "source_location": "L12",
       "id": "prediction_prediction",
-      "community": 1,
+      "community": 0,
       "norm_label": "prediction"
     },
     {
@@ -882,7 +882,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\db\\models\\__init__.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_db_models_init_py",
-      "community": 47,
+      "community": 48,
       "norm_label": "__init__.py"
     },
     {
@@ -891,7 +891,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\schemas\\alert.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_schemas_alert_py",
-      "community": 1,
+      "community": 0,
       "norm_label": "alert.py"
     },
     {
@@ -900,7 +900,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\schemas\\alert.py",
       "source_location": "L8",
       "id": "alert_alertresponse",
-      "community": 1,
+      "community": 0,
       "norm_label": "alertresponse"
     },
     {
@@ -909,7 +909,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\schemas\\alert.py",
       "source_location": "L22",
       "id": "alert_alertslistresponse",
-      "community": 1,
+      "community": 0,
       "norm_label": "alertslistresponse"
     },
     {
@@ -918,7 +918,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\schemas\\prediction.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_schemas_prediction_py",
-      "community": 0,
+      "community": 4,
       "norm_label": "prediction.py"
     },
     {
@@ -927,7 +927,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\schemas\\prediction.py",
       "source_location": "L9",
       "id": "prediction_predictrequest",
-      "community": 0,
+      "community": 4,
       "norm_label": "predictrequest"
     },
     {
@@ -936,7 +936,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\schemas\\prediction.py",
       "source_location": "L15",
       "id": "prediction_batchpredictrequest",
-      "community": 0,
+      "community": 4,
       "norm_label": "batchpredictrequest"
     },
     {
@@ -945,7 +945,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\schemas\\prediction.py",
       "source_location": "L19",
       "id": "prediction_predictionresponse",
-      "community": 0,
+      "community": 4,
       "norm_label": "predictionresponse"
     },
     {
@@ -954,7 +954,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\schemas\\prediction.py",
       "source_location": "L31",
       "id": "prediction_batchpredictionresponse",
-      "community": 0,
+      "community": 4,
       "norm_label": "batchpredictionresponse"
     },
     {
@@ -963,7 +963,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\schemas\\__init__.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_schemas_init_py",
-      "community": 48,
+      "community": 49,
       "norm_label": "__init__.py"
     },
     {
@@ -1012,10 +1012,28 @@
       "norm_label": ".__init__()"
     },
     {
+      "label": "loaded()",
+      "file_type": "code",
+      "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\explainer.py",
+      "source_location": "L49",
+      "id": "explainer_loaded",
+      "community": 9,
+      "norm_label": "loaded()"
+    },
+    {
+      "label": "load_error()",
+      "file_type": "code",
+      "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\explainer.py",
+      "source_location": "L53",
+      "id": "explainer_load_error",
+      "community": 9,
+      "norm_label": "load_error()"
+    },
+    {
       "label": ".load()",
       "file_type": "code",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\explainer.py",
-      "source_location": "L47",
+      "source_location": "L56",
       "id": "explainer_explainerservice_load",
       "community": 9,
       "norm_label": ".load()"
@@ -1024,7 +1042,7 @@
       "label": "._explain_sync()",
       "file_type": "code",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\explainer.py",
-      "source_location": "L73",
+      "source_location": "L85",
       "id": "explainer_explainerservice_explain_sync",
       "community": 9,
       "norm_label": "._explain_sync()"
@@ -1033,7 +1051,7 @@
       "label": ".explain()",
       "file_type": "code",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\explainer.py",
-      "source_location": "L125",
+      "source_location": "L137",
       "id": "explainer_explainerservice_explain",
       "community": 9,
       "norm_label": ".explain()"
@@ -1050,11 +1068,11 @@
     {
       "label": "Load SHAP explainer. Non-critical - predictions work without it.",
       "file_type": "rationale",
-      "source_file": "D:/MCA Project/ids-final/backend/app/services/explainer.py",
-      "source_location": "L48",
+      "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\explainer.py",
+      "source_location": "L57",
+      "id": "explainer_rationale_57",
       "community": 9,
-      "norm_label": "load shap explainer. non-critical - predictions work without it.",
-      "id": "explainer_rationale_48"
+      "norm_label": "load shap explainer. non-critical - predictions work without it."
     },
     {
       "label": "inference.py",
@@ -1143,7 +1161,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\inference.py",
       "source_location": "L93",
       "id": "inference_inferenceservice_predict",
-      "community": 8,
+      "community": 10,
       "norm_label": ".predict()"
     },
     {
@@ -1160,7 +1178,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/services/inference.py",
       "source_location": "L94",
-      "community": 8,
+      "community": 10,
       "norm_label": "async wrapper \u2014 runs cpu-bound inference in thread pool.",
       "id": "inference_rationale_94"
     },
@@ -1170,7 +1188,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\kafka_consumer.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_services_kafka_consumer_py",
-      "community": 1,
+      "community": 0,
       "norm_label": "kafka_consumer.py"
     },
     {
@@ -1179,7 +1197,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\kafka_consumer.py",
       "source_location": "L29",
       "id": "kafka_consumer_process_traffic_message",
-      "community": 1,
+      "community": 0,
       "norm_label": "process_traffic_message()"
     },
     {
@@ -1188,7 +1206,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\kafka_consumer.py",
       "source_location": "L101",
       "id": "kafka_consumer_consume_forever",
-      "community": 1,
+      "community": 0,
       "norm_label": "consume_forever()"
     },
     {
@@ -1196,7 +1214,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/services/kafka_consumer.py",
       "source_location": "L1",
-      "community": 1,
+      "community": 0,
       "norm_label": "xguard-ai a\u20ac\u201d kafka consumer background task  subscribes to the 'network-traffic",
       "id": "kafka_consumer_rationale_1"
     },
@@ -1205,7 +1223,7 @@
       "file_type": "rationale",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\kafka_consumer.py",
       "source_location": "L102",
-      "community": 1,
+      "community": 0,
       "norm_label": "connect to kafka and consume messages from the configured topic.      when the",
       "id": "kafka_consumer_rationale_102"
     },
@@ -1215,7 +1233,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\traffic_replay.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_services_traffic_replay_py",
-      "community": 3,
+      "community": 2,
       "norm_label": "traffic_replay.py"
     },
     {
@@ -1224,7 +1242,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\traffic_replay.py",
       "source_location": "L17",
       "id": "traffic_replay_replaystate",
-      "community": 3,
+      "community": 2,
       "norm_label": "replaystate"
     },
     {
@@ -1233,7 +1251,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\traffic_replay.py",
       "source_location": "L31",
       "id": "traffic_replay_trafficreplaymanager",
-      "community": 3,
+      "community": 2,
       "norm_label": "trafficreplaymanager"
     },
     {
@@ -1242,7 +1260,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\traffic_replay.py",
       "source_location": "L32",
       "id": "traffic_replay_trafficreplaymanager_init",
-      "community": 3,
+      "community": 2,
       "norm_label": ".__init__()"
     },
     {
@@ -1251,7 +1269,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\traffic_replay.py",
       "source_location": "L41",
       "id": "traffic_replay_trafficreplaymanager_enabled",
-      "community": 3,
+      "community": 2,
       "norm_label": "._enabled()"
     },
     {
@@ -1260,7 +1278,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\traffic_replay.py",
       "source_location": "L44",
       "id": "traffic_replay_trafficreplaymanager_dataset_path",
-      "community": 3,
+      "community": 2,
       "norm_label": "._dataset_path()"
     },
     {
@@ -1269,7 +1287,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\traffic_replay.py",
       "source_location": "L47",
       "id": "traffic_replay_trafficreplaymanager_producer_script",
-      "community": 3,
+      "community": 2,
       "norm_label": "._producer_script()"
     },
     {
@@ -1278,7 +1296,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\traffic_replay.py",
       "source_location": "L50",
       "id": "traffic_replay_trafficreplaymanager_scaler_path",
-      "community": 3,
+      "community": 2,
       "norm_label": "._scaler_path()"
     },
     {
@@ -1287,7 +1305,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\traffic_replay.py",
       "source_location": "L53",
       "id": "traffic_replay_trafficreplaymanager_background_path",
-      "community": 3,
+      "community": 2,
       "norm_label": "._background_path()"
     },
     {
@@ -1296,7 +1314,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\traffic_replay.py",
       "source_location": "L56",
       "id": "traffic_replay_trafficreplaymanager_is_running",
-      "community": 3,
+      "community": 2,
       "norm_label": "._is_running()"
     },
     {
@@ -1305,7 +1323,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\traffic_replay.py",
       "source_location": "L59",
       "id": "traffic_replay_trafficreplaymanager_base_state",
-      "community": 3,
+      "community": 2,
       "norm_label": "._base_state()"
     },
     {
@@ -1314,7 +1332,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\traffic_replay.py",
       "source_location": "L103",
       "id": "traffic_replay_trafficreplaymanager_status",
-      "community": 3,
+      "community": 2,
       "norm_label": ".status()"
     },
     {
@@ -1323,7 +1341,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\traffic_replay.py",
       "source_location": "L122",
       "id": "traffic_replay_trafficreplaymanager_start",
-      "community": 3,
+      "community": 2,
       "norm_label": ".start()"
     },
     {
@@ -1341,7 +1359,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\traffic_replay.py",
       "source_location": "L225",
       "id": "traffic_replay_trafficreplaymanager_capture_stderr",
-      "community": 3,
+      "community": 2,
       "norm_label": "._capture_stderr()"
     },
     {
@@ -1350,7 +1368,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\traffic_replay.py",
       "source_location": "L236",
       "id": "traffic_replay_trafficreplaymanager_watch_process",
-      "community": 3,
+      "community": 2,
       "norm_label": "._watch_process()"
     },
     {
@@ -1359,7 +1377,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\websocket_manager.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_services_websocket_manager_py",
-      "community": 1,
+      "community": 8,
       "norm_label": "websocket_manager.py"
     },
     {
@@ -1368,7 +1386,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\websocket_manager.py",
       "source_location": "L11",
       "id": "websocket_manager_websocketmanager",
-      "community": 1,
+      "community": 8,
       "norm_label": "websocketmanager"
     },
     {
@@ -1377,7 +1395,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\websocket_manager.py",
       "source_location": "L12",
       "id": "websocket_manager_websocketmanager_init",
-      "community": 1,
+      "community": 8,
       "norm_label": ".__init__()"
     },
     {
@@ -1386,7 +1404,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\websocket_manager.py",
       "source_location": "L15",
       "id": "websocket_manager_websocketmanager_connect",
-      "community": 1,
+      "community": 8,
       "norm_label": ".connect()"
     },
     {
@@ -1395,7 +1413,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\websocket_manager.py",
       "source_location": "L20",
       "id": "websocket_manager_websocketmanager_disconnect",
-      "community": 1,
+      "community": 8,
       "norm_label": ".disconnect()"
     },
     {
@@ -1404,7 +1422,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\websocket_manager.py",
       "source_location": "L24",
       "id": "websocket_manager_websocketmanager_broadcast",
-      "community": 1,
+      "community": 8,
       "norm_label": ".broadcast()"
     },
     {
@@ -1412,7 +1430,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/services/websocket_manager.py",
       "source_location": "L1",
-      "community": 1,
+      "community": 8,
       "norm_label": "websocket connection manager for broadcasting live alerts.",
       "id": "websocket_manager_rationale_1"
     },
@@ -1422,7 +1440,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\__init__.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_app_services_init_py",
-      "community": 49,
+      "community": 50,
       "norm_label": "__init__.py"
     },
     {
@@ -1431,7 +1449,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\tests\\conftest.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_tests_conftest_py",
-      "community": 2,
+      "community": 1,
       "norm_label": "conftest.py"
     },
     {
@@ -1440,7 +1458,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\tests\\conftest.py",
       "source_location": "L19",
       "id": "conftest_db_engine",
-      "community": 2,
+      "community": 1,
       "norm_label": "db_engine()"
     },
     {
@@ -1449,7 +1467,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\tests\\conftest.py",
       "source_location": "L28",
       "id": "conftest_db_session",
-      "community": 2,
+      "community": 1,
       "norm_label": "db_session()"
     },
     {
@@ -1458,7 +1476,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\tests\\conftest.py",
       "source_location": "L35",
       "id": "conftest_client",
-      "community": 2,
+      "community": 1,
       "norm_label": "client()"
     },
     {
@@ -1466,7 +1484,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/tests/conftest.py",
       "source_location": "L1",
-      "community": 2,
+      "community": 1,
       "norm_label": "shared test fixtures.",
       "id": "conftest_rationale_1"
     },
@@ -1476,7 +1494,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\tests\\test_explain.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_tests_test_explain_py",
-      "community": 18,
+      "community": 19,
       "norm_label": "test_explain.py"
     },
     {
@@ -1485,7 +1503,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\tests\\test_explain.py",
       "source_location": "L14",
       "id": "test_explain_test_explain_missing_prediction",
-      "community": 18,
+      "community": 19,
       "norm_label": "test_explain_missing_prediction()"
     },
     {
@@ -1494,7 +1512,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\tests\\test_explain.py",
       "source_location": "L20",
       "id": "test_explain_test_explain_after_predict",
-      "community": 18,
+      "community": 19,
       "norm_label": "test_explain_after_predict()"
     },
     {
@@ -1502,7 +1520,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/tests/test_explain.py",
       "source_location": "L1",
-      "community": 18,
+      "community": 19,
       "norm_label": "tests for /api/v1/explain endpoint.",
       "id": "test_explain_rationale_1"
     },
@@ -1512,7 +1530,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\tests\\test_predict.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_tests_test_predict_py",
-      "community": 12,
+      "community": 13,
       "norm_label": "test_predict.py"
     },
     {
@@ -1521,7 +1539,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\tests\\test_predict.py",
       "source_location": "L14",
       "id": "test_predict_test_predict_single",
-      "community": 12,
+      "community": 13,
       "norm_label": "test_predict_single()"
     },
     {
@@ -1530,7 +1548,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\tests\\test_predict.py",
       "source_location": "L28",
       "id": "test_predict_test_predict_no_api_key",
-      "community": 12,
+      "community": 13,
       "norm_label": "test_predict_no_api_key()"
     },
     {
@@ -1539,7 +1557,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\tests\\test_predict.py",
       "source_location": "L34",
       "id": "test_predict_test_predict_batch",
-      "community": 12,
+      "community": 13,
       "norm_label": "test_predict_batch()"
     },
     {
@@ -1548,7 +1566,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\tests\\test_predict.py",
       "source_location": "L47",
       "id": "test_predict_test_health",
-      "community": 12,
+      "community": 13,
       "norm_label": "test_health()"
     },
     {
@@ -1556,7 +1574,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/tests/test_predict.py",
       "source_location": "L1",
-      "community": 12,
+      "community": 13,
       "norm_label": "tests for /api/v1/predict endpoints.",
       "id": "test_predict_rationale_1"
     },
@@ -1566,7 +1584,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\backend\\tests\\__init__.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_backend_tests_init_py",
-      "community": 50,
+      "community": 51,
       "norm_label": "__init__.py"
     },
     {
@@ -1575,7 +1593,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\eslint.config.mjs",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_eslint_config_mjs",
-      "community": 51,
+      "community": 52,
       "norm_label": "eslint.config.mjs"
     },
     {
@@ -1584,7 +1602,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\next-env.d.ts",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_next_env_d_ts",
-      "community": 52,
+      "community": 53,
       "norm_label": "next-env.d.ts"
     },
     {
@@ -1593,7 +1611,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\next.config.mjs",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_next_config_mjs",
-      "community": 53,
+      "community": 54,
       "norm_label": "next.config.mjs"
     },
     {
@@ -1602,7 +1620,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\postcss.config.mjs",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_postcss_config_mjs",
-      "community": 54,
+      "community": 55,
       "norm_label": "postcss.config.mjs"
     },
     {
@@ -1611,7 +1629,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\tailwind.config.js",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_tailwind_config_js",
-      "community": 55,
+      "community": 56,
       "norm_label": "tailwind.config.js"
     },
     {
@@ -1620,7 +1638,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\app\\layout.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_app_layout_tsx",
-      "community": 25,
+      "community": 26,
       "norm_label": "layout.tsx"
     },
     {
@@ -1629,7 +1647,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\app\\layout.tsx",
       "source_location": "L16",
       "id": "layout_rootlayout",
-      "community": 25,
+      "community": 26,
       "norm_label": "rootlayout()"
     },
     {
@@ -1638,7 +1656,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\app\\page.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_app_page_tsx",
-      "community": 26,
+      "community": 27,
       "norm_label": "page.tsx"
     },
     {
@@ -1647,7 +1665,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\app\\page.tsx",
       "source_location": "L3",
       "id": "page_homepage",
-      "community": 26,
+      "community": 27,
       "norm_label": "homepage()"
     },
     {
@@ -1656,7 +1674,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\app\\dashboard\\page.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_app_dashboard_page_tsx",
-      "community": 56,
+      "community": 57,
       "norm_label": "page.tsx"
     },
     {
@@ -1665,7 +1683,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\theme-provider.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_theme_provider_tsx",
-      "community": 16,
+      "community": 17,
       "norm_label": "theme-provider.tsx"
     },
     {
@@ -1674,7 +1692,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\theme-provider.tsx",
       "source_location": "L7",
       "id": "theme_provider_themeprovider",
-      "community": 16,
+      "community": 17,
       "norm_label": "themeprovider()"
     },
     {
@@ -1683,7 +1701,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\theme-provider.tsx",
       "source_location": "L30",
       "id": "theme_provider_istypingtarget",
-      "community": 16,
+      "community": 17,
       "norm_label": "istypingtarget()"
     },
     {
@@ -1692,7 +1710,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\theme-provider.tsx",
       "source_location": "L43",
       "id": "theme_provider_themeanalyticssync",
-      "community": 16,
+      "community": 17,
       "norm_label": "themeanalyticssync()"
     },
     {
@@ -1701,7 +1719,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\theme-provider.tsx",
       "source_location": "L67",
       "id": "theme_provider_themehotkey",
-      "community": 16,
+      "community": 17,
       "norm_label": "themehotkey()"
     },
     {
@@ -1710,7 +1728,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\theme-toggle.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_theme_toggle_tsx",
-      "community": 27,
+      "community": 28,
       "norm_label": "theme-toggle.tsx"
     },
     {
@@ -1719,7 +1737,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\theme-toggle.tsx",
       "source_location": "L7",
       "id": "theme_toggle_themetoggle",
-      "community": 27,
+      "community": 28,
       "norm_label": "themetoggle()"
     },
     {
@@ -1728,7 +1746,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\analytics\\app-analytics.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_analytics_app_analytics_tsx",
-      "community": 28,
+      "community": 29,
       "norm_label": "app-analytics.tsx"
     },
     {
@@ -1737,7 +1755,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\analytics\\app-analytics.tsx",
       "source_location": "L15",
       "id": "app_analytics_appanalytics",
-      "community": 28,
+      "community": 29,
       "norm_label": "appanalytics()"
     },
     {
@@ -1746,7 +1764,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\dashboard\\attack-chart.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_dashboard_attack_chart_tsx",
-      "community": 57,
+      "community": 58,
       "norm_label": "attack-chart.tsx"
     },
     {
@@ -1755,7 +1773,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\dashboard\\live-feed.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_dashboard_live_feed_tsx",
-      "community": 20,
+      "community": 21,
       "norm_label": "live-feed.tsx"
     },
     {
@@ -1764,7 +1782,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\dashboard\\live-feed.tsx",
       "source_location": "L19",
       "id": "live_feed_handlescroll",
-      "community": 20,
+      "community": 21,
       "norm_label": "handlescroll()"
     },
     {
@@ -1773,7 +1791,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\dashboard\\live-feed.tsx",
       "source_location": "L28",
       "id": "live_feed_scrolltotop",
-      "community": 20,
+      "community": 21,
       "norm_label": "scrolltotop()"
     },
     {
@@ -1782,7 +1800,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\dashboard\\shap-dialog.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_dashboard_shap_dialog_tsx",
-      "community": 58,
+      "community": 59,
       "norm_label": "shap-dialog.tsx"
     },
     {
@@ -1791,7 +1809,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\dashboard\\stat-cards.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_dashboard_stat_cards_tsx",
-      "community": 29,
+      "community": 30,
       "norm_label": "stat-cards.tsx"
     },
     {
@@ -1800,7 +1818,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\dashboard\\stat-cards.tsx",
       "source_location": "L5",
       "id": "stat_cards_statcards",
-      "community": 29,
+      "community": 30,
       "norm_label": "statcards()"
     },
     {
@@ -1809,7 +1827,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\dashboard\\traffic-replay-controls.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_dashboard_traffic_replay_controls_tsx",
-      "community": 4,
+      "community": 3,
       "norm_label": "traffic-replay-controls.tsx"
     },
     {
@@ -1818,7 +1836,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\dashboard\\traffic-replay-controls.tsx",
       "source_location": "L30",
       "id": "traffic_replay_controls_buildfallbackstatus",
-      "community": 4,
+      "community": 3,
       "norm_label": "buildfallbackstatus()"
     },
     {
@@ -1827,7 +1845,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\dashboard\\traffic-replay-controls.tsx",
       "source_location": "L63",
       "id": "traffic_replay_controls_loadstatus",
-      "community": 4,
+      "community": 3,
       "norm_label": "loadstatus()"
     },
     {
@@ -1836,7 +1854,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\dashboard\\traffic-replay-controls.tsx",
       "source_location": "L92",
       "id": "traffic_replay_controls_handlestart",
-      "community": 4,
+      "community": 3,
       "norm_label": "handlestart()"
     },
     {
@@ -1845,7 +1863,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\dashboard\\traffic-replay-controls.tsx",
       "source_location": "L123",
       "id": "traffic_replay_controls_handlestop",
-      "community": 4,
+      "community": 3,
       "norm_label": "handlestop()"
     },
     {
@@ -1854,7 +1872,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\landing\\landing-page.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_landing_landing_page_tsx",
-      "community": 59,
+      "community": 60,
       "norm_label": "landing-page.tsx"
     },
     {
@@ -1863,7 +1881,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\badge.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_ui_badge_tsx",
-      "community": 30,
+      "community": 31,
       "norm_label": "badge.tsx"
     },
     {
@@ -1872,7 +1890,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\badge.tsx",
       "source_location": "L30",
       "id": "badge_badge",
-      "community": 30,
+      "community": 31,
       "norm_label": "badge()"
     },
     {
@@ -1881,7 +1899,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\button.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_ui_button_tsx",
-      "community": 31,
+      "community": 32,
       "norm_label": "button.tsx"
     },
     {
@@ -1890,7 +1908,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\button.tsx",
       "source_location": "L59",
       "id": "button_cn",
-      "community": 31,
+      "community": 32,
       "norm_label": "cn()"
     },
     {
@@ -1899,7 +1917,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\card.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_ui_card_tsx",
-      "community": 19,
+      "community": 20,
       "norm_label": "card.tsx"
     },
     {
@@ -1908,7 +1926,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\card.tsx",
       "source_location": "L14",
       "id": "card_cn",
-      "community": 19,
+      "community": 20,
       "norm_label": "cn()"
     },
     {
@@ -1917,7 +1935,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\card.tsx",
       "source_location": "L46",
       "id": "card_carddescription",
-      "community": 19,
+      "community": 20,
       "norm_label": "carddescription()"
     },
     {
@@ -1926,7 +1944,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\card.tsx",
       "source_location": "L56",
       "id": "card_cardaction",
-      "community": 19,
+      "community": 20,
       "norm_label": "cardaction()"
     },
     {
@@ -1935,7 +1953,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\chart.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_ui_chart_tsx",
-      "community": 21,
+      "community": 22,
       "norm_label": "chart.tsx"
     },
     {
@@ -1944,7 +1962,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\chart.tsx",
       "source_location": "L32",
       "id": "chart_usechart",
-      "community": 21,
+      "community": 22,
       "norm_label": "usechart()"
     },
     {
@@ -1953,7 +1971,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\chart.tsx",
       "source_location": "L67",
       "id": "chart_cn",
-      "community": 21,
+      "community": 22,
       "norm_label": "cn()"
     },
     {
@@ -1962,7 +1980,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\collapsible.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_ui_collapsible_tsx",
-      "community": 22,
+      "community": 23,
       "norm_label": "collapsible.tsx"
     },
     {
@@ -1971,7 +1989,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\collapsible.tsx",
       "source_location": "L13",
       "id": "collapsible_usecollapsiblecontext",
-      "community": 22,
+      "community": 23,
       "norm_label": "usecollapsiblecontext()"
     },
     {
@@ -1980,7 +1998,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\collapsible.tsx",
       "source_location": "L75",
       "id": "collapsible_collapsiblecontent",
-      "community": 22,
+      "community": 23,
       "norm_label": "collapsiblecontent()"
     },
     {
@@ -1989,7 +2007,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\dialog.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_ui_dialog_tsx",
-      "community": 13,
+      "community": 14,
       "norm_label": "dialog.tsx"
     },
     {
@@ -1998,7 +2016,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\dialog.tsx",
       "source_location": "L10",
       "id": "dialog_dialog",
-      "community": 13,
+      "community": 14,
       "norm_label": "dialog()"
     },
     {
@@ -2007,7 +2025,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\dialog.tsx",
       "source_location": "L16",
       "id": "dialog_dialogtrigger",
-      "community": 13,
+      "community": 14,
       "norm_label": "dialogtrigger()"
     },
     {
@@ -2016,7 +2034,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\dialog.tsx",
       "source_location": "L22",
       "id": "dialog_dialogportal",
-      "community": 13,
+      "community": 14,
       "norm_label": "dialogportal()"
     },
     {
@@ -2025,7 +2043,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\dialog.tsx",
       "source_location": "L28",
       "id": "dialog_dialogclose",
-      "community": 13,
+      "community": 14,
       "norm_label": "dialogclose()"
     },
     {
@@ -2034,7 +2052,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\dialog.tsx",
       "source_location": "L63",
       "id": "dialog_cn",
-      "community": 13,
+      "community": 14,
       "norm_label": "cn()"
     },
     {
@@ -2043,7 +2061,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\scroll-area.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_ui_scroll_area_tsx",
-      "community": 23,
+      "community": 24,
       "norm_label": "scroll-area.tsx"
     },
     {
@@ -2052,7 +2070,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\scroll-area.tsx",
       "source_location": "L8",
       "id": "scroll_area_scrollarea",
-      "community": 23,
+      "community": 24,
       "norm_label": "scrollarea()"
     },
     {
@@ -2061,7 +2079,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\scroll-area.tsx",
       "source_location": "L31",
       "id": "scroll_area_scrollbar",
-      "community": 23,
+      "community": 24,
       "norm_label": "scrollbar()"
     },
     {
@@ -2070,7 +2088,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\separator.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_ui_separator_tsx",
-      "community": 32,
+      "community": 33,
       "norm_label": "separator.tsx"
     },
     {
@@ -2079,7 +2097,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\separator.tsx",
       "source_location": "L8",
       "id": "separator_separator",
-      "community": 32,
+      "community": 33,
       "norm_label": "separator()"
     },
     {
@@ -2088,7 +2106,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\skeleton.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_ui_skeleton_tsx",
-      "community": 33,
+      "community": 34,
       "norm_label": "skeleton.tsx"
     },
     {
@@ -2097,7 +2115,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\skeleton.tsx",
       "source_location": "L3",
       "id": "skeleton_skeleton",
-      "community": 33,
+      "community": 34,
       "norm_label": "skeleton()"
     },
     {
@@ -2106,7 +2124,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\table.tsx",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_components_ui_table_tsx",
-      "community": 17,
+      "community": 18,
       "norm_label": "table.tsx"
     },
     {
@@ -2115,7 +2133,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\table.tsx",
       "source_location": "L7",
       "id": "table_table",
-      "community": 17,
+      "community": 18,
       "norm_label": "table()"
     },
     {
@@ -2124,7 +2142,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\table.tsx",
       "source_location": "L22",
       "id": "table_tableheader",
-      "community": 17,
+      "community": 18,
       "norm_label": "tableheader()"
     },
     {
@@ -2133,7 +2151,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\table.tsx",
       "source_location": "L32",
       "id": "table_tablebody",
-      "community": 17,
+      "community": 18,
       "norm_label": "tablebody()"
     },
     {
@@ -2142,7 +2160,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\components\\ui\\table.tsx",
       "source_location": "L46",
       "id": "table_cn",
-      "community": 17,
+      "community": 18,
       "norm_label": "cn()"
     },
     {
@@ -2151,7 +2169,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\hooks\\use-alerts.ts",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_hooks_use_alerts_ts",
-      "community": 34,
+      "community": 35,
       "norm_label": "use-alerts.ts"
     },
     {
@@ -2160,7 +2178,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\hooks\\use-alerts.ts",
       "source_location": "L6",
       "id": "use_alerts_usealerts",
-      "community": 34,
+      "community": 35,
       "norm_label": "usealerts()"
     },
     {
@@ -2169,7 +2187,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\analytics.ts",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_lib_analytics_ts",
-      "community": 4,
+      "community": 3,
       "norm_label": "analytics.ts"
     },
     {
@@ -2178,7 +2196,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\analytics.ts",
       "source_location": "L33",
       "id": "analytics_parsebooleanenv",
-      "community": 4,
+      "community": 3,
       "norm_label": "parsebooleanenv()"
     },
     {
@@ -2187,7 +2205,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\analytics.ts",
       "source_location": "L86",
       "id": "analytics_hasfirebaseconfig",
-      "community": 4,
+      "community": 3,
       "norm_label": "hasfirebaseconfig()"
     },
     {
@@ -2196,7 +2214,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\analytics.ts",
       "source_location": "L93",
       "id": "analytics_normalizevalue",
-      "community": 4,
+      "community": 3,
       "norm_label": "normalizevalue()"
     },
     {
@@ -2205,7 +2223,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\analytics.ts",
       "source_location": "L101",
       "id": "analytics_toeventparams",
-      "community": 4,
+      "community": 3,
       "norm_label": "toeventparams()"
     },
     {
@@ -2214,7 +2232,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\analytics.ts",
       "source_location": "L111",
       "id": "analytics_warnmissingconfig",
-      "community": 4,
+      "community": 3,
       "norm_label": "warnmissingconfig()"
     },
     {
@@ -2223,7 +2241,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\analytics.ts",
       "source_location": "L122",
       "id": "analytics_warndisabledstate",
-      "community": 4,
+      "community": 3,
       "norm_label": "warndisabledstate()"
     },
     {
@@ -2232,7 +2250,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\analytics.ts",
       "source_location": "L131",
       "id": "analytics_isdevelopmentlikeenvironment",
-      "community": 4,
+      "community": 3,
       "norm_label": "isdevelopmentlikeenvironment()"
     },
     {
@@ -2241,7 +2259,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\analytics.ts",
       "source_location": "L144",
       "id": "analytics_shoulddisableanalytics",
-      "community": 4,
+      "community": 3,
       "norm_label": "shoulddisableanalytics()"
     },
     {
@@ -2250,7 +2268,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\analytics.ts",
       "source_location": "L162",
       "id": "analytics_getuserproperties",
-      "community": 4,
+      "community": 3,
       "norm_label": "getuserproperties()"
     },
     {
@@ -2259,7 +2277,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\analytics.ts",
       "source_location": "L171",
       "id": "analytics_applyanalyticscontext",
-      "community": 4,
+      "community": 3,
       "norm_label": "applyanalyticscontext()"
     },
     {
@@ -2268,7 +2286,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\analytics.ts",
       "source_location": "L178",
       "id": "analytics_getanalyticsclient",
-      "community": 4,
+      "community": 3,
       "norm_label": "getanalyticsclient()"
     },
     {
@@ -2277,7 +2295,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\analytics.ts",
       "source_location": "L223",
       "id": "analytics_resolveroutegroup",
-      "community": 4,
+      "community": 3,
       "norm_label": "resolveroutegroup()"
     },
     {
@@ -2286,7 +2304,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\analytics.ts",
       "source_location": "L235",
       "id": "analytics_setanalyticscontext",
-      "community": 4,
+      "community": 3,
       "norm_label": "setanalyticscontext()"
     },
     {
@@ -2295,7 +2313,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\analytics.ts",
       "source_location": "L254",
       "id": "analytics_trackevent",
-      "community": 4,
+      "community": 3,
       "norm_label": "trackevent()"
     },
     {
@@ -2304,7 +2322,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\analytics.ts",
       "source_location": "L267",
       "id": "analytics_trackpageview",
-      "community": 4,
+      "community": 3,
       "norm_label": "trackpageview()"
     },
     {
@@ -2439,7 +2457,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\utils.ts",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_frontend_lib_utils_ts",
-      "community": 35,
+      "community": 36,
       "norm_label": "utils.ts"
     },
     {
@@ -2448,7 +2466,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\frontend\\lib\\utils.ts",
       "source_location": "L4",
       "id": "utils_cn",
-      "community": 35,
+      "community": 36,
       "norm_label": "cn()"
     },
     {
@@ -2538,7 +2556,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\scripts\\__init__.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_ml_scripts_init_py",
-      "community": 60,
+      "community": 61,
       "norm_label": "__init__.py"
     },
     {
@@ -2547,7 +2565,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\config.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_ml_src_config_py",
-      "community": 36,
+      "community": 37,
       "norm_label": "config.py"
     },
     {
@@ -2555,7 +2573,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/ml/src/config.py",
       "source_location": "L1",
-      "community": 36,
+      "community": 37,
       "norm_label": "xguard-ai ml configuration central config for paths, label mappings, and hyperpa",
       "id": "config_rationale_1"
     },
@@ -2592,7 +2610,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\generate_mixed_data.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_ml_src_generate_mixed_data_py",
-      "community": 37,
+      "community": 38,
       "norm_label": "generate_mixed_data.py"
     },
     {
@@ -2601,7 +2619,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\generate_mixed_data.py",
       "source_location": "L9",
       "id": "generate_mixed_data_main",
-      "community": 37,
+      "community": 38,
       "norm_label": "main()"
     },
     {
@@ -2610,7 +2628,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\preprocess.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_ml_src_preprocess_py",
-      "community": 11,
+      "community": 12,
       "norm_label": "preprocess.py"
     },
     {
@@ -2619,7 +2637,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\preprocess.py",
       "source_location": "L40",
       "id": "preprocess_extract_zip",
-      "community": 11,
+      "community": 12,
       "norm_label": "_extract_zip()"
     },
     {
@@ -2628,7 +2646,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\preprocess.py",
       "source_location": "L51",
       "id": "preprocess_load_csvs",
-      "community": 11,
+      "community": 12,
       "norm_label": "_load_csvs()"
     },
     {
@@ -2637,7 +2655,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\preprocess.py",
       "source_location": "L85",
       "id": "preprocess_clean",
-      "community": 11,
+      "community": 12,
       "norm_label": "_clean()"
     },
     {
@@ -2646,7 +2664,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\preprocess.py",
       "source_location": "L90",
       "id": "preprocess_encode_labels",
-      "community": 11,
+      "community": 12,
       "norm_label": "_encode_labels()"
     },
     {
@@ -2655,7 +2673,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\preprocess.py",
       "source_location": "L102",
       "id": "preprocess_run",
-      "community": 11,
+      "community": 12,
       "norm_label": "run()"
     },
     {
@@ -2663,7 +2681,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/ml/src/preprocess.py",
       "source_location": "L1",
-      "community": 11,
+      "community": 12,
       "norm_label": "xguard-ai \u2014 data preprocessing pipeline  steps:   1. extract machinelearningcsv.",
       "id": "preprocess_rationale_1"
     },
@@ -2673,7 +2691,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\shap_analysis.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_ml_src_shap_analysis_py",
-      "community": 0,
+      "community": 4,
       "norm_label": "shap_analysis.py"
     },
     {
@@ -2682,7 +2700,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\shap_analysis.py",
       "source_location": "L33",
       "id": "shap_analysis_run",
-      "community": 0,
+      "community": 4,
       "norm_label": "run()"
     },
     {
@@ -2690,7 +2708,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/ml/src/shap_analysis.py",
       "source_location": "L1",
-      "community": 0,
+      "community": 4,
       "norm_label": "xguard-ai \u2014 shap global analysis on xgboost model  produces:   - shap_summary.pn",
       "id": "shap_analysis_rationale_1"
     },
@@ -2700,7 +2718,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\train_lstm.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_ml_src_train_lstm_py",
-      "community": 8,
+      "community": 10,
       "norm_label": "train_lstm.py"
     },
     {
@@ -2709,7 +2727,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\train_lstm.py",
       "source_location": "L36",
       "id": "train_lstm_build_sequences",
-      "community": 8,
+      "community": 10,
       "norm_label": "_build_sequences()"
     },
     {
@@ -2718,7 +2736,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\train_lstm.py",
       "source_location": "L45",
       "id": "train_lstm_build_model",
-      "community": 8,
+      "community": 10,
       "norm_label": "_build_model()"
     },
     {
@@ -2727,7 +2745,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\train_lstm.py",
       "source_location": "L64",
       "id": "train_lstm_run",
-      "community": 8,
+      "community": 10,
       "norm_label": "run()"
     },
     {
@@ -2735,7 +2753,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/ml/src/train_lstm.py",
       "source_location": "L1",
-      "community": 8,
+      "community": 10,
       "norm_label": "xguard-ai \u2014 lstm training (research comparison model)  lstm is trained for acade",
       "id": "train_lstm_rationale_1"
     },
@@ -2744,7 +2762,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/ml/src/train_lstm.py",
       "source_location": "L37",
-      "community": 8,
+      "community": 10,
       "norm_label": "sliding-window sequence builder.",
       "id": "train_lstm_rationale_37"
     },
@@ -2754,7 +2772,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\train_rf.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_ml_src_train_rf_py",
-      "community": 8,
+      "community": 10,
       "norm_label": "train_rf.py"
     },
     {
@@ -2763,7 +2781,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\train_rf.py",
       "source_location": "L28",
       "id": "train_rf_load",
-      "community": 8,
+      "community": 10,
       "norm_label": "_load()"
     },
     {
@@ -2772,7 +2790,7 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\train_rf.py",
       "source_location": "L38",
       "id": "train_rf_run",
-      "community": 8,
+      "community": 10,
       "norm_label": "run()"
     },
     {
@@ -2780,7 +2798,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/ml/src/train_rf.py",
       "source_location": "L1",
-      "community": 8,
+      "community": 10,
       "norm_label": "xguard-ai \u2014 random forest training (baseline model)  usage:     cd ml/src && pyt",
       "id": "train_rf_rationale_1"
     },
@@ -2826,15 +2844,33 @@
       "source_file": "D:\\MCA Project\\ids-final\\ml\\src\\__init__.py",
       "source_location": "L1",
       "id": "d_mca_project_ids_final_ml_src_init_py",
-      "community": 61,
+      "community": 62,
       "norm_label": "__init__.py"
+    },
+    {
+      "label": "Returns service health. No auth required \u2014 suitable for load balancer checks.",
+      "file_type": "rationale",
+      "source_file": "D:/MCA Project/ids-final/backend/app/api/v1/routes/health.py",
+      "source_location": "L25",
+      "community": 63,
+      "norm_label": "returns service health. no auth required \u2014 suitable for load balancer checks.",
+      "id": "health_rationale_25"
+    },
+    {
+      "label": "Load SHAP explainer. Non-critical - predictions work without it.",
+      "file_type": "rationale",
+      "source_file": "D:/MCA Project/ids-final/backend/app/services/explainer.py",
+      "source_location": "L48",
+      "community": 64,
+      "norm_label": "load shap explainer. non-critical - predictions work without it.",
+      "id": "explainer_rationale_48"
     },
     {
       "label": "Initialize the DB engine and ensure tables exist.",
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/main.py",
       "source_location": "L40",
-      "community": 2,
+      "community": 1,
       "norm_label": "initialize the db engine and ensure tables exist.",
       "id": "main_rationale_40"
     },
@@ -2843,7 +2879,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/api/v1/routes/alerts.py",
       "source_location": "L83",
-      "community": 1,
+      "community": 0,
       "norm_label": "websocket endpoint \u2014 streams real-time alert json as events arrive.",
       "id": "alerts_rationale_83"
     },
@@ -2852,7 +2888,7 @@
       "file_type": "rationale",
       "source_file": "D:/MCA Project/ids-final/backend/app/services/kafka_consumer.py",
       "source_location": "L95",
-      "community": 1,
+      "community": 0,
       "norm_label": "connect to kafka and consume messages from network-traffic topic.     gracefully",
       "id": "kafka_consumer_rationale_95"
     }
@@ -3498,7 +3534,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\health.py",
-      "source_location": "L16",
+      "source_location": "L17",
       "weight": 1.0,
       "_src": "health_healthresponse",
       "_tgt": "basemodel",
@@ -3702,7 +3738,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\health.py",
-      "source_location": "L16",
+      "source_location": "L17",
       "weight": 1.0,
       "_src": "d_mca_project_ids_final_backend_app_api_v1_routes_health_py",
       "_tgt": "health_healthresponse",
@@ -3714,7 +3750,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\health.py",
-      "source_location": "L24",
+      "source_location": "L27",
       "weight": 1.0,
       "_src": "d_mca_project_ids_final_backend_app_api_v1_routes_health_py",
       "_tgt": "health_health",
@@ -3738,7 +3774,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\health.py",
-      "source_location": "L26",
+      "source_location": "L29",
       "weight": 1.0,
       "_src": "health_health",
       "_tgt": "health_healthresponse",
@@ -3750,12 +3786,12 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\api\\v1\\routes\\health.py",
-      "source_location": "L25",
+      "source_location": "L28",
       "weight": 1.0,
-      "_src": "health_rationale_25",
+      "_src": "health_rationale_28",
       "_tgt": "health_health",
       "source": "health_health",
-      "target": "health_rationale_25",
+      "target": "health_rationale_28",
       "confidence_score": 1.0
     },
     {
@@ -5439,6 +5475,30 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\explainer.py",
+      "source_location": "L49",
+      "weight": 1.0,
+      "_src": "d_mca_project_ids_final_backend_app_services_explainer_py",
+      "_tgt": "explainer_loaded",
+      "source": "d_mca_project_ids_final_backend_app_services_explainer_py",
+      "target": "explainer_loaded",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\explainer.py",
+      "source_location": "L53",
+      "weight": 1.0,
+      "_src": "d_mca_project_ids_final_backend_app_services_explainer_py",
+      "_tgt": "explainer_load_error",
+      "source": "d_mca_project_ids_final_backend_app_services_explainer_py",
+      "target": "explainer_load_error",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\explainer.py",
@@ -5454,7 +5514,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\explainer.py",
-      "source_location": "L118",
+      "source_location": "L130",
       "weight": 1.0,
       "_src": "explainer_explainerservice_explain_sync",
       "_tgt": "explainer_shapresult",
@@ -5466,7 +5526,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\explainer.py",
-      "source_location": "L122",
+      "source_location": "L134",
       "weight": 1.0,
       "_src": "explainer_explainerservice_explain_sync",
       "_tgt": "explainer_build_reason",
@@ -5490,7 +5550,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\explainer.py",
-      "source_location": "L47",
+      "source_location": "L56",
       "weight": 1.0,
       "_src": "explainer_explainerservice",
       "_tgt": "explainer_explainerservice_load",
@@ -5502,7 +5562,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\explainer.py",
-      "source_location": "L73",
+      "source_location": "L85",
       "weight": 1.0,
       "_src": "explainer_explainerservice",
       "_tgt": "explainer_explainerservice_explain_sync",
@@ -5514,7 +5574,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\explainer.py",
-      "source_location": "L125",
+      "source_location": "L137",
       "weight": 1.0,
       "_src": "explainer_explainerservice",
       "_tgt": "explainer_explainerservice_explain",
@@ -5526,12 +5586,12 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "D:\\MCA Project\\ids-final\\backend\\app\\services\\explainer.py",
-      "source_location": "L48",
+      "source_location": "L57",
       "weight": 1.0,
-      "_src": "explainer_rationale_48",
+      "_src": "explainer_rationale_57",
       "_tgt": "explainer_explainerservice_load",
       "source": "explainer_explainerservice_load",
-      "target": "explainer_rationale_48",
+      "target": "explainer_rationale_57",
       "confidence_score": 1.0
     },
     {

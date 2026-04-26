@@ -163,6 +163,10 @@ See `.env.example` for defaults.
 - `NEXT_PUBLIC_WS_URL`: `ws://localhost:8000/api/v1`
 - `NEXT_PUBLIC_API_TOKEN`: must match `API_SECRET_KEY`
 
+For Vercel production, `NEXT_PUBLIC_API_TOKEN` must be set explicitly.
+If it is blank, the dashboard can still receive unauthenticated WebSocket traffic,
+but the authenticated REST calls used for alert history and SHAP explanations will fail.
+
 ## ML Pipeline
 
 The ML pipeline lives in `ml/` and trains three models (RF, XGBoost, LSTM). XGBoost is served in production due to speed, size, and SHAP compatibility.
@@ -234,6 +238,10 @@ pytest
 
 - `model_loaded=false` on `/health`:
   - Ensure `ml/models` exists and is mounted to `/app/models` in Docker.
+- `shap_loaded=false` on `/health`:
+  - Check `shap_error` in the health response for the exact load failure.
+  - Rebuild the deployment with the pinned backend ML dependency versions from `backend/requirements.txt`.
+  - Verify `ml/models/xgboost/shap_background.pkl` is present in the deployment image.
 - No live updates:
   - Confirm `kafka` is healthy and the producer is sending to `network-traffic`.
   - Check `NEXT_PUBLIC_WS_URL` and `NEXT_PUBLIC_API_TOKEN`.
