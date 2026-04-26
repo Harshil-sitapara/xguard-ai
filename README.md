@@ -1,12 +1,3 @@
----
-title: XGuard AI IDS Backend
-emoji: 🛡️
-colorFrom: blue
-colorTo: indigo
-sdk: docker
-pinned: true
----
-
 # XGuard-AI
 
 Explainable AI-powered Network Intrusion Detection System (IDS) with real-time Kafka ingestion, FastAPI inference, SHAP explainability, PostgreSQL persistence, and a Next.js analyst dashboard.

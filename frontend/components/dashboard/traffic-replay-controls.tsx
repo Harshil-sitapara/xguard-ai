@@ -22,6 +22,7 @@ import {
   stopTrafficReplay,
   TrafficReplayStatus,
 } from "@/lib/api";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 const POLL_MS = 2000;
@@ -97,6 +98,14 @@ export function TrafficReplayControls() {
         attack_only: attackOnly,
       });
       setStatus(next);
+      void trackEvent("replay_start_success", {
+        attack_only: attackOnly,
+        limit: Number(limit) || 0,
+        rate: Number(rate) || 0,
+        replay_mode: next.message?.toLowerCase().includes("held-out")
+          ? "held_out"
+          : "packaged",
+      });
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Could not start traffic replay.";
@@ -105,6 +114,7 @@ export function TrafficReplayControls() {
         last_error: message,
         message,
       }));
+      void trackEvent("replay_error", { action: "start" });
     } finally {
       setSubmitting(false);
     }
@@ -115,6 +125,7 @@ export function TrafficReplayControls() {
     try {
       const next = await stopTrafficReplay();
       setStatus(next);
+      void trackEvent("replay_stop_success");
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Could not stop traffic replay.";
@@ -123,6 +134,7 @@ export function TrafficReplayControls() {
         last_error: message,
         message,
       }));
+      void trackEvent("replay_error", { action: "stop" });
     } finally {
       setSubmitting(false);
     }
@@ -132,12 +144,12 @@ export function TrafficReplayControls() {
   const canControl = Boolean(status?.enabled && status?.available);
   const isHeldOutReplay = status?.message?.toLowerCase().includes("held-out") ?? false;
   const toneClass = status?.last_error
-    ? "border-rose-900/60 bg-rose-950/10 text-rose-200"
+    ? "border-rose-400 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/10 text-rose-900 dark:text-rose-200"
     : running
-      ? "border-emerald-900/60 bg-emerald-950/20 text-emerald-200"
+      ? "border-emerald-400 dark:border-emerald-900/60 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-900 dark:text-emerald-200"
       : canControl
-        ? "border-cyan-900/60 bg-cyan-950/20 text-cyan-200"
-        : "border-neutral-800 bg-neutral-950/30 text-neutral-300";
+        ? "border-cyan-400 dark:border-cyan-900/60 bg-cyan-50 dark:bg-cyan-950/20 text-cyan-900 dark:text-cyan-200"
+        : "border-border bg-muted text-foreground";
 
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
@@ -161,12 +173,12 @@ export function TrafficReplayControls() {
               className={cn(
                 "rounded-full border px-2 py-0.5 text-[0.65rem] font-medium uppercase tracking-[0.2em] whitespace-nowrap",
                 status?.last_error
-                  ? "border-rose-800/70 text-rose-300"
+                  ? "border-rose-300 dark:border-rose-800/70 text-rose-700 dark:text-rose-300"
                   : running
-                    ? "border-emerald-800/70 text-emerald-300"
+                    ? "border-emerald-300 dark:border-emerald-800/70 text-emerald-700 dark:text-emerald-300"
                     : canControl
-                      ? "border-cyan-800/70 text-cyan-300"
-                      : "border-neutral-700 text-neutral-400"
+                      ? "border-cyan-300 dark:border-cyan-800/70 text-cyan-700 dark:text-cyan-300"
+                      : "border-gray-300 dark:border-neutral-700 text-gray-600 dark:text-neutral-400"
               )}
             >
               {status?.last_error ? "Issue" : running ? "Running" : canControl ? "Ready" : "Unavailable"}
@@ -176,7 +188,7 @@ export function TrafficReplayControls() {
                 type="button"
                 variant="outline"
                 size="sm"
-                className="border-current/20 bg-black/10 text-inherit hover:bg-black/20"
+                className="border-current/20 bg-card hover:bg-muted text-foreground"
               >
                 Controls
                 <ChevronDown
@@ -199,7 +211,7 @@ export function TrafficReplayControls() {
                   step="1"
                   value={rate}
                   onChange={(event) => setRate(event.target.value)}
-                  className="w-full rounded-md border border-current/15 bg-black/20 px-3 py-2 text-sm tracking-normal text-neutral-100 outline-none transition focus:border-cyan-500"
+                  className="w-full rounded-md border border-input bg-card px-3 py-2 text-sm tracking-normal text-foreground outline-none transition focus:border-cyan-500"
                 />
               </label>
 
@@ -212,7 +224,7 @@ export function TrafficReplayControls() {
                   step="50"
                   value={limit}
                   onChange={(event) => setLimit(event.target.value)}
-                  className="w-full rounded-md border border-current/15 bg-black/20 px-3 py-2 text-sm tracking-normal text-neutral-100 outline-none transition focus:border-cyan-500"
+                  className="w-full rounded-md border border-input bg-card px-3 py-2 text-sm tracking-normal text-foreground outline-none transition focus:border-cyan-500"
                 />
               </label>
 
@@ -234,7 +246,7 @@ export function TrafficReplayControls() {
                 size="sm"
                 onClick={handleStart}
                 disabled={loading || submitting || running || !canControl}
-                className="bg-cyan-500 text-slate-950 hover:bg-cyan-400"
+                className="bg-cyan-500 text-slate-50 hover:bg-cyan-400 dark:text-slate-950"
               >
                 <Play className="size-3.5" />
                 {running ? "Running..." : "Start"}
@@ -244,7 +256,7 @@ export function TrafficReplayControls() {
                 variant="outline"
                 onClick={handleStop}
                 disabled={loading || submitting || !running}
-                className="border-current/20 bg-black/10 text-neutral-100 hover:bg-black/20"
+                className="border-current/20 bg-card text-foreground hover:bg-muted"
               >
                 <Square className="size-3.5" />
                 Stop
@@ -254,7 +266,7 @@ export function TrafficReplayControls() {
             <p
               className={cn(
                 "text-xs",
-                status?.last_error ? "text-rose-300" : "text-inherit/75"
+                status?.last_error ? "text-rose-600 dark:text-rose-300" : "text-inherit/75"
               )}
             >
               {status?.message ?? "Replay status unavailable. Start the backend to enable replay."}
