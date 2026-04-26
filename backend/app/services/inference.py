@@ -13,7 +13,7 @@ from pathlib import Path
 import joblib
 import numpy as np
 from starlette.concurrency import run_in_threadpool
-from xgboost import XGBClassifier
+import xgboost as xgb
 
 from app.core.config import settings
 
@@ -44,7 +44,7 @@ class PredictionResult:
 
 class InferenceService:
     def __init__(self) -> None:
-        self._model: XGBClassifier | None = None
+        self._model: xgb.Booster | None = None
         self._scaler = None
         self._label_encoder = None
         self._feature_names: list[str] = []
@@ -57,7 +57,7 @@ class InferenceService:
         self._feature_names = joblib.load(prep / "feature_names.pkl")
 
         xgb_path = models_path / "xgboost" / "model.json"
-        self._model = XGBClassifier()
+        self._model = xgb.Booster()
         self._model.load_model(str(xgb_path))
         logger.info("Model loaded. Classes: %s", list(self._label_encoder.classes_))
 
@@ -70,12 +70,19 @@ class InferenceService:
         return list(self._label_encoder.classes_)
 
     def _predict_sync(self, raw_features: dict[str, float]) -> PredictionResult:
+        if self._model is None:
+            raise RuntimeError("Inference model not loaded")
+
         # Build feature vector in correct order; missing features default to 0.0
         vec = np.array(
             [raw_features.get(f, 0.0) for f in self._feature_names], dtype=np.float32
         ).reshape(1, -1)
         vec_scaled = self._scaler.transform(vec)
-        proba = self._model.predict_proba(vec_scaled)[0]
+        proba = np.asarray(self._model.predict(xgb.DMatrix(vec_scaled)), dtype=np.float32)
+        if proba.ndim == 1:
+            # Binary models can return the positive-class probability only.
+            proba = np.array([[1.0 - float(proba[0]), float(proba[0])]], dtype=np.float32)
+        proba = proba[0]
         class_idx = int(np.argmax(proba))
         label = self._label_encoder.classes_[class_idx]
         confidence = float(proba[class_idx])
