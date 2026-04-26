@@ -15,6 +15,8 @@ No auth required. Used by Docker health checks and load balancers.
 {
   "status": "ok",
   "model_loaded": true,
+  "shap_loaded": true,
+  "shap_error": null,
   "model_type": "xgboost",
   "environment": "development"
 }

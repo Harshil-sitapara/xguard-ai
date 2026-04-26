@@ -92,6 +92,10 @@ curl -X POST http://localhost:8000/api/v1/predict \
   -d '{"features": {"Flow Duration": 1000, "Total Fwd Packets": 5}}'
 ```
 
+If you run the frontend locally or on Vercel, set `NEXT_PUBLIC_API_TOKEN`
+to the same API key value the dashboard should send to the backend.
+A blank token will break the REST calls used for alerts history and SHAP lookups.
+
 ---
 
 ## Step 5 — Simulate Live Traffic (Kafka Producer)

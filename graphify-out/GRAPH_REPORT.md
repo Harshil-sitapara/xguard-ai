@@ -1,11 +1,11 @@
-# Graph Report - D:\MCA Project\ids-final  (2026-04-20)
+# Graph Report - D:\MCA Project\ids-final  (2026-04-26)
 
 ## Corpus Check
-- 73 files · ~19,439 words
+- 73 files · ~62,709 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 270 nodes · 371 edges · 56 communities detected
+- 272 nodes · 373 edges · 56 communities detected
 - Extraction: 70% EXTRACTED · 30% INFERRED · 0% AMBIGUOUS · INFERRED: 112 edges (avg confidence: 0.63)
 - Token cost: 0 input · 0 output
 
@@ -102,7 +102,7 @@ Cohesion: 0.2
 Nodes (9): _allow_replay_control(), replay_start(), replay_status(), replay_stop(), ReplayStartRequest, ReplayStatusResponse, _to_response(), ReplayState (+1 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.19
+Cohesion: 0.2
 Nodes (14): Alert, AlertResponse, AlertsListResponse, alerts_live(), list_alerts(), Alerts: REST history + WebSocket live stream., Paginated alert history with optional attack_type filter., WebSocket endpoint — streams real-time alert JSON as events arrive. (+6 more)
 
 ### Community 3 - "Community 3"
@@ -114,28 +114,28 @@ Cohesion: 0.16
 Nodes (8): Base, SQLAlchemy declarative base shared by all ORM models., Shared test fixtures., DeclarativeBase, lifespan(), _prepare_database(), XGuard-AI FastAPI application.  Lifespan:   startup -> load model artefacts,, Initialize the DB engine and ensure tables exist.
 
 ### Community 5 - "Community 5"
+Cohesion: 0.19
+Nodes (10): _default_dataset_path(), main(), _prepare_rows(), produce(), XGuard-AI Kafka Traffic Producer  Reads rows from a processed parquet split an, main(), XGuard-AI — Pipeline Runner CLI  Usage:     python scripts/run_pipeline.py --ste, _load() (+2 more)
+
+### Community 6 - "Community 6"
 Cohesion: 0.18
 Nodes (6): XGuard-AI — Cross-Model Evaluation Report  Loads metrics.json from all three tra, run(), InferenceService, PredictionResult, XGuard-AI — Inference Service  Loads the XGBoost model and preprocessor artefa, _severity()
 
-### Community 6 - "Community 6"
-Cohesion: 0.21
-Nodes (10): _default_dataset_path(), main(), _prepare_rows(), produce(), XGuard-AI Kafka Traffic Producer  Reads rows from a processed parquet split an, main(), XGuard-AI — Pipeline Runner CLI  Usage:     python scripts/run_pipeline.py --ste, _load() (+2 more)
-
 ### Community 7 - "Community 7"
+Cohesion: 0.2
+Nodes (5): _build_reason(), ExplainerService, XGuard-AI — SHAP Explainer Service  Generates per-prediction SHAP explanations, Load SHAP explainer. Non-critical - predictions work without it., SHAPResult
+
+### Community 8 - "Community 8"
 Cohesion: 0.18
 Nodes (4): Alembic environment — async SQLAlchemy setup., run_migrations_online(), WebSocket connection manager for broadcasting live alerts., WebSocketManager
 
-### Community 8 - "Community 8"
+### Community 9 - "Community 9"
 Cohesion: 0.21
 Nodes (9): Async wrapper — runs CPU-bound inference in thread pool., _build_model(), _build_sequences(), XGuard-AI — LSTM Training (Research Comparison Model)  LSTM is trained for acade, Sliding-window sequence builder., run(), _load(), XGuard-AI — Random Forest Training (Baseline Model)  Usage:     cd ml/src && pyt (+1 more)
 
-### Community 9 - "Community 9"
-Cohesion: 0.24
-Nodes (5): _build_reason(), ExplainerService, XGuard-AI — SHAP Explainer Service  Generates per-prediction SHAP explanations u, Load SHAP explainer. Non-critical - predictions work without it., SHAPResult
-
 ### Community 10 - "Community 10"
 Cohesion: 0.31
-Nodes (8): get_db(), get_optional_db(), init_db(), _normalize_database_url(), Yield a database session when available, otherwise fall back to None., Translate URL query params unsupported by asyncpg into connect_args., Initialize database engine and session factory. Called during app startup., Get async database session. Raises error if database not available.
+Nodes (8): get_db(), get_optional_db(), init_db(), _normalize_database_url(), Translate URL query params unsupported by asyncpg into connect_args., Initialize database engine and session factory. Called during app startup., Get async database session. Raises error if database not available., Yield a database session when available, otherwise fall back to None.
 
 ### Community 11 - "Community 11"
 Cohesion: 0.33
@@ -386,11 +386,11 @@ Nodes (0):
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `process_traffic_message()` connect `Community 2` to `Community 8`, `Community 0`, `Community 9`, `Community 7`?**
-  _High betweenness centrality (0.081) - this node is a cross-community bridge._
+- **Why does `process_traffic_message()` connect `Community 2` to `Community 0`, `Community 9`, `Community 8`, `Community 7`?**
+  _High betweenness centrality (0.083) - this node is a cross-community bridge._
 - **Why does `Prediction` connect `Community 2` to `Community 0`, `Community 3`, `Community 4`?**
   _High betweenness centrality (0.072) - this node is a cross-community bridge._
-- **Why does `Base` connect `Community 4` to `Community 2`, `Community 7`?**
+- **Why does `Base` connect `Community 4` to `Community 8`, `Community 2`?**
   _High betweenness centrality (0.071) - this node is a cross-community bridge._
 - **Are the 11 inferred relationships involving `VerifiedToken` (e.g. with `Alerts: REST history + WebSocket live stream.` and `Paginated alert history with optional attack_type filter.`) actually correct?**
   _`VerifiedToken` has 11 INFERRED edges - model-reasoned connections that need verification._
