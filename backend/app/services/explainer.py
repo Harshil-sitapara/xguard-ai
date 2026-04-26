@@ -43,9 +43,19 @@ class ExplainerService:
         self._feature_names: list[str] = []
         self._label_encoder = None
         self._loaded: bool = False
+        self._load_error: str | None = None
+
+    @property
+    def loaded(self) -> bool:
+        return self._loaded
+
+    @property
+    def load_error(self) -> str | None:
+        return self._load_error
 
     def load(self, models_path: Path) -> None:
         """Load SHAP explainer. Non-critical - predictions work without it."""
+        self._load_error = None
         try:
             xgb_dir = models_path / "xgboost"
             model = xgb.Booster()
@@ -54,7 +64,8 @@ class ExplainerService:
             # Try to load SHAP background data (optional)
             bg_path = xgb_dir / "shap_background.pkl"
             if not bg_path.exists():
-                logger.warning(f"⚠ SHAP background file not found: {bg_path}")
+                self._load_error = f"SHAP background file not found: {bg_path}"
+                logger.warning("⚠ %s", self._load_error)
                 logger.info("  Explanations will not be available (predictions still work)")
                 self._loaded = False
                 return
@@ -66,7 +77,8 @@ class ExplainerService:
             self._loaded = True
             logger.info("✓ SHAP explainer loaded (background=%d rows)", len(bg_data["background"]))
         except Exception as e:
-            logger.warning(f"⚠ Failed to load SHAP explainer: {e}")
+            self._load_error = f"{type(e).__name__}: {e}"
+            logger.warning("⚠ Failed to load SHAP explainer: %s", self._load_error)
             logger.info("  Predictions will work without detailed explanations")
             self._loaded = False
 
