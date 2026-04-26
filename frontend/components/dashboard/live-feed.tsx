@@ -33,15 +33,15 @@ export function LiveFeed({ alerts, onSelectAlert }: { alerts: Alert[], onSelectA
   };
 
   return (
-    <div className="rounded-md border border-neutral-800 bg-neutral-950 relative">
+    <div className="rounded-md border border-border bg-card relative">
       <Table>
-        <TableHeader className="bg-neutral-900/50">
-          <TableRow className="border-neutral-800 hover:bg-neutral-900/50">
-            <TableHead className="w-[150px] text-neutral-400">Timestamp</TableHead>
-            <TableHead className="text-neutral-400">Connection (Src → Dst)</TableHead>
-            <TableHead className="text-neutral-400">Status</TableHead>
-            <TableHead className="text-right text-neutral-400">Confidence</TableHead>
-            <TableHead className="text-right text-neutral-400">XAI</TableHead>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[150px]">Timestamp</TableHead>
+            <TableHead>Connection (Src → Dst)</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="text-right">Confidence</TableHead>
+            <TableHead className="text-right">XAI</TableHead>
           </TableRow>
         </TableHeader>
       </Table>
@@ -56,14 +56,14 @@ export function LiveFeed({ alerts, onSelectAlert }: { alerts: Alert[], onSelectA
             {displayedAlerts.slice(0, 100).map((alert) => (
               <TableRow 
                 key={alert.id} 
-                className="border-neutral-800 border-b transition-colors hover:bg-neutral-900/80 cursor-pointer"
+                className="border-b transition-colors hover:bg-muted cursor-pointer"
                 onClick={() => onSelectAlert(alert.prediction_id)}
               >
-                <TableCell className="font-mono text-xs text-neutral-500 w-[150px]">
+                <TableCell className="font-mono text-xs text-muted-foreground w-[150px]">
                   {format(new Date(alert.created_at), "HH:mm:ss.SSS")}
                 </TableCell>
-                <TableCell className="font-mono text-xs text-neutral-300">
-                  {alert.source_ip} <span className="text-neutral-600">→</span> {alert.destination_ip}
+                <TableCell className="font-mono text-xs">
+                  {alert.source_ip} <span className="text-muted-foreground">→</span> {alert.destination_ip}
                 </TableCell>
                 <TableCell>
                   {(alert.is_attack ?? (alert.attack_type && alert.attack_type !== "Benign")) ? (
@@ -76,7 +76,7 @@ export function LiveFeed({ alerts, onSelectAlert }: { alerts: Alert[], onSelectA
                     </Badge>
                   )}
                 </TableCell>
-                <TableCell className="text-right font-mono text-xs text-neutral-400">
+                <TableCell className="text-right font-mono text-xs text-foreground/70">
                   {(alert.confidence * 100).toFixed(2)}%
                 </TableCell>
                 <TableCell className="text-right">
@@ -88,7 +88,7 @@ export function LiveFeed({ alerts, onSelectAlert }: { alerts: Alert[], onSelectA
             ))}
             {displayedAlerts.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="h-24 text-center text-neutral-500">
+                <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
                   Waiting for network traffic...
                 </TableCell>
               </TableRow>

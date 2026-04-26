@@ -1,6 +1,8 @@
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google"
 
 import "./globals.css"
+import { AppAnalytics } from "@/components/analytics/app-analytics";
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils";
 
@@ -23,7 +25,12 @@ export default function RootLayout({
       className={cn("antialiased", fontMono.variable, "font-sans", geist.variable)}
     >
       <body suppressHydrationWarning>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <Suspense fallback={null}>
+            <AppAnalytics />
+          </Suspense>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )

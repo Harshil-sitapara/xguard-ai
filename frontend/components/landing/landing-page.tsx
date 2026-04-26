@@ -837,33 +837,33 @@ function HeroPreview() {
             </div>
 
             <div className="mt-5 grid gap-4 2xl:grid-cols-[minmax(0,1.08fr)_250px]">
-              <div className="min-w-0 rounded-[1.35rem] border border-slate-800/80 bg-slate-950 p-4 text-slate-100">
+              <div className="min-w-0 rounded-[1.35rem] border border-slate-200/80 bg-white/92 p-4 text-slate-700 dark:border-slate-800/80 dark:bg-slate-950 dark:text-slate-100">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-700 dark:text-cyan-300">
                       Selected incident
                     </p>
-                    <p className="mt-2 text-2xl font-semibold text-white">
+                    <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">
                       Port Scan
                     </p>
                   </div>
-                  <span className="rounded-full bg-rose-400/15 px-3 py-1 text-xs font-semibold text-rose-200">
+                  <span className="rounded-full bg-rose-500/12 px-3 py-1 text-xs font-semibold text-rose-700 dark:bg-rose-400/15 dark:text-rose-200">
                     92% confidence
                   </span>
                 </div>
 
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+                  <div className="rounded-2xl border border-slate-200/80 bg-slate-50/90 px-4 py-3 dark:border-white/10 dark:bg-white/5">
+                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
                       Source
                     </p>
-                    <p className="mt-2 font-mono text-sm text-white">10.0.2.18</p>
+                    <p className="mt-2 font-mono text-sm text-slate-900 dark:text-white">10.0.2.18</p>
                   </div>
-                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
+                  <div className="rounded-2xl border border-slate-200/80 bg-slate-50/90 px-4 py-3 dark:border-white/10 dark:bg-white/5">
+                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
                       Destination
                     </p>
-                    <p className="mt-2 font-mono text-sm text-white">172.16.0.21</p>
+                    <p className="mt-2 font-mono text-sm text-slate-900 dark:text-white">172.16.0.21</p>
                   </div>
                 </div>
 
@@ -902,7 +902,7 @@ function HeroPreview() {
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-3">
+          {/* <div className="grid gap-4 sm:grid-cols-3">
             <div className="rounded-[1.5rem] border border-slate-200/80 bg-slate-50/80 p-4 dark:border-slate-800 dark:bg-slate-900/70">
               <div className="flex items-center justify-between">
                 <div>
@@ -1004,7 +1004,7 @@ function HeroPreview() {
                 </span>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
@@ -1101,12 +1101,12 @@ function FeatureSignal({
   toneClass: string;
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-      <div className="flex items-center justify-between text-xs text-slate-300">
+    <div className="rounded-2xl border border-slate-200/80 bg-slate-50/90 p-3 dark:border-white/10 dark:bg-white/5">
+      <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-300">
         <span>{feature}</span>
         <span>feature weight</span>
       </div>
-      <div className="mt-2 h-2 rounded-full bg-white/10">
+      <div className="mt-2 h-2 rounded-full bg-slate-200 dark:bg-white/10">
         <div className={cn("h-2 rounded-full", widthClass, toneClass)} />
       </div>
     </div>

@@ -137,3 +137,14 @@
     --scroll-behavior: auto;
   }
 }
+
+/* PNG brand lockup - readable in both light and dark interfaces */
+:not(.dark) .brand-logo {
+  filter: brightness(0.72) contrast(1.16) saturate(1.08)
+    drop-shadow(0 8px 18px rgba(15, 23, 42, 0.12));
+}
+
+.dark .brand-logo {
+  filter: brightness(1.05) contrast(1.03)
+    drop-shadow(0 10px 24px rgba(8, 145, 178, 0.08));
+}

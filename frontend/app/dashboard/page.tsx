@@ -51,10 +51,10 @@ export default function DashboardPage() {
           <Image
             src="/brand/log_with_name.png"
             alt="XGuard-AI"
-            width={280}
-            height={70}
+            width={508}
+            height={164}
             priority
-            className="h-auto w-auto max-w-sm"
+            className="brand-logo h-auto w-[180px] sm:w-[220px] xl:w-[260px]"
           />
         </div>
         <div className="flex items-center gap-4">
