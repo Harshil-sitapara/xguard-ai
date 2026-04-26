@@ -1,11 +1,11 @@
 # Graph Report - D:\MCA Project\ids-final  (2026-04-26)
 
 ## Corpus Check
-- 81 files · ~76,548 words
+- 81 files · ~76,975 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 321 nodes · 453 edges · 65 communities detected
+- 322 nodes · 454 edges · 65 communities detected
 - Extraction: 72% EXTRACTED · 28% INFERRED · 0% AMBIGUOUS · INFERRED: 125 edges (avg confidence: 0.62)
 - Token cost: 0 input · 0 output
 
@@ -108,31 +108,31 @@ Nodes (30): Alert, AlertResponse, AlertsListResponse, alerts_live(), list_alerts
 
 ### Community 1 - "Community 1"
 Cohesion: 0.1
-Nodes (17): Base, SQLAlchemy declarative base shared by all ORM models., Shared test fixtures., DeclarativeBase, lifespan(), _prepare_database(), XGuard-AI FastAPI Application  Lifespan:   startup  → load model artefacts, run, Initialize the DB engine and ensure tables exist. (+9 more)
+Nodes (15): XGuard-AI — Cross-Model Evaluation Report  Loads metrics.json from all three tra, run(), InferenceService, PredictionResult, XGuard-AI — Inference Service  Loads the XGBoost model and preprocessor artefa, Async wrapper — runs CPU-bound inference in thread pool., _severity(), _build_model() (+7 more)
 
 ### Community 2 - "Community 2"
+Cohesion: 0.1
+Nodes (17): Base, SQLAlchemy declarative base shared by all ORM models., Shared test fixtures., DeclarativeBase, lifespan(), _prepare_database(), XGuard-AI FastAPI Application  Lifespan:   startup  → load model artefacts, run, Initialize the DB engine and ensure tables exist. (+9 more)
+
+### Community 3 - "Community 3"
 Cohesion: 0.21
 Nodes (8): _allow_replay_control(), replay_start(), replay_status(), replay_stop(), ReplayStatusResponse, _to_response(), ReplayState, TrafficReplayManager
 
-### Community 3 - "Community 3"
+### Community 4 - "Community 4"
 Cohesion: 0.16
 Nodes (15): applyAnalyticsContext(), getAnalyticsClient(), getUserProperties(), hasFirebaseConfig(), isDevelopmentLikeEnvironment(), setAnalyticsContext(), shouldDisableAnalytics(), toEventParams() (+7 more)
 
-### Community 4 - "Community 4"
+### Community 5 - "Community 5"
 Cohesion: 0.22
 Nodes (15): BaseModel, predict(), predict_batch(), POST /api/v1/predict  — single and batch prediction endpoints., Classify a single network flow and return label + confidence., Classify up to 1000 network flows in one request., _run_prediction(), BatchPredictionResponse (+7 more)
 
-### Community 5 - "Community 5"
+### Community 6 - "Community 6"
 Cohesion: 0.33
 Nodes (13): fetchExplanation(), fetchHistory(), fetchReplayStatus(), getApiBaseUrl(), getWebSocketBaseUrl(), isSecureBrowserContext(), readErrorMessage(), startTrafficReplay() (+5 more)
 
-### Community 6 - "Community 6"
+### Community 7 - "Community 7"
 Cohesion: 0.19
 Nodes (10): _default_dataset_path(), main(), _prepare_rows(), produce(), XGuard-AI — Kafka Traffic Producer (Demo / Simulation)  Reads rows from the proc, main(), XGuard-AI — Pipeline Runner CLI  Usage:     python scripts/run_pipeline.py --ste, _load() (+2 more)
-
-### Community 7 - "Community 7"
-Cohesion: 0.18
-Nodes (6): XGuard-AI — Cross-Model Evaluation Report  Loads metrics.json from all three tra, run(), InferenceService, PredictionResult, XGuard-AI — Inference Service  Loads the XGBoost model and preprocessor artefa, _severity()
 
 ### Community 8 - "Community 8"
 Cohesion: 0.18
@@ -143,47 +143,47 @@ Cohesion: 0.2
 Nodes (5): _build_reason(), ExplainerService, XGuard-AI — SHAP Explainer Service  Generates per-prediction SHAP explanations u, Load SHAP explainer. Non-critical - predictions work without it., SHAPResult
 
 ### Community 10 - "Community 10"
-Cohesion: 0.21
-Nodes (9): Async wrapper — runs CPU-bound inference in thread pool., _build_model(), _build_sequences(), XGuard-AI — LSTM Training (Research Comparison Model)  LSTM is trained for acade, Sliding-window sequence builder., run(), _load(), XGuard-AI — Random Forest Training (Baseline Model)  Usage:     cd ml/src && pyt (+1 more)
-
-### Community 11 - "Community 11"
 Cohesion: 0.33
 Nodes (3): BaseSettings, get_settings(), Settings
 
-### Community 12 - "Community 12"
+### Community 11 - "Community 11"
 Cohesion: 0.48
 Nodes (6): _clean(), _encode_labels(), _extract_zip(), _load_csvs(), XGuard-AI — Data Preprocessing Pipeline  Steps:   1. Extract MachineLearningCSV., run()
 
-### Community 13 - "Community 13"
+### Community 12 - "Community 12"
 Cohesion: 0.33
 Nodes (1): Tests for /api/v1/predict endpoints.
 
-### Community 14 - "Community 14"
+### Community 13 - "Community 13"
 Cohesion: 0.33
 Nodes (0): 
 
-### Community 15 - "Community 15"
+### Community 14 - "Community 14"
 Cohesion: 0.5
 Nodes (4): health(), HealthResponse, GET /api/v1/health — liveness and readiness check., Returns service health. No auth required — suitable for load balancer checks.
 
-### Community 16 - "Community 16"
+### Community 15 - "Community 15"
 Cohesion: 0.4
 Nodes (3): DummyLimiter, Rate limiting configuration for FastAPI endpoints, No-op decorator if slowapi unavailable
+
+### Community 16 - "Community 16"
+Cohesion: 0.4
+Nodes (0): 
 
 ### Community 17 - "Community 17"
 Cohesion: 0.4
 Nodes (0): 
 
 ### Community 18 - "Community 18"
-Cohesion: 0.4
-Nodes (0): 
-
-### Community 19 - "Community 19"
 Cohesion: 0.5
 Nodes (1): Tests for /api/v1/explain endpoint.
 
-### Community 20 - "Community 20"
+### Community 19 - "Community 19"
 Cohesion: 0.5
+Nodes (0): 
+
+### Community 20 - "Community 20"
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 21 - "Community 21"
@@ -191,15 +191,15 @@ Cohesion: 0.67
 Nodes (0): 
 
 ### Community 22 - "Community 22"
-Cohesion: 0.67
-Nodes (0): 
-
-### Community 23 - "Community 23"
 Cohesion: 1.0
 Nodes (2): CollapsibleContent(), useCollapsibleContext()
 
-### Community 24 - "Community 24"
+### Community 23 - "Community 23"
 Cohesion: 0.67
+Nodes (0): 
+
+### Community 24 - "Community 24"
+Cohesion: 1.0
 Nodes (0): 
 
 ### Community 25 - "Community 25"
@@ -248,11 +248,11 @@ Nodes (0):
 
 ### Community 36 - "Community 36"
 Cohesion: 1.0
-Nodes (0): 
+Nodes (1): XGuard-AI ML Configuration Central config for paths, label mappings, and hyperpa
 
 ### Community 37 - "Community 37"
 Cohesion: 1.0
-Nodes (1): XGuard-AI ML Configuration Central config for paths, label mappings, and hyperpa
+Nodes (0): 
 
 ### Community 38 - "Community 38"
 Cohesion: 1.0
@@ -352,7 +352,7 @@ Nodes (0):
 
 ### Community 62 - "Community 62"
 Cohesion: 1.0
-Nodes (0): 
+Nodes (1): Async wrapper — runs CPU-bound inference in thread pool.
 
 ### Community 63 - "Community 63"
 Cohesion: 1.0
@@ -363,45 +363,47 @@ Cohesion: 1.0
 Nodes (1): Load SHAP explainer. Non-critical - predictions work without it.
 
 ## Knowledge Gaps
-- **34 isolated node(s):** `GET /api/v1/health — liveness and readiness check.`, `Returns service health. No auth required — suitable for load balancer checks.`, `Rate limiting configuration for FastAPI endpoints`, `No-op decorator if slowapi unavailable`, `Token permission scopes` (+29 more)
+- **35 isolated node(s):** `GET /api/v1/health — liveness and readiness check.`, `Returns service health. No auth required — suitable for load balancer checks.`, `Rate limiting configuration for FastAPI endpoints`, `No-op decorator if slowapi unavailable`, `Token permission scopes` (+30 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **Thin community `Community 25`** (2 nodes): `logging.py`, `setup_logging()`
+- **Thin community `Community 24`** (2 nodes): `logging.py`, `setup_logging()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 26`** (2 nodes): `layout.tsx`, `RootLayout()`
+- **Thin community `Community 25`** (2 nodes): `layout.tsx`, `RootLayout()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 27`** (2 nodes): `page.tsx`, `HomePage()`
+- **Thin community `Community 26`** (2 nodes): `page.tsx`, `HomePage()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 28`** (2 nodes): `theme-toggle.tsx`, `ThemeToggle()`
+- **Thin community `Community 27`** (2 nodes): `theme-toggle.tsx`, `ThemeToggle()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 29`** (2 nodes): `AppAnalytics()`, `app-analytics.tsx`
+- **Thin community `Community 28`** (2 nodes): `AppAnalytics()`, `app-analytics.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 30`** (2 nodes): `stat-cards.tsx`, `StatCards()`
+- **Thin community `Community 29`** (2 nodes): `stat-cards.tsx`, `StatCards()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 31`** (2 nodes): `Badge()`, `badge.tsx`
+- **Thin community `Community 30`** (2 nodes): `Badge()`, `badge.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 32`** (2 nodes): `cn()`, `button.tsx`
+- **Thin community `Community 31`** (2 nodes): `cn()`, `button.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 33`** (2 nodes): `separator.tsx`, `Separator()`
+- **Thin community `Community 32`** (2 nodes): `separator.tsx`, `Separator()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 34`** (2 nodes): `skeleton.tsx`, `Skeleton()`
+- **Thin community `Community 33`** (2 nodes): `skeleton.tsx`, `Skeleton()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 35`** (2 nodes): `use-alerts.ts`, `useAlerts()`
+- **Thin community `Community 34`** (2 nodes): `use-alerts.ts`, `useAlerts()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 36`** (2 nodes): `utils.ts`, `cn()`
+- **Thin community `Community 35`** (2 nodes): `utils.ts`, `cn()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 37`** (2 nodes): `XGuard-AI ML Configuration Central config for paths, label mappings, and hyperpa`, `config.py`
+- **Thin community `Community 36`** (2 nodes): `XGuard-AI ML Configuration Central config for paths, label mappings, and hyperpa`, `config.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 38`** (2 nodes): `generate_mixed_data.py`, `main()`
+- **Thin community `Community 37`** (2 nodes): `generate_mixed_data.py`, `main()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 39`** (1 nodes): `test_inference.py`
+- **Thin community `Community 38`** (1 nodes): `test_inference.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 40`** (1 nodes): `__init__.py`
+- **Thin community `Community 39`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 41`** (1 nodes): `deps.py`
+- **Thin community `Community 40`** (1 nodes): `deps.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 42`** (1 nodes): `__init__.py`
+- **Thin community `Community 41`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 43`** (1 nodes): `router.py`
+- **Thin community `Community 42`** (1 nodes): `router.py`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 43`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 44`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
@@ -417,29 +419,29 @@ Nodes (1): Load SHAP explainer. Non-critical - predictions work without it.
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 50`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 51`** (1 nodes): `__init__.py`
+- **Thin community `Community 51`** (1 nodes): `eslint.config.mjs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 52`** (1 nodes): `eslint.config.mjs`
+- **Thin community `Community 52`** (1 nodes): `next-env.d.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 53`** (1 nodes): `next-env.d.ts`
+- **Thin community `Community 53`** (1 nodes): `next.config.mjs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 54`** (1 nodes): `next.config.mjs`
+- **Thin community `Community 54`** (1 nodes): `postcss.config.mjs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 55`** (1 nodes): `postcss.config.mjs`
+- **Thin community `Community 55`** (1 nodes): `tailwind.config.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 56`** (1 nodes): `tailwind.config.js`
+- **Thin community `Community 56`** (1 nodes): `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 57`** (1 nodes): `page.tsx`
+- **Thin community `Community 57`** (1 nodes): `attack-chart.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 58`** (1 nodes): `attack-chart.tsx`
+- **Thin community `Community 58`** (1 nodes): `shap-dialog.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 59`** (1 nodes): `shap-dialog.tsx`
+- **Thin community `Community 59`** (1 nodes): `landing-page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 60`** (1 nodes): `landing-page.tsx`
+- **Thin community `Community 60`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 61`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 62`** (1 nodes): `__init__.py`
+- **Thin community `Community 62`** (1 nodes): `Async wrapper — runs CPU-bound inference in thread pool.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 63`** (1 nodes): `Returns service health. No auth required — suitable for load balancer checks.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
@@ -449,11 +451,11 @@ Nodes (1): Load SHAP explainer. Non-critical - predictions work without it.
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `process_traffic_message()` connect `Community 0` to `Community 8`, `Community 9`, `Community 10`, `Community 4`?**
-  _High betweenness centrality (0.063) - this node is a cross-community bridge._
-- **Why does `Prediction` connect `Community 0` to `Community 1`, `Community 4`?**
-  _High betweenness centrality (0.056) - this node is a cross-community bridge._
-- **Why does `Base` connect `Community 1` to `Community 8`, `Community 0`?**
+- **Why does `process_traffic_message()` connect `Community 0` to `Community 8`, `Community 1`, `Community 5`, `Community 9`?**
+  _High betweenness centrality (0.065) - this node is a cross-community bridge._
+- **Why does `Prediction` connect `Community 0` to `Community 2`, `Community 5`?**
+  _High betweenness centrality (0.057) - this node is a cross-community bridge._
+- **Why does `Base` connect `Community 2` to `Community 8`, `Community 0`?**
   _High betweenness centrality (0.055) - this node is a cross-community bridge._
 - **Are the 16 inferred relationships involving `Prediction` (e.g. with `Alerts: REST history + WebSocket live stream.` and `Paginated alert history with optional attack_type filter.`) actually correct?**
   _`Prediction` has 16 INFERRED edges - model-reasoned connections that need verification._
