@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Environment
+.env
+*.env.local
+
+# ML artefacts (large, reproduced by pipeline)
+ml/data/raw/
+ml/data/processed/
+# ml/models/ - REMOVED: models are needed for deployment
+
+# Large datasets
+CIC-IDS-2017 - dataset/
+*.zip
+*.7z
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+
+# Docker volumes
+postgres_data/
+ml/models/xgboost/*.png
