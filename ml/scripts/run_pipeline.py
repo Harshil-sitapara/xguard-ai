@@ -6,6 +6,7 @@ Usage:
     python scripts/run_pipeline.py --step preprocess
     python scripts/run_pipeline.py --step train --model xgboost
     python scripts/run_pipeline.py --step evaluate
+    python scripts/run_pipeline.py --step shap
 """
 from __future__ import annotations
 
@@ -25,7 +26,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="XGuard-AI ML Pipeline Runner")
     parser.add_argument(
         "--step",
-        choices=["all", "preprocess", "train", "evaluate"],
+        choices=["all", "preprocess", "train", "evaluate", "shap"],
         default="all",
     )
     parser.add_argument(
@@ -54,6 +55,10 @@ def main() -> None:
     if args.step in ("all", "evaluate"):
         logger.info("══ STEP: EVALUATE ══")
         import evaluate; evaluate.run()
+
+    if args.step in ("all", "shap"):
+        logger.info("══ STEP: SHAP ANALYSIS ══")
+        import shap_analysis; shap_analysis.run()
 
     logger.info("Pipeline complete ✅")
 
