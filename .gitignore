@@ -50,3 +50,6 @@ logs/
 # Docker volumes
 postgres_data/
 ml/models/xgboost/*.png
+./frontend/.next
+.\frontend\.next
+./frontend/node_modules
