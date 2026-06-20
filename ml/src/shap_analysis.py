@@ -26,14 +26,13 @@ warnings.filterwarnings("ignore")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
 logger = logging.getLogger(__name__)
 
-N_EXPLAIN = 2000    # rows for summary plot
-N_BACKGROUND = 500  # rows saved for runtime explainer
+N_EXPLAIN = 2000        
+N_BACKGROUND = 500
 
 
 def run() -> None:
     xgb_dir = MODELS_DIR / "xgboost"
     
-    # Use native XGBoost Booster to avoid Scikit-Learn 1.6 wrapper incompatibility 
     model = xgb.Booster()
     model.load_model(str(xgb_dir / "model.json"))
 
@@ -41,7 +40,6 @@ def run() -> None:
     feature_names = [c for c in test.columns if c != "Label"]
     X_test = test[feature_names].values.astype(np.float32)
 
-    # SHAP TreeExplainer — O(TL) complexity, no approximation needed for trees
     logger.info("Building SHAP TreeExplainer …")
     explainer = shap.TreeExplainer(model)
 
@@ -52,13 +50,11 @@ def run() -> None:
     logger.info("Computing SHAP values for %d samples …", len(X_sample))
     shap_values = explainer.shap_values(X_sample)
 
-    # Mean absolute SHAP across all classes
     if isinstance(shap_values, list):
         mean_abs = np.mean([np.abs(sv) for sv in shap_values], axis=0)
     else:
         mean_abs = np.abs(shap_values)
 
-    # Global summary bar plot
     logger.info("Generating summary plot …")
     plt.figure(figsize=(12, 8))
     shap.summary_plot(mean_abs, X_sample, feature_names=np.array(feature_names),
@@ -68,7 +64,6 @@ def run() -> None:
     plt.close()
     logger.info("shap_summary.png saved")
 
-    # Background dataset for runtime use
     bg_idx = rng.choice(len(X_test), size=N_BACKGROUND, replace=False)
     joblib.dump(
         {"background": X_test[bg_idx], "feature_names": feature_names},

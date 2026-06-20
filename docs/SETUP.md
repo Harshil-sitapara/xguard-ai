@@ -13,7 +13,6 @@
 ## Step 1 — Clone & Configure
 
 ```bash
-# Copy root env template and fill in your values
 cp .env.example .env
 ```
 
@@ -26,7 +25,6 @@ Edit `.env`:
 ## Step 2 — Train the ML Models
 
 ```bash
-# Create Python virtual environment
 cd ml
 python -m venv .venv
 .venv\Scripts\activate          # Windows
@@ -137,6 +135,6 @@ ws.onmessage = (e) => console.log(JSON.parse(e.data));
 ## Stopping Services
 
 ```bash
-docker compose down         # stop containers
-docker compose down -v      # stop + delete postgres data volume
+docker compose down       
+docker compose down -v    
 ```

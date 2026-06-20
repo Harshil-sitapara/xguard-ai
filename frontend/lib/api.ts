@@ -103,7 +103,6 @@ const readErrorMessage = async (response: Response, fallback: string) => {
       return data.detail;
     }
   } catch {
-    // Ignore JSON parsing errors and return the fallback message.
   }
   return fallback;
 };
