@@ -146,7 +146,6 @@ class ExplainerService:
         self._label_encoder = None
         self._loaded: bool = False
         self._load_error: str | None = None
-        self._lock = None
 
     @property
     def loaded(self) -> bool:
