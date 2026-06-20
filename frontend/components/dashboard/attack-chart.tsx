@@ -11,7 +11,6 @@ export function AttackChart({ alerts, attackDistribution = {} }: { alerts: Alert
     color: key === "Benign" ? "#10b981" : COLORS[(i + 1) % COLORS.length]
   }));
 
-  // Fallback if no attackDistribution provided
   if (data.length === 0 && alerts.length > 0) {
     const counts: Record<string, number> = {};
     alerts.forEach(a => {

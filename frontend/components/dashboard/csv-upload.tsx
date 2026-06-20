@@ -40,14 +40,12 @@ export function CsvUploadControls() {
       if (status === "success") {
         const apiKey = process.env.NEXT_PUBLIC_API_KEY || "dev_public_key_for_frontend";
         
-        // Use keepalive: true so the request continues after page unloads
         fetch(`${getApiBaseUrl()}/predict/upload/cancel`, {
           method: "POST",
           headers: { "X-API-Key": apiKey },
           keepalive: true,
         }).catch(console.error);
 
-        // Also clear alerts on refresh to fully "empty the queue" as requested
         fetch(`${getApiBaseUrl()}/alerts`, {
           method: "DELETE",
           headers: { "X-API-Key": apiKey },
@@ -83,7 +81,6 @@ export function CsvUploadControls() {
     formData.append("file", file);
 
     try {
-      // In development, the public token is used. In production, a real flow is needed.
       const apiKey = process.env.NEXT_PUBLIC_API_KEY || "dev_public_key_for_frontend";
       
       const response = await fetch(`${getApiBaseUrl()}/predict/upload`, {
