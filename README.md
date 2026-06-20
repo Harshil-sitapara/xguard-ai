@@ -167,6 +167,10 @@ For Vercel production, `NEXT_PUBLIC_API_TOKEN` must be set explicitly.
 If it is blank, the dashboard can still receive unauthenticated WebSocket traffic,
 but the authenticated REST calls used for alert history and SHAP explanations will fail.
 
+For Vercel production, `NEXT_PUBLIC_API_TOKEN` must be set explicitly.
+If it is blank, the dashboard can still receive unauthenticated WebSocket traffic,
+but the authenticated REST calls used for alert history and SHAP explanations will fail.
+
 ## ML Pipeline
 
 The ML pipeline lives in `ml/` and trains three models (RF, XGBoost, LSTM). XGBoost is served in production due to speed, size, and SHAP compatibility.
