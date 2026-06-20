@@ -6,6 +6,7 @@ import { AttackChart } from "@/components/dashboard/attack-chart";
 import { LiveFeed } from "@/components/dashboard/live-feed";
 import { ShapDialog } from "@/components/dashboard/shap-dialog";
 import { TrafficReplayControls } from "@/components/dashboard/traffic-replay-controls";
+import { CsvUploadControls } from "@/components/dashboard/csv-upload";
 import { ThemeToggle } from "@/components/theme-toggle";
 import Image from "next/image";
 import { useState } from "react";
@@ -36,7 +37,6 @@ export default function DashboardPage() {
               <div className="h-2 w-2 bg-cyan-500 dark:bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
               <div className="h-2 w-2 bg-cyan-500 dark:bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
             </div>
-            <p className="text-sm text-muted-foreground">Initializing threat detection system...</p>
           </div>
         </div>
       </div>
@@ -45,7 +45,6 @@ export default function DashboardPage() {
 
   return (
     <main className="min-h-screen bg-background p-8 font-sans text-foreground selection:bg-cyan-400/20 transition-colors duration-300">
-      {/* Header */}
       <div className="mb-8 flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
         <div className="flex items-center gap-4">
           <Image
@@ -70,30 +69,25 @@ export default function DashboardPage() {
       </div>
 
       <div className="mb-6">
-        <TrafficReplayControls />
+        {/* <TrafficReplayControls /> */}
+        <CsvUploadControls />
       </div>
 
-      {/* Top Metrics */}
       <StatCards alerts={alerts} totalIngested={totalIngested} totalAttacks={totalAttacks} />
 
-      {/* Grid Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-        {/* Left Col: Charts */}
         <div className="lg:col-span-1 space-y-6">
           <AttackChart alerts={alerts} attackDistribution={attackDistribution} />
         </div>
 
-        {/* Right Col: Live Feed */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold tracking-tight text-foreground">Live Network Packets</h2>
-            <span className="text-xs text-muted-foreground">Click any row for SHAP analysis</span>
           </div>
           <LiveFeed alerts={alerts} onSelectAlert={setSelectedAlertId} />
         </div>
       </div>
 
-      {/* SHAP Modal */}
       <ShapDialog 
         predictionId={selectedAlertId} 
         open={selectedAlertId !== null} 

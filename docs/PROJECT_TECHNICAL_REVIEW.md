@@ -18,7 +18,7 @@ In practical terms, XGuard-AI is not just a machine learning model. It is an end
 - stream ingestion through Kafka,
 - persistence in PostgreSQL,
 - analyst-facing monitoring through a modern web dashboard,
-- replay tooling for demonstrations, validation, and controlled testing.
+- custom CSV log simulation for demonstrations, validation, and controlled testing.
 
 That combination makes the project stronger than a typical academic IDS prototype. It operates as a full detection workflow, not just a classification notebook.
 
@@ -47,17 +47,17 @@ This result matters. It shows the project is not using XGBoost because it is fas
 
 The project follows a five-layer conceptual framework for explainable cyber defense:
 
-1. Observation layer: capture or replay network-flow records.
+1. Observation layer: capture or simulate network-flow records.
 2. Intelligence layer: classify each flow as benign or a known attack class.
 3. Explanation layer: generate local feature attributions for analyst review.
 4. Operational layer: persist, visualize, and stream results to users.
-5. Governance layer: secure access, constrain usage, and support controlled replay and evaluation.
+5. Governance layer: secure access, constrain usage, and support controlled simulation and evaluation.
 
 In simplified form:
 
 ```mermaid
 flowchart LR
-    A[Traffic source or replay data] --> B[Feature-aligned network flow record]
+    A[Traffic source or simulated data] --> B[Feature-aligned network flow record]
     B --> C[ML inference engine]
     C --> D[Prediction and severity]
     D --> E[SHAP explanation]
@@ -67,7 +67,7 @@ flowchart LR
     D --> H[Live WebSocket stream]
     G --> I[Analyst dashboard]
     H --> I
-    J[Security, rate limits, replay controls, deployment policy] --- C
+    J[Security, rate limits, simulation controls, deployment policy] --- C
     J --- G
     J --- I
 ```
@@ -86,7 +86,7 @@ The project targets a well-known weakness in many IDS demonstrations: they stop 
 - produce timely classifications,
 - help a human understand why an alert fired,
 - maintain historical records for review,
-- support safe experimentation and replay,
+- support safe experimentation and stream simulation,
 - provide a usable interface for monitoring.
 
 XGuard-AI addresses that broader problem. Conceptually, it sits between:
@@ -162,7 +162,7 @@ Why this stack fits:
 | Area | Technologies | Role |
 |---|---|---|
 | Containerization | Docker, Docker Compose | Reproducible local deployment |
-| Message broker | Kafka | Stream ingestion and replay path |
+| Message broker | Kafka | Stream ingestion and simulation path |
 | Coordination | Zookeeper | Local Kafka stack support in compose |
 | Database | PostgreSQL 16 | Prediction and alert persistence |
 | Deployment variant | Hugging Face Spaces runtime scripts | Cloud-friendly demo deployment path |
@@ -196,7 +196,7 @@ The preprocessing design is stronger than a naive classroom pipeline for three r
 
 1. It explicitly handles class imbalance.
 2. It preserves the fitted scaler, label encoder, and ordered feature names as production artifacts.
-3. It prepares reproducible Parquet outputs that can be reused across training, SHAP analysis, and replay.
+3. It prepares reproducible Parquet outputs that can be reused across training and SHAP analysis.
 
 The balancing strategy is particularly notable. The project does not simply apply SMOTE blindly. It first under-samples very large classes, then over-samples minority classes. That is a pragmatic response to memory pressure and computational cost. It suggests the author was thinking operationally, not just statistically.
 
@@ -285,15 +285,15 @@ Critical review:
 
 Recent literature makes an important distinction: explanation availability is not the same as explanation robustness. XAI systems themselves can be attacked, manipulated, or misunderstood [4]. So the project's SHAP integration is a major strength, but it should be treated as an analyst support layer, not a formal proof of model correctness.
 
-### 6.4 Streaming, Replay, and Traffic Simulation Module
+### 6.4 Streaming and Traffic Simulation Module
 
 This module is one of the project's most distinctive strengths.
 
 Instead of limiting the system to offline prediction, XGuard-AI includes:
 
-- a Kafka producer that publishes replayed traffic,
+- a Kafka producer that handles stream publishing,
 - a Kafka consumer that scores incoming traffic,
-- a replay manager that lets analysts start and stop controlled replay from the dashboard.
+- a dynamic CSV upload module that allows users to supply custom log files, parsing and streaming them into Kafka with randomized delays and IPs to simulate live traffic flows realistically.
 
 Conceptually, this is very important. It means the project supports:
 
@@ -303,7 +303,7 @@ Conceptually, this is very important. It means the project supports:
 - analyst training,
 - workflow rehearsal.
 
-The replay path is also technically thoughtful. The producer inverse-transforms scaled rows before publishing them so replay data resembles operational feature values rather than internal training coordinates. That is a subtle but meaningful design improvement.
+The dynamic CSV Simulation allows an operator to upload their own datasets. The backend runs a background producer task that cleans the features, injects simulated source and destination IPs, and publishes the payloads to Kafka with randomized interval delays (0.0 to 2.0 seconds). This mimics natural, bursty network traffic rather than a static block insert, proving the architecture's capacity for asynchronous background stream generation. The process also includes a dedicated cancellation endpoint, preventing runaway background tasks.
 
 Why Kafka is appropriate:
 
@@ -330,7 +330,6 @@ Its responsibilities include:
 - exposing inference and explanation APIs,
 - serving alert history,
 - pushing live events over WebSocket,
-- managing replay control endpoints,
 - enforcing API-key checks and rate limiting.
 
 This is a clean service-oriented backend. It is not split into many microservices, but for the project scale that is a sensible decision. A single application process owns the control plane and the inference plane. That keeps deployment simpler and supports easier academic presentation.
@@ -394,7 +393,7 @@ Main functional areas:
 - traffic distribution chart,
 - live packet or alert feed,
 - SHAP explanation dialog,
-- replay controls,
+- custom CSV log upload interface for simulation,
 - theme support.
 
 This is important because many student ML projects fail at the last mile: they produce predictions but no usable human interface. XGuard-AI avoids that problem.
@@ -404,14 +403,14 @@ The dashboard behavior is also thoughtful:
 - it combines initial history fetch with WebSocket live updates,
 - it keeps live feed usability manageable through pause-on-scroll behavior,
 - it exposes SHAP drill-down directly from alert rows,
-- it surfaces operational state such as replay readiness and stream connectivity.
+- it surfaces operational state such as stream connectivity.
 
 This is a good analyst workflow design:
 
 - see what is happening,
 - inspect what matters,
 - request explanation,
-- control replay if needed.
+- simulate traffic if needed.
 
 In conceptual terms, the frontend converts the backend from an ML service into a cyber operations tool.
 
@@ -423,8 +422,7 @@ The project includes several operational control mechanisms:
 - token scope concepts,
 - rate limiting,
 - CORS configuration,
-- health-check separation,
-- replay enable/disable settings.
+- health-check separation.
 
 This shows strong intent. The project is trying to treat security services as governed systems, not only as technical demos.
 
@@ -468,7 +466,7 @@ What is still missing:
 
 - end-to-end stream tests,
 - WebSocket contract tests,
-- replay lifecycle tests,
+- stream simulation lifecycle tests,
 - frontend component or integration tests,
 - stronger migration and persistence verification,
 - model artifact validation checks in CI.
@@ -512,8 +510,7 @@ SQLAlchemy async is appropriate here because the database workload is not the do
 Kafka is one of the project's most appropriate backend technology choices because intrusion detection is event-native. Each traffic flow is an event. Kafka gives:
 
 - stream semantics,
-- replayability,
-- decoupling between producer and consumer,
+- event decoupling between producer and consumer,
 - a realistic event-processing mental model.
 
 Even when used in a simplified local setup, it gives the project architectural credibility.
@@ -542,9 +539,9 @@ The project uses tabular flow features and serves a high-performing tree-based m
 
 The project treats explanation as part of the alert workflow. That is a major strength.
 
-### 8.3 Replay closes the loop between offline evaluation and live demonstration
+### 8.3 CSV Simulation closes the loop between offline evaluation and live demonstration
 
-Replay is one of the best features in the repository because it supports teaching, validation, and operational simulation.
+The dynamic CSV upload simulation is one of the best features in the repository because it supports teaching, validation, and operational simulation. Analysts are not restricted to predefined data; they can supply their own logs and watch the system score them in real time as a realistic stream.
 
 ### 8.4 The system is full-stack, not isolated
 
@@ -604,7 +601,7 @@ The system has the beginnings of good backend testing, but its most distinctive 
 
 Priority improvement:
 
-- add end-to-end replay tests,
+- add end-to-end simulation tests,
 - add WebSocket and dashboard integration tests,
 - add CI checks for model artifact integrity and schema compatibility.
 
@@ -620,7 +617,7 @@ What makes it impressive is not merely that it predicts attacks. What makes it t
 - local explainability,
 - persistence,
 - analyst interaction,
-- replay-based validation.
+- simulation-based validation.
 
 That is the architecture of a serious applied AI security project.
 
@@ -646,7 +643,7 @@ This review also relies on the repository's own trained-artifact outputs, runtim
 
 - comparative model metrics,
 - backend service logic,
-- traffic replay behavior,
+- traffic simulation behavior,
 - dashboard data flow,
 - deployment configuration,
 - test scaffolding,

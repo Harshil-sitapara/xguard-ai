@@ -20,6 +20,6 @@ class Alert(Base):
     attack_type: Mapped[str] = mapped_column(String(64), index=True)
     confidence: Mapped[float] = mapped_column(Float)
     severity: Mapped[str] = mapped_column(String(16))  # LOW | MEDIUM | HIGH | CRITICAL
-    reason: Mapped[str] = mapped_column(String(512), nullable=True)
+    reason: Mapped[str] = mapped_column(String(2048), nullable=True)
     source_ip: Mapped[str] = mapped_column(String(64), nullable=True)
     destination_ip: Mapped[str] = mapped_column(String(64), nullable=True)

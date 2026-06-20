@@ -77,6 +77,7 @@ class InferenceService:
         vec = np.array(
             [raw_features.get(f, 0.0) for f in self._feature_names], dtype=np.float32
         ).reshape(1, -1)
+        vec = np.nan_to_num(vec, nan=0.0, posinf=0.0, neginf=0.0)
         vec_scaled = self._scaler.transform(vec)
         proba = np.asarray(self._model.predict(xgb.DMatrix(vec_scaled)), dtype=np.float32)
         if proba.ndim == 1:

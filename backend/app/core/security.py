@@ -32,6 +32,8 @@ class VerifiedToken:
         # Admin tokens have all permissions
         if self.scope == TokenScope.ADMIN:
             return True
+        if self.scope == TokenScope.PUBLIC:
+            return required_scope in {TokenScope.PREDICT, TokenScope.ALERTS, TokenScope.EXPLAIN}
         return self.scope == required_scope
 
 

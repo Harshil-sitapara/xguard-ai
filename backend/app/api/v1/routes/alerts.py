@@ -77,6 +77,44 @@ async def list_alerts(
         ) from exc
 
 
+@router.delete("")
+async def clear_alerts(
+    db: AsyncSession | None = Depends(get_optional_db),
+    token: VerifiedToken = Depends(verify_api_key),
+):
+    """Clear all historical alerts and predictions from the database."""
+    from fastapi import HTTPException, status
+    from sqlalchemy import text
+    
+    if not token.has_permission(TokenScope.ALERTS):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="This endpoint requires alerts scope.",
+        )
+    
+    if db is None:
+        raise HTTPException(status_code=503, detail="Database is unavailable")
+        
+    try:
+        from app.services.kafka_consumer import trigger_seek_to_end
+        # Instantly skip all pending messages in the active Kafka queue
+        trigger_seek_to_end()
+        
+        # Using DELETE instead of TRUNCATE to avoid AccessExclusiveLock which hangs 
+        # if the background kafka consumer is currently holding a lock
+        await db.execute(text("DELETE FROM alerts;"))
+        await db.execute(text("DELETE FROM predictions;"))
+        await db.commit()
+        return {"message": "All dashboard history cleared successfully."}
+    except Exception as exc:
+        await db.rollback()
+        logger.exception("Failed to clear alerts database")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(exc),
+        ) from exc
+
+
 @router.websocket("/live")
 async def alerts_live(ws: WebSocket):
     """WebSocket endpoint — streams real-time alert JSON as events arrive."""

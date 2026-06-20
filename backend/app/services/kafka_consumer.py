@@ -25,8 +25,15 @@ from app.services.websocket_manager import ws_manager
 
 logger = logging.getLogger(__name__)
 
+_should_seek_to_end: bool = False
 
-async def process_traffic_message(raw: dict) -> dict:
+def trigger_seek_to_end():
+    """Instruct the consumer to instantly seek to the end of the queue."""
+    global _should_seek_to_end
+    _should_seek_to_end = True
+
+async def process_traffic_message(raw: dict) -> dict | None:
+        
     features: dict[str, float] = raw.get("features", {})
     source_ip: str | None = raw.get("source_ip")
     dest_ip: str | None = raw.get("destination_ip")
@@ -139,7 +146,13 @@ async def consume_forever() -> None:
             continue
 
         try:
+            global _should_seek_to_end
             async for msg in consumer:
+                if _should_seek_to_end:
+                    await consumer.seek_to_end()
+                    _should_seek_to_end = False
+                    continue
+                    
                 try:
                     await process_traffic_message(msg.value)
                 except Exception as exc:

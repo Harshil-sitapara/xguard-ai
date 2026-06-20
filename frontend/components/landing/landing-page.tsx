@@ -90,11 +90,11 @@ const featureCards: FeatureCard[] = [
   },
   {
     eyebrow: "Validation",
-    title: "Replay traffic on demand",
+    title: "Traffic simulation tools",
     description:
-      "Start and stop packaged traffic replay from the UI to exercise the same pipeline used for live monitoring.",
+      "Upload raw network traffic data from the UI to simulate live conditions and exercise the production detection pipeline.",
     detail:
-      "It is useful for demos, smoke testing, and reviewing held-out traffic flows.",
+      "It is useful for validating historical flows, smoke testing, and analyzing held-out datasets at scale.",
     icon: PlayCircle,
   },
   {
@@ -110,7 +110,7 @@ const featureCards: FeatureCard[] = [
     eyebrow: "Secure delivery",
     title: "Secured analyst operations",
     description:
-      "Prediction, explanation, alert history, and replay controls are protected with API-key access, while health checks stay simple for operations.",
+      "Prediction, explanation, alert history, and CSV upload tools are protected with API-key access, while health checks stay simple for operations.",
     detail:
       "That keeps the operational control plane protected while preserving simple service health verification.",
     icon: Lock,
@@ -128,10 +128,10 @@ const featureCards: FeatureCard[] = [
 
 const workflowSteps: WorkflowStep[] = [
   {
-    title: "Stream or submit traffic",
+    title: "Upload network logs (CSV)",
     description:
-      "Bring flows in through Kafka for continuous monitoring or submit controlled scoring requests through the service layer.",
-    detail: "That keeps the same detection logic available for streaming operations and direct validation.",
+      "Submit raw network logs through the interface. The system reads the CSV, queues the flows into Kafka, and begins real-time processing.",
+    detail: "This allows you to simulate high-volume network traffic seamlessly using historical datasets.",
     icon: Network,
   },
   {
@@ -171,7 +171,7 @@ const stackItems = [
 const benefitItems = [
   "Real-time WebSocket updates keep analysts aware of changing traffic conditions.",
   "SHAP-backed review improves trust in automated decisions before escalation.",
-  "Replay controls help with demos, testing, and operator training on realistic traffic.",
+  "CSV log upload controls help simulate live traffic, enabling robust testing and validation.",
   "Light and dark modes support different analyst environments without changing workflows.",
 ] as const;
 
@@ -296,13 +296,13 @@ export function LandingPage() {
           <div data-reveal className="relative z-10 max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200/70 bg-white/80 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm backdrop-blur dark:border-cyan-900/60 dark:bg-slate-900/75 dark:text-slate-200">
               <Sparkles className="size-4 text-cyan-600 dark:text-cyan-300" />
-              Production-ready AI IDS platform
+              AI IDS platform
             </div>
 
             <h1 className="mt-8 max-w-4xl text-5xl font-semibold tracking-tight text-slate-950 sm:text-6xl lg:text-7xl dark:text-white">
-              AI intrusion detection,
+              Explainable AI defense,
               <span className="mt-2 block bg-gradient-to-r from-slate-950 via-cyan-700 to-emerald-600 bg-clip-text text-transparent dark:from-white dark:via-cyan-300 dark:to-emerald-300">
-                built for real-time defense.
+                built for network traffic analysis.
               </span>
             </h1>
 
@@ -333,7 +333,7 @@ export function LandingPage() {
               <div className="flex items-start gap-3 rounded-2xl border border-slate-200/70 bg-white/65 p-4 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/70">
                 <CheckCircle2 className="mt-0.5 size-5 text-emerald-500" />
                 <span>
-                  Replay controls for exercising the same backend pipeline with
+                  CSV log upload tools for exercising the backend pipeline with
                   packaged traffic during testing, demos, and validation.
                 </span>
               </div>
@@ -603,8 +603,8 @@ export function LandingPage() {
                   Ready for SOC-style monitoring and explainable review.
                 </h3>
                 <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-400">
-                  The platform combines a professional dashboard, controlled
-                  replay, stored alert history, and explainability workflows in
+                  The platform combines a professional dashboard, CSV log
+                  simulation, stored alert history, and explainability workflows in
                   an interface that remains comfortable in both light and dark
                   operating environments.
                 </p>
@@ -622,7 +622,7 @@ export function LandingPage() {
                 Deploy with confidence
               </p>
               <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
-                Monitor live traffic, review flagged flows, and explain model decisions from one AI IDS workspace.
+                Monitor traffic, review flagged flows, and explain model decisions from one AI IDS workspace.
               </h2>
               <p className="mt-5 max-w-2xl text-base leading-8 text-slate-200/80">
                 XGuard AI brings together streaming detection, alert history,
@@ -806,8 +806,8 @@ function HeroPreview() {
           />
           <PreviewBadge
             icon={PlayCircle}
-            label="Replay ready"
-            value="Validation traffic"
+            label="Log upload"
+            value="CSV simulation"
           />
         </div>
 
