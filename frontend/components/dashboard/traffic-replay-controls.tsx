@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronDown, Play, Square, Zap } from "lucide-react";
+import { ChevronDown, Play, Square, Zap, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +21,7 @@ import {
   startTrafficReplay,
   stopTrafficReplay,
   TrafficReplayStatus,
+  getApiBaseUrl,
 } from "@/lib/api";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
@@ -140,6 +141,26 @@ export function TrafficReplayControls() {
     }
   };
 
+  const handleClear = async () => {
+    if (!confirm("Are you sure you want to clear all historical alerts and dashboard data? This cannot be undone.")) return;
+    setSubmitting(true);
+    try {
+      const apiKey = process.env.NEXT_PUBLIC_API_KEY || "dev_public_key_for_frontend";
+      const response = await fetch(`${getApiBaseUrl()}/alerts`, {
+        method: "DELETE",
+        headers: { "X-API-Key": apiKey },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to clear dashboard");
+      }
+      window.location.reload();
+    } catch (error) {
+      console.error("Clear dashboard error:", error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const running = status?.running ?? false;
   const canControl = Boolean(status?.enabled && status?.available);
   const isHeldOutReplay = status?.message?.toLowerCase().includes("held-out") ?? false;
@@ -227,18 +248,6 @@ export function TrafficReplayControls() {
                   className="w-full rounded-md border border-input bg-card px-3 py-2 text-sm tracking-normal text-foreground outline-none transition focus:border-cyan-500"
                 />
               </label>
-
-              {/* Keeping the attack-only control disabled in the UI for now.
-                  The replay API and backend support remain in place. */}
-              {/* <label className="flex min-h-10 items-center gap-3 rounded-md border border-current/15 bg-black/10 px-3 py-2 text-sm text-neutral-100">
-                <input
-                  type="checkbox"
-                  checked={attackOnly}
-                  onChange={(event) => setAttackOnly(event.target.checked)}
-                  className="size-4 rounded border-current/30 bg-black/20 text-cyan-400"
-                />
-                Attack rows only
-              </label> */}
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
@@ -260,6 +269,16 @@ export function TrafficReplayControls() {
               >
                 <Square className="size-3.5" />
                 Stop
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleClear}
+                disabled={loading || submitting}
+                className="border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 dark:border-rose-900/50 dark:text-rose-400 dark:hover:bg-rose-950/50 ml-auto"
+              >
+                <Trash2 className="size-3.5 mr-1" />
+                Clear Dashboard
               </Button>
             </div>
 

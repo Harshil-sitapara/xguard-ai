@@ -48,6 +48,11 @@ async def _prepare_database() -> bool:
     try:
         async with db_session.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
+            try:
+                from sqlalchemy import text
+                await conn.execute(text("ALTER TABLE alerts ALTER COLUMN reason TYPE VARCHAR(2048);"))
+            except Exception:
+                pass
         logger.info("Database tables ready")
         return True
     except Exception as exc:

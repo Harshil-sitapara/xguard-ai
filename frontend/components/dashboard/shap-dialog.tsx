@@ -72,7 +72,7 @@ export function ShapDialog({ predictionId, open, onOpenChange }: { predictionId:
           </DialogDescription>
         </DialogHeader>
 
-        {loading && <div className="h-[300px] flex items-center justify-center text-muted-foreground">Generating SHAP values via backend...</div>}
+        {loading && <div className="h-[300px] flex items-center justify-center text-muted-foreground">Generating SHAP values...</div>}
         {error && <div className="h-[300px] flex items-center justify-center text-rose-500">{error}</div>}
         
         {data && !loading && !error && (

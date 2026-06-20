@@ -7,14 +7,21 @@ import { ArrowUp } from "lucide-react";
 
 export function LiveFeed({ alerts, onSelectAlert }: { alerts: Alert[], onSelectAlert: (id: string) => void }) {
   const [isPaused, setIsPaused] = useState(false);
+  const [filterMode, setFilterMode] = useState<"all" | "attacks">("all");
   const [displayedAlerts, setDisplayedAlerts] = useState<Alert[]>(alerts);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isPaused) {
-      setDisplayedAlerts(alerts);
+      const filtered = alerts.filter(alert => {
+        if (filterMode === "attacks") {
+          return alert.is_attack ?? (alert.attack_type && alert.attack_type !== "Benign");
+        }
+        return true;
+      });
+      setDisplayedAlerts(filtered);
     }
-  }, [alerts, isPaused]);
+  }, [alerts, isPaused, filterMode]);
 
   const handleScroll = (e: UIEvent<HTMLDivElement>) => {
     const { scrollTop } = e.currentTarget;
@@ -33,8 +40,25 @@ export function LiveFeed({ alerts, onSelectAlert }: { alerts: Alert[], onSelectA
   };
 
   return (
-    <div className="rounded-md border border-border bg-card relative">
-      <Table>
+    <div className="space-y-3">
+      <div className="flex items-center justify-end">
+        <div className="flex items-center rounded-md border border-border bg-card p-1 shadow-sm">
+          <button
+            onClick={() => setFilterMode("all")}
+            className={`px-3 py-1.5 text-xs font-medium rounded-sm transition-colors ${filterMode === "all" ? "bg-indigo-500/10 text-indigo-400" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            All Traffic
+          </button>
+          <button
+            onClick={() => setFilterMode("attacks")}
+            className={`px-3 py-1.5 text-xs font-medium rounded-sm transition-colors ${filterMode === "attacks" ? "bg-rose-500/10 text-rose-400" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            Attacks
+          </button>
+        </div>
+      </div>
+      <div className="rounded-md border border-border bg-card relative">
+        <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[150px]">Timestamp</TableHead>
@@ -108,6 +132,7 @@ export function LiveFeed({ alerts, onSelectAlert }: { alerts: Alert[], onSelectA
           </button>
         </div>
       )}
+    </div>
     </div>
   );
 }
