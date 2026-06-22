@@ -41,6 +41,7 @@ inter.broker.listener.name=PLAINTEXT
 log.dirs=${KAFKA_DATA_DIR}
 num.partitions=1
 offsets.topic.replication.factor=1
+offsets.topic.num.partitions=1
 transaction.state.log.replication.factor=1
 transaction.state.log.min.isr=1
 group.initial.rebalance.delay.ms=0
