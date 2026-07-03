@@ -154,6 +154,39 @@ Key entry points:
 
 See `docs/SETUP.md` for a full end-to-end setup.
 
+## Run Backend App
+
+Recommended Docker command from the project root:
+```powershell
+docker compose up -d backend
+```
+
+This starts the FastAPI backend with the required Docker services defined in
+`docker-compose.yml`, including PostgreSQL and Kafka dependencies.
+
+To start the full local stack:
+```powershell
+docker compose up -d
+```
+
+After startup, verify the backend is running:
+```powershell
+curl http://localhost:8000/api/v1/health
+```
+
+Backend base URL:
+```text
+http://localhost:8000/api/v1
+```
+
+Local Python fallback, only if PostgreSQL, Kafka, environment variables, and
+model files are already available:
+```powershell
+cd backend
+python -m pip install -r requirements.txt
+python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
 ## Configuration
 
 ### Root `.env` (Backend + Docker)

@@ -368,6 +368,124 @@ The data model also stores:
 
 This makes the database more than a logging sink. It becomes a forensic support layer.
 
+#### 6.6.1 Backend Schemas, Types, and ER-Diagram Mapping
+
+The backend uses two schema layers:
+
+- SQLAlchemy ORM models define the persisted database tables.
+- Pydantic models define REST request and response contracts.
+
+For ER diagrams, the main persisted entities are `predictions` and `alerts`. A prediction is created for every scored network flow. An alert is created only when the prediction is an attack. In the current implementation, `alerts.prediction_id` is indexed and logically references `predictions.id`, but it is not declared as an explicit SQL foreign key in the ORM model. This is useful to note in diagrams: the relationship exists at the application level and should be shown as a logical one-to-zero-or-one relationship.
+
+```mermaid
+erDiagram
+    PREDICTIONS ||--o| ALERTS : "prediction_id"
+
+    PREDICTIONS {
+        string id PK
+        datetime created_at
+        string label
+        float confidence
+        boolean is_attack
+        json features_json
+        json shap_json
+        string source_ip
+        string destination_ip
+    }
+
+    ALERTS {
+        string id PK
+        datetime created_at
+        string prediction_id "logical FK to predictions.id"
+        string attack_type
+        float confidence
+        string severity
+        string reason
+        string source_ip
+        string destination_ip
+    }
+```
+
+Database table details:
+
+| Table | Backend Model | Column | SQLAlchemy / DB Type | Python Type | Constraints / Indexes | Purpose |
+|---|---|---|---|---|---|---|
+| `predictions` | `Prediction` | `id` | `String(36)` | `str` | Primary key, UUID string default | Unique identifier for each scored flow |
+| `predictions` | `Prediction` | `created_at` | `DateTime(timezone=True)` | `datetime` | UTC timestamp default | Time when prediction was created |
+| `predictions` | `Prediction` | `label` | `String(64)` | `str` | Indexed | Predicted class such as `Benign`, `DDoS`, `PortScan` |
+| `predictions` | `Prediction` | `confidence` | `Float` | `float` | Required | Model probability for selected class |
+| `predictions` | `Prediction` | `is_attack` | inferred Boolean column | `bool` | Default `False` | Separates benign predictions from attack detections |
+| `predictions` | `Prediction` | `features_json` | `JSON` | `dict` | Nullable | Raw feature vector used for inference |
+| `predictions` | `Prediction` | `shap_json` | `JSON` | `dict` | Nullable | Cached SHAP explanation payload |
+| `predictions` | `Prediction` | `source_ip` | `String(64)` | `str \| None` | Nullable | Simulated or supplied source IP |
+| `predictions` | `Prediction` | `destination_ip` | `String(64)` | `str \| None` | Nullable | Simulated or supplied destination IP |
+| `alerts` | `Alert` | `id` | `String(36)` | `str` | Primary key, UUID string default | Unique alert identifier |
+| `alerts` | `Alert` | `created_at` | `DateTime(timezone=True)` | `datetime` | Indexed, UTC timestamp default | Time when alert was created |
+| `alerts` | `Alert` | `prediction_id` | `String(36)` | `str` | Indexed, logical relation to `predictions.id` | Connects alert to its source prediction |
+| `alerts` | `Alert` | `attack_type` | `String(64)` | `str` | Indexed | Attack class shown in dashboard and filters |
+| `alerts` | `Alert` | `confidence` | `Float` | `float` | Required | Confidence copied from prediction result |
+| `alerts` | `Alert` | `severity` | `String(16)` | `str` | Values generated as `LOW`, `MEDIUM`, `HIGH`, `CRITICAL` | Analyst-facing priority level |
+| `alerts` | `Alert` | `reason` | `String(2048)` | `str \| None` | Nullable | Plain-language SHAP explanation summary |
+| `alerts` | `Alert` | `source_ip` | `String(64)` | `str \| None` | Nullable | Source IP copied from event payload |
+| `alerts` | `Alert` | `destination_ip` | `String(64)` | `str \| None` | Nullable | Destination IP copied from event payload |
+
+Pydantic request and response schemas used by the backend:
+
+| Schema | File / Route | Field | Type | Validation / Default | Used By |
+|---|---|---|---|---|---|
+| `PredictRequest` | `backend/app/schemas/prediction.py` | `features` | `dict[str, float]` | Required | `POST /api/v1/predict`, batch records, Kafka-style payload shape |
+| `PredictRequest` | `backend/app/schemas/prediction.py` | `source_ip` | `str \| None` | Default `None` | Optional traffic metadata |
+| `PredictRequest` | `backend/app/schemas/prediction.py` | `destination_ip` | `str \| None` | Default `None` | Optional traffic metadata |
+| `BatchPredictRequest` | `backend/app/schemas/prediction.py` | `records` | `list[PredictRequest]` | Required, maximum 1000 | `POST /api/v1/predict/batch` |
+| `PredictionResponse` | `backend/app/schemas/prediction.py` | `id` | `str` | Required | Single prediction API response |
+| `PredictionResponse` | `backend/app/schemas/prediction.py` | `label` | `str` | Required | Predicted class returned to clients |
+| `PredictionResponse` | `backend/app/schemas/prediction.py` | `confidence` | `float` | Required | Prediction confidence |
+| `PredictionResponse` | `backend/app/schemas/prediction.py` | `is_attack` | `bool` | Required | Client-side benign/attack split |
+| `PredictionResponse` | `backend/app/schemas/prediction.py` | `created_at` | `datetime` | Required | API timestamp |
+| `BatchPredictionResponse` | `backend/app/schemas/prediction.py` | `results` | `list[PredictionResponse]` | Required | Batch prediction result list |
+| `BatchPredictionResponse` | `backend/app/schemas/prediction.py` | `total` | `int` | Required | Number of returned predictions |
+| `AlertResponse` | `backend/app/schemas/alert.py` | `id` | `str` | Required | Alert list and live dashboard payloads |
+| `AlertResponse` | `backend/app/schemas/alert.py` | `created_at` | `datetime` | Required | Alert timestamp |
+| `AlertResponse` | `backend/app/schemas/alert.py` | `prediction_id` | `str` | Required | Links alert to prediction/explanation lookup |
+| `AlertResponse` | `backend/app/schemas/alert.py` | `attack_type` | `str` | Required | Dashboard attack category |
+| `AlertResponse` | `backend/app/schemas/alert.py` | `confidence` | `float` | Required | Alert confidence score |
+| `AlertResponse` | `backend/app/schemas/alert.py` | `severity` | `str` | Required | Priority badge in dashboard |
+| `AlertResponse` | `backend/app/schemas/alert.py` | `reason` | `str \| None` | Default `None` | Human-readable explanation summary |
+| `AlertsListResponse` | `backend/app/schemas/alert.py` | `alerts` | `list[AlertResponse]` | Required | `GET /api/v1/alerts` |
+| `AlertsListResponse` | `backend/app/schemas/alert.py` | `total` | `int` | Required | Number of matching alerts |
+| `AlertsListResponse` | `backend/app/schemas/alert.py` | `total_predictions` | `int` | Default `0` | Dashboard aggregate statistic |
+| `AlertsListResponse` | `backend/app/schemas/alert.py` | `page` | `int` | Required | Pagination state |
+| `AlertsListResponse` | `backend/app/schemas/alert.py` | `page_size` | `int` | Required | Pagination size |
+| `ExplainResponse` | `backend/app/api/v1/routes/explain.py` | `prediction_id` | `str` | Required | `GET /api/v1/explain/{prediction_id}` |
+| `ExplainResponse` | `backend/app/api/v1/routes/explain.py` | `label` | `str` | Required | Label being explained |
+| `ExplainResponse` | `backend/app/api/v1/routes/explain.py` | `reason` | `str` | Required | SHAP-generated plain-language reason |
+| `ExplainResponse` | `backend/app/api/v1/routes/explain.py` | `top_features` | `list[dict]` | Required | Feature attribution rows, usually `{feature, shap_value, direction}` |
+| `HealthResponse` | `backend/app/api/v1/routes/health.py` | `status` | `str` | Required | `GET /api/v1/health` |
+| `HealthResponse` | `backend/app/api/v1/routes/health.py` | `model_loaded` | `bool` | Required | Model readiness flag |
+| `HealthResponse` | `backend/app/api/v1/routes/health.py` | `shap_loaded` | `bool` | Required | SHAP readiness flag |
+| `HealthResponse` | `backend/app/api/v1/routes/health.py` | `shap_error` | `str \| None` | Default `None` | Explainer load error if present |
+| `HealthResponse` | `backend/app/api/v1/routes/health.py` | `model_type` | `str` | Required | Active model family, normally `xgboost` |
+| `HealthResponse` | `backend/app/api/v1/routes/health.py` | `environment` | `str` | Required | Runtime environment name |
+| `ReplayStartRequest` | `backend/app/api/v1/routes/replay.py` | `rate` | `float` | Default `10.0`, `0 <= rate <= 500` | `POST /api/v1/replay/start` |
+| `ReplayStartRequest` | `backend/app/api/v1/routes/replay.py` | `limit` | `int` | Default `500`, `0 <= limit <= 20000` | Replay volume control |
+| `ReplayStartRequest` | `backend/app/api/v1/routes/replay.py` | `attack_only` | `bool` | Default `False` | Filters replay source |
+| `ReplayStatusResponse` | `backend/app/api/v1/routes/replay.py` | `running`, `enabled`, `available`, `attack_only` | `bool` | Required | Replay state flags |
+| `ReplayStatusResponse` | `backend/app/api/v1/routes/replay.py` | `rate` | `float` | Required | Current replay rate |
+| `ReplayStatusResponse` | `backend/app/api/v1/routes/replay.py` | `limit` | `int` | Required | Current replay limit |
+| `ReplayStatusResponse` | `backend/app/api/v1/routes/replay.py` | `started_at`, `finished_at`, `last_error` | `str \| None` | Default `None` | Replay lifecycle metadata |
+| `ReplayStatusResponse` | `backend/app/api/v1/routes/replay.py` | `message`, `environment` | `str` | Required | Human-readable status and runtime environment |
+
+Operational schema flow:
+
+| Flow | Input Schema | Processing Layer | Persisted Table(s) | Output Schema / Event |
+|---|---|---|---|---|
+| Single prediction | `PredictRequest` | `InferenceService.predict()` | `predictions` when DB is available | `PredictionResponse` |
+| Batch prediction | `BatchPredictRequest` | Repeated single prediction calls | `predictions` when DB is available | `BatchPredictionResponse` |
+| Kafka traffic event | `{features, source_ip, destination_ip}` dictionary payload | `process_traffic_message()` | Always attempts `predictions`; creates `alerts` only for attacks | WebSocket alert JSON payload |
+| Alert history | Query params: `page`, `page_size`, optional `attack_type` | SQLAlchemy alert query | Reads `alerts` and counts `predictions` | `AlertsListResponse` |
+| Explanation lookup | Path parameter `prediction_id` | Cached `shap_json` or on-demand SHAP calculation | Reads and may update `predictions.shap_json` | `ExplainResponse` |
+| Replay control | `ReplayStartRequest` | `traffic_replay_manager` | No direct table writes; Kafka consumer later writes detections | `ReplayStatusResponse` |
+
 Strengths:
 
 - JSON storage is flexible for feature vectors and explanation payloads.
@@ -648,3 +766,690 @@ This review also relies on the repository's own trained-artifact outputs, runtim
 - deployment configuration,
 - test scaffolding,
 - graph-based architecture summary.
+# Chapter 6 Actual Project Code Listings
+
+Use these as replacements for the illustrative snippets in Chapter 6. Each block is copied from the current project codebase and labelled with its source file.
+
+> Note: the project maps CICIDS2017 raw labels into 9 unified categories, not 6. Update the report text for Sections 6.1.1 and 6.1.6 accordingly.
+
+## 6.1.1 Preprocessing and Class Balancing
+
+Source: `ml/src/preprocess.py`
+
+```python
+def _load_csvs(csv_files: list) -> pd.DataFrame:
+    frames = []
+    for f in csv_files:
+        logger.info("  Loading & chunk-cleaning: %s", f.name)
+        df = pd.read_csv(f, low_memory=False)
+        df.columns = df.columns.str.strip()
+        
+        # 1. Drop unused columns immediately
+        existing_drop = [c for c in DROP_COLS if c in df.columns]
+        df.drop(columns=existing_drop, inplace=True)
+        
+        # 2. Replace Inf and drop NAs on the chunk
+        df.replace([np.inf, -np.inf], np.nan, inplace=True)
+        df.dropna(inplace=True)
+        
+        # 3. Downcast numeric types to save RAM
+        for col in df.select_dtypes(include=['float64']).columns:
+            df[col] = df[col].astype(np.float32)
+        for col in df.select_dtypes(include=['int64']).columns:
+            df[col] = pd.to_numeric(df[col], downcast='integer')
+
+        # 4. Drop duplicates chunk-wise to prevent global memory issues
+        df.drop_duplicates(inplace=True)
+
+        frames.append(df)
+        
+    logger.info("Concatenating chunks ...")
+    combined = pd.concat(frames, ignore_index=True)
+    
+    # Global drop_duplicates skipped because of local RAM limit (causes 20MB hash allocation crash)
+    logger.info("Combined shape: %s", combined.shape)
+    return combined
+```
+
+```python
+def _encode_labels(df: pd.DataFrame) -> tuple[pd.DataFrame, LabelEncoder]:
+    df["Label"] = df["Label"].map(LABEL_MAP)
+    unmapped = df["Label"].isna().sum()
+    if unmapped:
+        logger.warning("Dropping %d rows with unmapped labels", unmapped)
+        df.dropna(subset=["Label"], inplace=True)
+    le = LabelEncoder()
+    df["Label"] = le.fit_transform(df["Label"])
+    logger.info("Encoded classes: %s", list(le.classes_))
+    return df, le
+```
+
+```python
+    # 6. Balance Dataset (train only)
+    logger.info("Balancing dataset to prevent OOM and speed up training ...")
+    unique, counts = np.unique(y_train, return_counts=True)
+    counts_dict = dict(zip(unique, counts))
+    
+    # Under-sample huge classes (like Benign) to max 250,000
+    under_strategy = {k: min(v, 250000) for k, v in counts_dict.items()}
+    rus = RandomUnderSampler(sampling_strategy=under_strategy, random_state=RANDOM_STATE)
+    X_train_res, y_train_res = rus.fit_resample(X_train, y_train)
+    
+    # Over-sample tiny classes to min 50,000
+    over_strategy = {k: max(v, 50000) for k, v in under_strategy.items()}
+    smote = SMOTE(sampling_strategy=over_strategy, random_state=RANDOM_STATE)
+    X_train_res, y_train_res = smote.fit_resample(X_train_res, y_train_res)
+    
+    logger.info("Post-resampling train shape: %s", X_train_res.shape)
+
+    # 7. Scale
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train_res)
+    X_test_scaled = scaler.transform(X_test)
+```
+
+## 6.1.2 Model Training and Selection
+
+Source: `ml/src/train_xgboost.py`
+
+```python
+def run() -> dict:
+    X_train, y_train, X_test, y_test, feature_names = _load()
+
+    logger.info("Training XGBoost Classifier (Sklearn 1.6 direct fit) ...")
+    
+    # Bypass Sklearn 1.6 GridSearchCV __sklearn_tags__ compatibility error
+    best_params = {
+        "n_estimators": 200,
+        "max_depth": 8,
+        "learning_rate": 0.1,
+        "subsample": 0.8,
+        "colsample_bytree": 0.8,
+    }
+    
+    best = XGBClassifier(**XGB_BASE_PARAMS, **best_params)
+
+    t0 = time.perf_counter()
+    best.fit(X_train, y_train)
+    train_time = time.perf_counter() - t0
+
+    logger.info("Best config: %s", best_params)
+
+    # Inference latency
+    t0 = time.perf_counter()
+    best.predict(X_test[:1000])
+    inf_ms = (time.perf_counter() - t0) / 1000 * 1000
+
+    y_pred = best.predict(X_test)
+    metrics: dict = {
+        "model": "xgboost",
+        "best_params": best_params,
+        "accuracy": round(accuracy_score(y_test, y_pred), 6),
+        "precision": round(precision_score(y_test, y_pred, average="weighted", zero_division=0), 6),
+        "recall": round(recall_score(y_test, y_pred, average="weighted", zero_division=0), 6),
+        "f1_weighted": round(f1_score(y_test, y_pred, average="weighted", zero_division=0), 6),
+        "train_time_sec": round(train_time, 2),
+        "inference_ms_per_sample": round(inf_ms, 4),
+    }
+    logger.info("XGBoost Metrics: %s", metrics)
+
+    out = MODELS_DIR / "xgboost"
+    best.save_model(str(out / "model.json"))          # portable JSON format
+    joblib.dump(feature_names, out / "feature_names.pkl")
+    with open(out / "metrics.json", "w") as f:
+        json.dump(metrics, f, indent=2)
+    with open(out / "classification_report.txt", "w") as f:
+        f.write(classification_report(y_test, y_pred))
+
+    logger.info("XGBoost saved -> %s", out)
+    return metrics
+```
+
+## 6.1.3 SHAP Local Attribution
+
+Source: `backend/app/services/explainer.py`
+
+```python
+    def _explain_sync(
+        self,
+        prediction_id: str,
+        raw_features: dict[str, float],
+        label: str,
+        scaler,
+    ) -> SHAPResult:
+        if not self._loaded:
+            raise RuntimeError("SHAP explainer not loaded - background data missing")
+        
+        vec = np.array(
+            [raw_features.get(f, 0.0) for f in self._feature_names], dtype=np.float32
+        ).reshape(1, -1)
+        vec = np.nan_to_num(vec, nan=0.0, posinf=0.0, neginf=0.0)
+        vec_scaled = scaler.transform(vec)
+
+        label_idx = list(self._label_encoder.classes_).index(label)
+        shap_vals = self._explainer.shap_values(vec_scaled)
+
+        # shap_vals: either list[n_classes x (1, n_features)] or array (1, n_features, n_classes)
+        if isinstance(shap_vals, list):
+            sv = shap_vals[label_idx][0]
+        elif isinstance(shap_vals, np.ndarray):
+            if len(shap_vals.shape) == 3:
+                # New SHAP versions return (n_samples, n_features, n_classes)
+                sv = shap_vals[0, :, label_idx]
+            else:
+                sv = shap_vals[0]
+        else:
+            sv = shap_vals[0]
+
+        # Build top-N sorted by absolute value
+        pairs = sorted(
+            zip(self._feature_names, sv),
+            key=lambda x: abs(x[1]),
+            reverse=True,
+        )[:TOP_N]
+
+        top_features = [
+            {
+                "feature": name,
+                "shap_value": round(float(val), 6),
+                "direction": "increases risk" if val > 0 else "decreases risk",
+            }
+            for name, val in pairs
+        ]
+        return SHAPResult(
+            prediction_id=prediction_id,
+            label=label,
+            top_features=top_features,
+            reason=_build_reason(label, top_features),
+        )
+```
+
+## 6.1.4 Kafka Simulation Producer
+
+Source: `kafka/producer.py`
+
+```python
+async def produce(
+    rate: float,
+    attack_only: bool,
+    dataset_path: Path,
+    max_messages: int,
+    single_pass: bool,
+    scaler_path: Path | None,
+    background_path: Path | None,
+) -> None:
+    rows, source_name = _prepare_rows(
+        dataset_path,
+        attack_only,
+        scaler_path,
+        max_messages,
+        background_path,
+    )
+
+    producer = AIOKafkaProducer(
+        bootstrap_servers=BOOTSTRAP,
+        value_serializer=lambda value: json.dumps(value).encode("utf-8"),
+    )
+    await producer.start()
+    logger.info(
+        "Producer started -> topic: %s | rate: %s msg/s | source: %s",
+        TOPIC,
+        rate if rate > 0 else "unlimited",
+        source_name,
+    )
+
+    sent = 0
+    try:
+        while True:
+            random.shuffle(rows)
+            for row in rows:
+                payload = {
+                    "features": {key: float(value) for key, value in row.items()},
+                    "source_ip": random.choice(SAMPLE_IPS),
+                    "destination_ip": random.choice(SAMPLE_IPS),
+                }
+                await producer.send_and_wait(TOPIC, payload)
+                sent += 1
+                if sent % 100 == 0:
+                    logger.info("Sent %d messages", sent)
+                if max_messages > 0 and sent >= max_messages:
+                    logger.info("Reached max message limit (%d)", max_messages)
+                    return
+                if rate > 0:
+                    await asyncio.sleep(1 / rate)
+            if single_pass:
+                logger.info("Single-pass replay complete after %d messages", sent)
+                return
+    except (KeyboardInterrupt, asyncio.CancelledError):
+        logger.info("Stopping producer after %d messages", sent)
+    finally:
+        await producer.stop()
+```
+
+## 6.1.5 FastAPI Prediction Endpoint
+
+Source: `backend/app/api/v1/routes/predict.py`
+
+```python
+async def _run_prediction(
+    req: PredictRequest, db: AsyncSession | None
+) -> PredictionResponse:
+    result = await inference_service.predict(req.features)
+    prediction_id = str(uuid.uuid4())
+    created_at = datetime.now(timezone.utc)
+
+    if db is None:
+        return PredictionResponse(
+            id=prediction_id,
+            label=result.label,
+            confidence=result.confidence,
+            is_attack=result.is_attack,
+            created_at=created_at,
+            source_ip=req.source_ip,
+            destination_ip=req.destination_ip,
+        )
+
+    pred = Prediction(
+        id=prediction_id,
+        label=result.label,
+        confidence=result.confidence,
+        is_attack=result.is_attack,
+        features_json=req.features,
+        source_ip=req.source_ip,
+        destination_ip=req.destination_ip,
+    )
+    db.add(pred)
+    await db.commit()
+    await db.refresh(pred)
+    return PredictionResponse.model_validate(pred)
+```
+
+```python
+@router.post("", response_model=PredictionResponse)
+@limiter.limit("30/minute")
+async def predict(
+    req: PredictRequest,
+    request: Request,
+    db: AsyncSession | None = Depends(get_optional_db),
+    token: VerifiedToken = Depends(verify_api_key),
+):
+    """Classify a single network flow and return label + confidence."""
+    try:
+        if not token.has_permission(TokenScope.PREDICT):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="This endpoint requires predict scope.",
+            )
+        return await _run_prediction(req, db)
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(exc),
+        ) from exc
+```
+
+## 6.1.6 Exploratory Analysis and Label Mapping
+
+Source: `ml/src/config.py`
+
+```python
+# Maps all 15+ raw CICIDS2017 class names -> 9 unified attack categories.
+LABEL_MAP: dict[str, str] = {
+    "BENIGN": "Benign",
+    "DoS Hulk": "DoS",
+    "DoS GoldenEye": "DoS",
+    "DoS slowloris": "DoS",
+    "DoS Slowhttptest": "DoS",
+    "DDoS": "DDoS",
+    "FTP-Patator": "Brute Force",
+    "SSH-Patator": "Brute Force",
+    "Web Attack \x96 Brute Force": "Web Attack",
+    "Web Attack \x96 XSS": "Web Attack",
+    "Web Attack \x96 Sql Injection": "Web Attack",
+    "Web Attack - Brute Force": "Web Attack",
+    "Web Attack - XSS": "Web Attack",
+    "Web Attack - Sql Injection": "Web Attack",
+    "Infiltration": "Infiltration",
+    "Bot": "Botnet",
+    "Heartbleed": "Heartbleed",
+    "PortScan": "PortScan",
+}
+```
+
+## 6.1.7 LSTM Comparison Model
+
+Source: `ml/src/train_lstm.py`
+
+```python
+SEQ_LEN: int = LSTM_CONFIG["sequence_length"]
+
+
+def _build_sequences(X: np.ndarray, y: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Sliding-window sequence builder."""
+    Xs, ys = [], []
+    for i in range(len(X) - SEQ_LEN):
+        Xs.append(X[i: i + SEQ_LEN])
+        ys.append(y[i + SEQ_LEN])
+    return np.array(Xs, dtype=np.float32), np.array(ys, dtype=np.int32)
+
+
+def _build_model(n_features: int, n_classes: int):
+    from tensorflow.keras.layers import LSTM, BatchNormalization, Dense, Dropout
+    from tensorflow.keras.models import Sequential
+
+    cfg = LSTM_CONFIG
+    model = Sequential([
+        LSTM(cfg["lstm_units"][0], return_sequences=True, input_shape=(SEQ_LEN, n_features)),
+        BatchNormalization(),
+        Dropout(cfg["dropout_rate"]),
+        LSTM(cfg["lstm_units"][1]),
+        BatchNormalization(),
+        Dropout(cfg["dropout_rate"]),
+        Dense(64, activation="relu"),
+        Dense(n_classes, activation="softmax"),
+    ])
+    model.compile(optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"])
+    return model
+```
+
+## 6.1.8 Kafka Consumer Loop
+
+Source: `backend/app/services/kafka_consumer.py`
+
+```python
+async def consume_forever() -> None:
+    """
+    Connect to Kafka and consume messages from the configured topic.
+
+    When the broker is not ready yet, keep retrying instead of parking forever.
+    """
+    retry_delay = max(float(settings.kafka_retry_delay_seconds), 1.0)
+    attempt = 0
+
+    while True:
+        try:
+            consumer = AIOKafkaConsumer(
+                settings.kafka_topic_traffic,
+                bootstrap_servers=settings.kafka_bootstrap_servers,
+                group_id=settings.kafka_group_id,
+                value_deserializer=lambda v: json.loads(v.decode("utf-8")),
+                auto_offset_reset="latest",
+                enable_auto_commit=True,
+            )
+            await consumer.start()
+            attempt = 0
+            logger.info("Kafka consumer started - topic: %s", settings.kafka_topic_traffic)
+        except asyncio.CancelledError:
+            raise
+        except (KafkaConnectionError, OSError, ConnectionError, asyncio.TimeoutError) as exc:
+            attempt += 1
+            logger.warning(
+                "Kafka connection attempt %s failed: %s: %s",
+                attempt,
+                type(exc).__name__,
+                exc,
+            )
+            logger.info("Retrying Kafka connection in %.1f seconds", retry_delay)
+            await asyncio.sleep(retry_delay)
+            continue
+        except Exception as exc:
+            logger.error("Unexpected error while starting Kafka consumer: %s", exc, exc_info=True)
+            await asyncio.sleep(retry_delay)
+            continue
+
+        try:
+            global _should_seek_to_end
+            async for msg in consumer:
+                if _should_seek_to_end:
+                    await consumer.seek_to_end()
+                    _should_seek_to_end = False
+                    continue
+                    
+                try:
+                    await process_traffic_message(msg.value)
+                except Exception as exc:
+                    logger.error("Error processing Kafka message: %s", exc, exc_info=True)
+        finally:
+            await consumer.stop()
+            logger.info("Kafka consumer stopped")
+
+        logger.info("Kafka consumer loop ended, reconnecting in %.1f seconds", retry_delay)
+        await asyncio.sleep(retry_delay)
+```
+
+## 6.1.9 Request Schema and API-Key Security
+
+Source: `backend/app/schemas/prediction.py`
+
+```python
+class PredictRequest(BaseModel):
+    features: dict[str, float] = Field(..., description="Feature name -> value mapping")
+    source_ip: str | None = None
+    destination_ip: str | None = None
+
+
+class BatchPredictRequest(BaseModel):
+    records: list[PredictRequest] = Field(..., max_length=1000)
+
+
+class PredictionResponse(BaseModel):
+    id: str
+    label: str
+    confidence: float
+    is_attack: bool
+    created_at: datetime
+    source_ip: str | None = None
+    destination_ip: str | None = None
+
+    model_config = {"from_attributes": True}
+```
+
+Source: `backend/app/core/security.py`
+
+```python
+async def verify_api_key(
+    request: Request,
+    api_key: str | None = Security(_api_key_header),
+) -> VerifiedToken:
+    """
+    Dependency: validates X-API-Key header and returns token info.
+    Supports both admin (api_secret_key) and public (api_public_key) tokens.
+    """
+    if not api_key:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Missing API key. Pass X-API-Key header.",
+        )
+
+    client_origin = request.client.host if request.client else "unknown"
+
+    # Admin token (full access)
+    if api_key == settings.api_secret_key:
+        return VerifiedToken(api_key, TokenScope.ADMIN, client_origin)
+
+    # Public token (frontend - limited access)
+    if api_key == settings.api_public_key:
+        return VerifiedToken(api_key, TokenScope.PUBLIC, client_origin)
+
+    # Invalid token
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Invalid API key.",
+    )
+```
+
+## 6.1.10 Frontend Live-Feed Hook
+
+Source: `frontend/hooks/use-alerts.ts`
+
+```typescript
+export const useAlerts = () => {
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [totalIngested, setTotalIngested] = useState(0);
+  const [totalAttacks, setTotalAttacks] = useState(0);
+  const [attackDistribution, setAttackDistribution] = useState<Record<string, number>>({});
+  const [loading, setLoading] = useState(true);
+  const [connected, setConnected] = useState(false);
+  const ws = useRef<WebSocket | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    fetchHistory(1, 100)
+      .then((res) => {
+        if (mounted) {
+          setAlerts(res.alerts);
+          setTotalIngested(res.total_predictions || res.total || res.alerts.length);
+          setTotalAttacks(res.total);
+
+          const initialDist: Record<string, number> = {};
+          res.alerts.forEach(a => {
+            const type = (a.is_attack ?? (a.attack_type && a.attack_type !== "Benign")) ? a.attack_type : "Benign";
+            initialDist[type] = (initialDist[type] || 0) + 1;
+          });
+          setAttackDistribution(initialDist);
+
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error("Fetch history error:", err);
+        if (mounted) setLoading(false);
+      });
+
+    const socketUrl = `${getWebSocketBaseUrl()}/alerts/live`;
+    let socket: WebSocket | null = null;
+
+    try {
+      socket = new WebSocket(socketUrl);
+      ws.current = socket;
+
+      socket.onopen = () => setConnected(true);
+      socket.onerror = (event) => {
+        console.error("WebSocket error:", event);
+      };
+      socket.onclose = () => setConnected(false);
+
+      socket.onmessage = (event) => {
+        try {
+          const newAlert: Alert = JSON.parse(event.data);
+          if (mounted) {
+            setAlerts((prev) => [newAlert, ...prev].slice(0, 500));
+            setTotalIngested((prev) => prev + 1);
+
+            const isAttack = newAlert.is_attack ?? (newAlert.attack_type && newAlert.attack_type !== "Benign");
+            const type = isAttack ? newAlert.attack_type : "Benign";
+
+            setAttackDistribution((prev) => ({
+              ...prev,
+              [type]: (prev[type] || 0) + 1
+            }));
+
+            if (isAttack) {
+              setTotalAttacks((prev) => prev + 1);
+            }
+          }
+        } catch (err) {
+          console.error("WS Parse error", err);
+        }
+      };
+    } catch (err) {
+      console.error(`WebSocket init error for ${socketUrl}:`, err);
+      setConnected(false);
+    }
+
+    return () => {
+      mounted = false;
+      socket?.close();
+    };
+  }, []);
+
+  return { alerts, totalIngested, totalAttacks, attackDistribution, loading, connected };
+};
+```
+
+## 6.1.11 Persistence Models
+
+Source: `backend/app/db/models/prediction.py`
+
+```python
+class Prediction(Base):
+    __tablename__ = "predictions"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
+    label: Mapped[str] = mapped_column(String(64), index=True)
+    confidence: Mapped[float] = mapped_column(Float)
+    is_attack: Mapped[bool] = mapped_column(default=False)
+    features_json: Mapped[dict] = mapped_column(JSON, nullable=True)
+    shap_json: Mapped[dict] = mapped_column(JSON, nullable=True)
+    source_ip: Mapped[str] = mapped_column(String(64), nullable=True)
+    destination_ip: Mapped[str] = mapped_column(String(64), nullable=True)
+```
+
+Source: `backend/app/db/models/alert.py`
+
+```python
+class Alert(Base):
+    __tablename__ = "alerts"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), index=True
+    )
+    prediction_id: Mapped[str] = mapped_column(String(36), index=True)
+    attack_type: Mapped[str] = mapped_column(String(64), index=True)
+    confidence: Mapped[float] = mapped_column(Float)
+    severity: Mapped[str] = mapped_column(String(16))  # LOW | MEDIUM | HIGH | CRITICAL
+    reason: Mapped[str] = mapped_column(String(2048), nullable=True)
+    source_ip: Mapped[str] = mapped_column(String(64), nullable=True)
+    destination_ip: Mapped[str] = mapped_column(String(64), nullable=True)
+```
+
+## 6.1.12 WebSocket Broadcast Hub
+
+Source: `backend/app/services/websocket_manager.py`
+
+```python
+class WebSocketManager:
+    def __init__(self) -> None:
+        self._connections: list[WebSocket] = []
+
+    async def connect(self, ws: WebSocket) -> None:
+        await ws.accept()
+        self._connections.append(ws)
+        logger.info("WS client connected. Total: %d", len(self._connections))
+
+    def disconnect(self, ws: WebSocket) -> None:
+        self._connections = [c for c in self._connections if c is not ws]
+        logger.info("WS client disconnected. Total: %d", len(self._connections))
+
+    async def broadcast(self, message: str) -> None:
+        dead: list[WebSocket] = []
+        for ws in self._connections:
+            try:
+                await ws.send_text(message)
+            except Exception:
+                dead.append(ws)
+        for ws in dead:
+            self.disconnect(ws)
+
+
+ws_manager = WebSocketManager()
+```
+
+Source: `backend/app/api/v1/routes/alerts.py`
+
+```python
+@router.websocket("/live")
+async def alerts_live(ws: WebSocket):
+    """WebSocket endpoint - streams real-time alert JSON as events arrive."""
+    await ws_manager.connect(ws)
+    try:
+        while True:
+            await ws.receive_text()   # keep connection alive; client can send pings
+    except WebSocketDisconnect:
+        ws_manager.disconnect(ws)
+```

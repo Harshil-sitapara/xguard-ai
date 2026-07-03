@@ -69,7 +69,15 @@ async def process_traffic_message(raw: dict) -> dict | None:
         "destination_ip": dest_ip,
     }
 
+    print(f"\n[DEBUG CONSUMER] Received message. Processing...", flush=True)
+    print(f"[DEBUG CONSUMER] SessionLocal is None: {db_session.AsyncSessionLocal is None}", flush=True)
+
     if db_session.AsyncSessionLocal is not None:
+        db_url = "Unknown"
+        if db_session.engine:
+            db_url = str(db_session.engine.url)
+        print(f"[DEBUG CONSUMER] Database Connection URL: {db_url}", flush=True)
+        print(f"[DEBUG CONSUMER] Attempting to save prediction ID: {pred_id}", flush=True)
         try:
             async with db_session.AsyncSessionLocal() as db:
                 pred = Prediction(
@@ -98,8 +106,12 @@ async def process_traffic_message(raw: dict) -> dict | None:
                     db.add(alert)
 
                 await db.commit()
+                print(f"[DEBUG CONSUMER] Prediction ID {pred_id} successfully COMMITTED to DB.\n", flush=True)
         except Exception as exc:
+            print(f"[DEBUG CONSUMER] Failed to persist prediction ID {pred_id}: {exc}", flush=True)
             logger.warning("Failed to persist processed traffic message: %s", exc)
+    else:
+        print(f"[DEBUG CONSUMER] Database Session factory is None! Skipping persistence.\n", flush=True)
 
     await ws_manager.broadcast(json.dumps(payload))
     return payload

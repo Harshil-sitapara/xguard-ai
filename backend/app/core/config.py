@@ -18,6 +18,8 @@ class Settings(BaseSettings):
 
     # Database
     database_url: str = "postgresql+asyncpg://xguard:xguard_secret@localhost:5432/xguard"
+    db_connect_timeout_seconds: float = 5.0
+    db_query_timeout_seconds: float = 8.0
 
     # Kafka
     kafka_bootstrap_servers: str = "localhost:9092"
@@ -29,17 +31,21 @@ class Settings(BaseSettings):
 
     # Security - API Keys
     api_secret_key: str = "dev_secret_change_in_production"
-    api_public_key: str = "dev_public_key_for_frontend"  # Limited-scope public token
+    api_public_key: str = "dev_public_key_for_frontend" 
     
     # CORS
-    cors_origins: List[str] = ["http://localhost:3000"]
+    cors_origins: List[str] = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://www.xguard-ai.tech",
+    ]
     
     # Rate Limiting
     rate_limit_enabled: bool = True
-    rate_limit_predict: str = "30/minute"  # 30 requests/minute for predictions
-    rate_limit_explain: str = "20/minute"  # 20 requests/minute for explanations
-    rate_limit_alerts: str = "50/minute"   # 50 requests/minute for alerts fetch
-    rate_limit_default: str = "100/minute" # Default for other endpoints
+    rate_limit_predict: str = "30/minute"
+    rate_limit_explain: str = "20/minute"
+    rate_limit_alerts: str = "50/minute"
+    rate_limit_default: str = "100/minute"
 
     # Model
     best_model_type: str = "xgboost"

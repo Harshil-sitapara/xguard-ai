@@ -1,13 +1,15 @@
 """Alerts: REST history + WebSocket live stream."""
 from __future__ import annotations
 
+import asyncio
 import logging
 
-from fastapi import APIRouter, Depends, Query, Request, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, WebSocket, WebSocketDisconnect, status
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_optional_db
+from app.core.config import settings
 from app.core.rate_limiter import limiter
 from app.core.security import TokenScope, VerifiedToken, verify_api_key
 from app.db.models.alert import Alert
@@ -32,8 +34,6 @@ async def list_alerts(
     """Paginated alert history with optional attack_type filter."""
     try:
         if not token.has_permission(TokenScope.ALERTS):
-            from fastapi import HTTPException, status
-
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="This endpoint requires alerts scope.",
@@ -55,11 +55,24 @@ async def list_alerts(
             q = q.where(Alert.attack_type == attack_type)
             count_q = count_q.where(Alert.attack_type == attack_type)
 
-        total = (await db.execute(count_q)).scalar_one()
-        total_predictions = (await db.execute(pred_count_q)).scalar_one()
+        total = (
+            await asyncio.wait_for(
+                db.execute(count_q),
+                timeout=settings.db_query_timeout_seconds,
+            )
+        ).scalar_one()
+        total_predictions = (
+            await asyncio.wait_for(
+                db.execute(pred_count_q),
+                timeout=settings.db_query_timeout_seconds,
+            )
+        ).scalar_one()
 
         rows = (
-            await db.execute(q.offset((page - 1) * page_size).limit(page_size))
+            await asyncio.wait_for(
+                db.execute(q.offset((page - 1) * page_size).limit(page_size)),
+                timeout=settings.db_query_timeout_seconds,
+            )
         ).scalars().all()
         return AlertsListResponse(
             alerts=[AlertResponse.model_validate(r) for r in rows],
@@ -68,9 +81,16 @@ async def list_alerts(
             page=page,
             page_size=page_size,
         )
+    except HTTPException:
+        raise
+    except asyncio.TimeoutError as exc:
+        logger.warning("Alerts endpoint timed out after %.1f seconds", settings.db_query_timeout_seconds)
+        raise HTTPException(
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            detail="Alert history query timed out. Check database connectivity.",
+        ) from exc
     except Exception as exc:
         logger.exception("Alerts endpoint failed")
-        from fastapi import HTTPException, status
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(exc),

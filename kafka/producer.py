@@ -41,13 +41,8 @@ MODELS_DIR = os.getenv("MODELS_DIR", "../ml/models")
 DEFAULT_SCALER_PATH = Path(MODELS_DIR) / "preprocessor" / "scaler.pkl"
 DEFAULT_BACKGROUND_PATH = Path(MODELS_DIR) / "xgboost" / "shap_background.pkl"
 
-SAMPLE_IPS = [
-    "192.168.1.10",
-    "10.0.0.5",
-    "172.16.0.3",
-    "203.0.113.42",
-    "198.51.100.7",
-]
+SRC_IP_KEYS = {"source ip", "source_ip", "src_ip", "sourceip", "src", "source"}
+DST_IP_KEYS = {"destination ip", "destination_ip", "dest_ip", "dst_ip", "destinationip", "destip", "dst", "destination"}
 
 
 def _default_dataset_path() -> Path:
@@ -72,11 +67,19 @@ def _prepare_rows(
     if dataset_path.exists():
         logger.info("Loading dataset from %s ...", dataset_path)
         df = pd.read_parquet(dataset_path)
-        feature_cols = [column for column in df.columns if column != "Label"]
+
+        feature_names_path = Path(scaler_path).parent / "feature_names.pkl"
+        if feature_names_path.exists():
+            feature_cols = [col for col in joblib.load(feature_names_path) if col in df.columns]
+        else:
+            feature_cols = [column for column in df.columns if column != "Label" and str(column).lower() not in SRC_IP_KEYS and str(column).lower() not in DST_IP_KEYS]
 
         if attack_only:
-            df = df[df["Label"] != 0]
-            logger.info("Attack-only mode: %d rows", len(df))
+            if "Label" in df.columns:
+                df = df[df["Label"] != 0]
+                logger.info("Attack-only mode: %d rows", len(df))
+            else:
+                logger.warning("Attack-only mode requested but no 'Label' column found.")
 
         if df.empty:
             raise RuntimeError("No rows available for the selected replay filters.")
@@ -87,9 +90,28 @@ def _prepare_rows(
             logger.info("Prepared %d sampled replay rows", sample_size)
 
         unscaled = scaler.inverse_transform(df[feature_cols])
-        df = pd.DataFrame(unscaled, columns=feature_cols, index=df.index).assign(Label=df["Label"].values)
+        df_unscaled = pd.DataFrame(unscaled, columns=feature_cols, index=df.index)
+
+        if "Label" in df.columns:
+            df_unscaled = df_unscaled.assign(Label=df["Label"].values)
+
+        # Extract and preserve IP columns if present in raw df
+        src_ip_col = None
+        dst_ip_col = None
+        for col in df.columns:
+            col_lower = str(col).strip().lower()
+            if col_lower in SRC_IP_KEYS:
+                src_ip_col = col
+            elif col_lower in DST_IP_KEYS:
+                dst_ip_col = col
+
+        if src_ip_col is not None:
+            df_unscaled = df_unscaled.assign(source_ip=df[src_ip_col].values)
+        if dst_ip_col is not None:
+            df_unscaled = df_unscaled.assign(destination_ip=df[dst_ip_col].values)
+
         logger.info("Inverse-transformed replay rows using scaler at %s", scaler_path)
-        return df[feature_cols].to_dict(orient="records"), "held-out test split"
+        return df_unscaled.to_dict(orient="records"), "held-out test split"
 
     if attack_only:
         raise RuntimeError(
@@ -155,10 +177,50 @@ async def produce(
         while True:
             random.shuffle(rows)
             for row in rows:
+                features = {}
+                source_ip = row.get("source_ip")
+                destination_ip = row.get("destination_ip")
+                row_label = row.get("Label", 0)
+
+                # Identify source and destination IP if stored under original column names
+                for k, v in row.items():
+                    k_lower = str(k).strip().lower()
+                    if k_lower in SRC_IP_KEYS and not source_ip:
+                        source_ip = str(v)
+                    elif k_lower in DST_IP_KEYS and not destination_ip:
+                        destination_ip = str(v)
+
+                # Extract features (filter out non-feature metadata)
+                for k, v in row.items():
+                    k_lower = str(k).strip().lower()
+                    if (
+                        k != "source_ip"
+                        and k != "destination_ip"
+                        and k_lower != "label"
+                        and k_lower not in SRC_IP_KEYS
+                        and k_lower not in DST_IP_KEYS
+                        and k_lower != "timestamp"
+                        and k_lower != "flow id"
+                    ):
+                        try:
+                            features[k] = float(v)
+                        except (ValueError, TypeError):
+                            features[k] = 0.0
+
+                # Fallback to simulated IP routing if not present in the record
+                if not source_ip or not destination_ip:
+                    is_attack = row_label != 0
+                    if is_attack:
+                        source_ip = source_ip or f"203.0.113.{random.randint(10, 250)}"
+                        destination_ip = destination_ip or f"192.168.1.{random.randint(100, 200)}"
+                    else:
+                        source_ip = source_ip or f"192.168.1.{random.randint(10, 99)}"
+                        destination_ip = destination_ip or f"192.168.1.{random.randint(100, 200)}"
+
                 payload = {
-                    "features": {key: float(value) for key, value in row.items()},
-                    "source_ip": random.choice(SAMPLE_IPS),
-                    "destination_ip": random.choice(SAMPLE_IPS),
+                    "features": features,
+                    "source_ip": source_ip,
+                    "destination_ip": destination_ip,
                 }
                 await producer.send_and_wait(TOPIC, payload)
                 sent += 1

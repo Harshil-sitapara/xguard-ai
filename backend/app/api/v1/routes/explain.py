@@ -45,11 +45,19 @@ async def explain(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Database is unavailable for explanation lookup.",
         )
+        
+    db_url = "Unknown"
+    if db.bind:
+        db_url = str(db.bind.url)
+    print(f"\n[DEBUG API EXPLAIN] Requested prediction ID: {prediction_id}", flush=True)
+    print(f"[DEBUG API EXPLAIN] Database Connection URL: {db_url}\n", flush=True)
+
     result = await db.execute(
         select(Prediction).where(Prediction.id == prediction_id)
     )
     pred = result.scalar_one_or_none()
     if not pred:
+        print(f"[DEBUG API EXPLAIN] Prediction {prediction_id} was NOT found in DB!", flush=True)
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Prediction not found")
 
     # Return cached SHAP if available

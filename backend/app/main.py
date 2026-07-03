@@ -33,6 +33,7 @@ setup_logging()
 logger = logging.getLogger(__name__)
 
 _consumer_task: asyncio.Task | None = None
+_explainer_task: asyncio.Task | None = None
 
 
 async def _prepare_database() -> bool:
@@ -48,11 +49,38 @@ async def _prepare_database() -> bool:
     try:
         async with db_session.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
+            
+            # Ensure alerts table has correct column size for reason
             try:
                 from sqlalchemy import text
                 await conn.execute(text("ALTER TABLE alerts ALTER COLUMN reason TYPE VARCHAR(2048);"))
             except Exception:
                 pass
+            
+            # Ensure predictions table has source_ip and destination_ip columns
+            try:
+                from sqlalchemy import text
+                await conn.execute(text("ALTER TABLE predictions ADD COLUMN source_ip VARCHAR(64);"))
+            except Exception:
+                pass
+            try:
+                from sqlalchemy import text
+                await conn.execute(text("ALTER TABLE predictions ADD COLUMN destination_ip VARCHAR(64);"))
+            except Exception:
+                pass
+                
+            # Ensure alerts table has source_ip and destination_ip columns
+            try:
+                from sqlalchemy import text
+                await conn.execute(text("ALTER TABLE alerts ADD COLUMN source_ip VARCHAR(64);"))
+            except Exception:
+                pass
+            try:
+                from sqlalchemy import text
+                await conn.execute(text("ALTER TABLE alerts ADD COLUMN destination_ip VARCHAR(64);"))
+            except Exception:
+                pass
+                
         logger.info("Database tables ready")
         return True
     except Exception as exc:
@@ -62,17 +90,28 @@ async def _prepare_database() -> bool:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global _consumer_task
+    global _consumer_task, _explainer_task
 
     logger.info("XGuard-AI starting ...")
 
     try:
         inference_service.load(settings.models_path)
-        explainer_service.load(settings.models_path)
-        logger.info("ML models loaded successfully")
+        logger.info("Inference model loaded successfully")
     except Exception as exc:
         logger.error(f"Failed to load ML models: {exc}")
         raise
+
+    async def load_explainer_background() -> None:
+        try:
+            await asyncio.to_thread(explainer_service.load, settings.models_path)
+            if explainer_service.loaded:
+                logger.info("SHAP explainer loaded successfully")
+            else:
+                logger.warning("SHAP explainer unavailable: %s", explainer_service.load_error)
+        except Exception as exc:
+            logger.warning("SHAP explainer background load failed: %s", exc, exc_info=True)
+
+    _explainer_task = asyncio.create_task(load_explainer_background())
 
     await _prepare_database()
 
@@ -99,6 +138,9 @@ async def lifespan(app: FastAPI):
             await _consumer_task
         except asyncio.CancelledError:
             pass
+
+    if _explainer_task and not _explainer_task.done():
+        _explainer_task.cancel()
 
     if db_session.engine is not None:
         try:
@@ -128,6 +170,7 @@ else:
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
+    allow_origin_regex=r"^https://(www\.)?xguard-ai\.tech$|^http://(localhost|127\.0\.0\.1):\d+$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

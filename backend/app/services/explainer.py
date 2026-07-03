@@ -6,6 +6,7 @@ Loaded once at startup; explain() called on-demand per API request.
 """
 from __future__ import annotations
 
+import asyncio
 import logging
 from dataclasses import dataclass
 from pathlib import Path
@@ -146,6 +147,7 @@ class ExplainerService:
         self._label_encoder = None
         self._loaded: bool = False
         self._load_error: str | None = None
+        self._lock: asyncio.Lock | None = None
 
     @property
     def loaded(self) -> bool:
@@ -245,7 +247,6 @@ class ExplainerService:
         scaler,
     ) -> SHAPResult:
         if self._lock is None:
-            import asyncio
             self._lock = asyncio.Lock()
             
         async with self._lock:

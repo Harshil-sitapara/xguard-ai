@@ -54,6 +54,7 @@ export interface StartTrafficReplayRequest {
 
 const DEFAULT_API_URL = "http://localhost:8000/api/v1";
 const API_KEY = process.env.NEXT_PUBLIC_API_TOKEN || "";
+const REQUEST_TIMEOUT_MS = 12000;
 
 const stripTrailingSlash = (value: string) => value.replace(/\/+$/, "");
 
@@ -107,6 +108,29 @@ const readErrorMessage = async (response: Response, fallback: string) => {
   return fallback;
 };
 
+const fetchWithTimeout = async (
+  input: RequestInfo | URL,
+  init: RequestInit = {},
+  timeoutMs = REQUEST_TIMEOUT_MS
+) => {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(input, {
+      ...init,
+      signal: init.signal ?? controller.signal,
+    });
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new Error("Backend request timed out. Check that the API server is running.");
+    }
+    throw error;
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+};
+
 export const getApiBaseUrl = () => {
   const configuredUrl = process.env.NEXT_PUBLIC_API_URL || DEFAULT_API_URL;
   return stripTrailingSlash(
@@ -126,7 +150,7 @@ export const getWebSocketBaseUrl = () => {
 };
 
 export const fetchHistory = async (page = 1, pageSize = 50): Promise<AlertsResponse> => {
-  const rs = await fetch(`${getApiBaseUrl()}/alerts?page=${page}&page_size=${pageSize}`, {
+  const rs = await fetchWithTimeout(`${getApiBaseUrl()}/alerts?page=${page}&page_size=${pageSize}`, {
     headers: { "X-API-Key": API_KEY }
   });
   if (!rs.ok) throw new Error(await readErrorMessage(rs, "Failed to fetch alerts history"));
@@ -134,7 +158,7 @@ export const fetchHistory = async (page = 1, pageSize = 50): Promise<AlertsRespo
 };
 
 export const fetchExplanation = async (id: string): Promise<ShapResult> => {
-  const rs = await fetch(`${getApiBaseUrl()}/explain/${id}`, {
+  const rs = await fetchWithTimeout(`${getApiBaseUrl()}/explain/${id}`, {
     headers: { "X-API-Key": API_KEY }
   });
   if (!rs.ok) throw new Error(await readErrorMessage(rs, "Failed to fetch SHAP explanation"));
@@ -142,7 +166,7 @@ export const fetchExplanation = async (id: string): Promise<ShapResult> => {
 };
 
 export const fetchReplayStatus = async (): Promise<TrafficReplayStatus> => {
-  const rs = await fetch(`${getApiBaseUrl()}/replay/status`, {
+  const rs = await fetchWithTimeout(`${getApiBaseUrl()}/replay/status`, {
     headers: { "X-API-Key": API_KEY }
   });
   if (!rs.ok) throw new Error(await readErrorMessage(rs, "Failed to fetch replay status"));
@@ -152,7 +176,7 @@ export const fetchReplayStatus = async (): Promise<TrafficReplayStatus> => {
 export const startTrafficReplay = async (
   body: StartTrafficReplayRequest
 ): Promise<TrafficReplayStatus> => {
-  const rs = await fetch(`${getApiBaseUrl()}/replay/start`, {
+  const rs = await fetchWithTimeout(`${getApiBaseUrl()}/replay/start`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -167,7 +191,7 @@ export const startTrafficReplay = async (
 };
 
 export const stopTrafficReplay = async (): Promise<TrafficReplayStatus> => {
-  const rs = await fetch(`${getApiBaseUrl()}/replay/stop`, {
+  const rs = await fetchWithTimeout(`${getApiBaseUrl()}/replay/stop`, {
     method: "POST",
     headers: { "X-API-Key": API_KEY }
   });

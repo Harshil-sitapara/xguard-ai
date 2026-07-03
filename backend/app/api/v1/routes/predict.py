@@ -114,9 +114,8 @@ async def _process_csv_and_publish(rows: list[dict]):
         global _upload_cancel_requested
         logger.info(f"Starting to process {len(rows)} rows from CSV")
         
-        sample_ips = [
-            "192.168.1.10", "10.0.0.5", "172.16.0.3", "203.0.113.42", "198.51.100.7",
-        ]
+        SRC_IP_KEYS = {"source ip", "source_ip", "src_ip", "sourceip", "src", "source"}
+        DST_IP_KEYS = {"destination ip", "destination_ip", "dest_ip", "dst_ip", "destinationip", "destip", "dst", "destination"}
 
         logger.info(f"Connecting to Kafka at {settings.kafka_bootstrap_servers}")
         producer = AIOKafkaProducer(
@@ -131,11 +130,34 @@ async def _process_csv_and_publish(rows: list[dict]):
                     logger.info("Upload processing cancelled by user.")
                     break
                 
-                # Clean row: remove Label if present and strip whitespace from keys
+                source_ip = None
+                destination_ip = None
+                row_label = None
+
+                # First pass: identify IPs and Label (case-insensitive keys)
+                for k, v in row.items():
+                    clean_k = str(k).strip().lower()
+                    if clean_k == "label":
+                        row_label = v
+                    elif clean_k in SRC_IP_KEYS:
+                        if pd.notna(v) and str(v).strip() != "":
+                            source_ip = str(v).strip()
+                    elif clean_k in DST_IP_KEYS:
+                        if pd.notna(v) and str(v).strip() != "":
+                            destination_ip = str(v).strip()
+                
+                # Clean row: remove metadata and construct numeric features
                 features = {}
                 for k, v in row.items():
                     clean_k = str(k).strip()
-                    if clean_k.lower() != "label":
+                    clean_k_lower = clean_k.lower()
+                    if (
+                        clean_k_lower != "label"
+                        and clean_k_lower not in SRC_IP_KEYS
+                        and clean_k_lower not in DST_IP_KEYS
+                        and clean_k_lower != "timestamp"
+                        and clean_k_lower != "flow id"
+                    ):
                         try:
                             # Handle pandas NaN or None
                             import math
@@ -149,11 +171,24 @@ async def _process_csv_and_publish(rows: list[dict]):
                                     features[clean_k] = f_val
                         except (ValueError, TypeError):
                             features[clean_k] = 0.0
+                
+                # Fallback to simulated IP routing if not present in the record
+                if not source_ip or not destination_ip:
+                    is_attack = False
+                    if row_label is not None:
+                        is_attack = str(row_label).strip().lower() not in ["0", "benign", "0.0"]
+                    
+                    if is_attack:
+                        source_ip = source_ip or f"203.0.113.{random.randint(10, 250)}"
+                        destination_ip = destination_ip or f"192.168.1.{random.randint(100, 200)}"
+                    else:
+                        source_ip = source_ip or f"192.168.1.{random.randint(10, 99)}"
+                        destination_ip = destination_ip or f"192.168.1.{random.randint(100, 200)}"
                     
                 payload = {
                     "features": features,
-                    "source_ip": random.choice(sample_ips),
-                    "destination_ip": random.choice(sample_ips),
+                    "source_ip": source_ip,
+                    "destination_ip": destination_ip,
                 }
                 await producer.send_and_wait(settings.kafka_topic_traffic, payload)
                 if i % 100 == 0:

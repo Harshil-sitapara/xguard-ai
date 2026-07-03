@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import logging
 from collections.abc import AsyncGenerator
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
@@ -13,7 +14,6 @@ from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-# Database engine initialized lazily (None if DATABASE_URL is invalid)
 engine: Optional[object] = None
 AsyncSessionLocal: Optional[object] = None
 
@@ -22,7 +22,11 @@ def _normalize_database_url(raw_url: str) -> tuple[str, dict]:
     """Translate URL query params unsupported by asyncpg into connect_args."""
     parts = urlsplit(raw_url)
     query = dict(parse_qsl(parts.query, keep_blank_values=True))
-    connect_args: dict = {"server_settings": {"jit": "off"}}
+    connect_args: dict = {
+        "server_settings": {"jit": "off"},
+        "timeout": settings.db_connect_timeout_seconds,
+        "command_timeout": settings.db_query_timeout_seconds,
+    }
 
     scheme = parts.scheme
     if scheme in {"postgres", "postgresql"}:
@@ -30,7 +34,7 @@ def _normalize_database_url(raw_url: str) -> tuple[str, dict]:
 
     sslmode = query.pop("sslmode", None)
     if sslmode:
-        connect_args["ssl"] = sslmode
+        connect_args["ssl"] = sslmode.lower() != "disable"
 
     normalized_url = urlunsplit(
         (scheme, parts.netloc, parts.path, urlencode(query), parts.fragment)
@@ -54,6 +58,8 @@ def init_db(database_url: str | None = None):
             connect_args=connect_args,
             pool_size=10,
             max_overflow=20,
+            pool_pre_ping=True,
+            pool_timeout=settings.db_connect_timeout_seconds,
             echo=settings.environment == "development",
         )
         AsyncSessionLocal = async_sessionmaker(
@@ -82,7 +88,10 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
 
     async with AsyncSessionLocal() as session:
         try:
-            await session.execute(text("SELECT 1"))
+            await asyncio.wait_for(
+                session.execute(text("SELECT 1")),
+                timeout=settings.db_query_timeout_seconds,
+            )
         except Exception as exc:
             logger.warning("Database session unavailable: %s", exc)
             raise HTTPException(
@@ -105,7 +114,10 @@ async def get_optional_db() -> AsyncGenerator[AsyncSession | None, None]:
 
     async with AsyncSessionLocal() as session:
         try:
-            await session.execute(text("SELECT 1"))
+            await asyncio.wait_for(
+                session.execute(text("SELECT 1")),
+                timeout=settings.db_query_timeout_seconds,
+            )
         except Exception as exc:
             logger.warning("Continuing without database access: %s", exc)
             yield None
