@@ -7,7 +7,7 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.db.base import Base
-from app.db.session import get_db
+from app.db.session import get_db, get_optional_db
 from app.main import app
 from app.services.inference import inference_service
 
@@ -34,6 +34,7 @@ async def db_session(db_engine):
 @pytest_asyncio.fixture
 async def client(db_session):
     app.dependency_overrides[get_db] = lambda: db_session
+    app.dependency_overrides[get_optional_db] = lambda: db_session
 
     # Patch model so tests don't need real artefacts
     class _FakeResult:

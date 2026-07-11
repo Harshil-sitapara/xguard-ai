@@ -45,6 +45,12 @@ SRC_IP_KEYS = {"source ip", "source_ip", "src_ip", "sourceip", "src", "source"}
 DST_IP_KEYS = {"destination ip", "destination_ip", "dest_ip", "dst_ip", "destinationip", "destip", "dst", "destination"}
 
 
+try:
+    from constants import BENIGN_SRC_IPS, BENIGN_DST_IPS, ATTACK_SRC_IPS, ATTACK_DST_IPS
+except ImportError:
+    from kafka.constants import BENIGN_SRC_IPS, BENIGN_DST_IPS, ATTACK_SRC_IPS, ATTACK_DST_IPS
+
+
 def _default_dataset_path() -> Path:
     mixed_path = Path(PROCESSED_DIR) / "test_mixed.parquet"
     if mixed_path.exists():
@@ -211,11 +217,12 @@ async def produce(
                 if not source_ip or not destination_ip:
                     is_attack = row_label != 0
                     if is_attack:
-                        source_ip = source_ip or f"203.0.113.{random.randint(10, 250)}"
-                        destination_ip = destination_ip or f"192.168.1.{random.randint(100, 200)}"
+                        source_ip = source_ip or random.choice(ATTACK_SRC_IPS)
+                        destination_ip = destination_ip or random.choice(ATTACK_DST_IPS)
                     else:
-                        source_ip = source_ip or f"192.168.1.{random.randint(10, 99)}"
-                        destination_ip = destination_ip or f"192.168.1.{random.randint(100, 200)}"
+                        source_ip = source_ip or random.choice(BENIGN_SRC_IPS)
+                        destination_ip = destination_ip or random.choice(BENIGN_DST_IPS)
+
 
                 payload = {
                     "features": features,

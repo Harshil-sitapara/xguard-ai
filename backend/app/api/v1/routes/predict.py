@@ -108,6 +108,15 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+import sys
+from app.core.config import settings
+
+if str(settings.app_root) not in sys.path:
+    sys.path.append(str(settings.app_root))
+
+from kafka.constants import BENIGN_SRC_IPS, BENIGN_DST_IPS, ATTACK_SRC_IPS, ATTACK_DST_IPS
+
+
 async def _process_csv_and_publish(rows: list[dict]):
     """Background task to publish CSV rows to Kafka."""
     try:
@@ -179,11 +188,12 @@ async def _process_csv_and_publish(rows: list[dict]):
                         is_attack = str(row_label).strip().lower() not in ["0", "benign", "0.0"]
                     
                     if is_attack:
-                        source_ip = source_ip or f"203.0.113.{random.randint(10, 250)}"
-                        destination_ip = destination_ip or f"192.168.1.{random.randint(100, 200)}"
+                        source_ip = source_ip or random.choice(ATTACK_SRC_IPS)
+                        destination_ip = destination_ip or random.choice(ATTACK_DST_IPS)
                     else:
-                        source_ip = source_ip or f"192.168.1.{random.randint(10, 99)}"
-                        destination_ip = destination_ip or f"192.168.1.{random.randint(100, 200)}"
+                        source_ip = source_ip or random.choice(BENIGN_SRC_IPS)
+                        destination_ip = destination_ip or random.choice(BENIGN_DST_IPS)
+
                     
                 payload = {
                     "features": features,
