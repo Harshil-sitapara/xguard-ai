@@ -9,6 +9,7 @@ import { TrafficReplayControls } from "@/components/dashboard/traffic-replay-con
 import { CsvUploadControls } from "@/components/dashboard/csv-upload";
 import { ThemeToggle } from "@/components/theme-toggle";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function DashboardPage() {
@@ -47,14 +48,24 @@ export default function DashboardPage() {
     <main className="min-h-screen bg-background p-8 font-sans text-foreground selection:bg-cyan-400/20 transition-colors duration-300">
       <div className="mb-8 flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
         <div className="flex items-center gap-4">
-          <Image
-            src="/brand/log_with_name.png"
-            alt="XGuard-AI"
-            width={508}
-            height={164}
-            priority
-            className="brand-logo h-auto w-[180px] sm:w-[220px] xl:w-[260px]"
-          />
+          <Link href="/" className="shrink-0">
+            <Image
+              src="/brand/log_with_name_light.png"
+              alt="XGuard-AI"
+              width={508}
+              height={164}
+              priority
+              className="brand-logo dark:hidden h-auto w-[180px] sm:w-[220px] xl:w-[260px]"
+            />
+            <Image
+              src="/brand/log_with_name.png"
+              alt="XGuard-AI"
+              width={508}
+              height={164}
+              priority
+              className="brand-logo hidden dark:block h-auto w-[180px] sm:w-[220px] xl:w-[260px]"
+            />
+          </Link>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 rounded-full border border-border bg-card/50 px-4 py-2 shadow-sm backdrop-blur-sm transition-colors duration-300">

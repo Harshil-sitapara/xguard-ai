@@ -251,12 +251,20 @@ export function LandingPage() {
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-4 sm:px-6 lg:px-8">
           <Link href="/" className="shrink-0">
             <Image
+              src="/brand/log_with_name_light.png"
+              alt="XGuard AI"
+              width={508}
+              height={164}
+              priority
+              className="brand-logo dark:hidden h-auto w-[155px] object-contain sm:w-[190px] lg:w-[220px]"
+            />
+            <Image
               src="/brand/log_with_name.png"
               alt="XGuard AI"
               width={508}
               height={164}
               priority
-              className="brand-logo h-auto w-[155px] object-contain sm:w-[190px] lg:w-[220px]"
+              className="brand-logo hidden dark:block h-auto w-[155px] object-contain sm:w-[190px] lg:w-[220px]"
             />
           </Link>
 
