@@ -248,7 +248,7 @@ export function LandingPage() {
             : "bg-transparent"
         )}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-3 sm:gap-3 sm:px-6 sm:py-4 lg:px-8">
           <Link href="/" className="shrink-0">
             <Image
               src="/brand/log_with_name_light.png"
@@ -256,7 +256,7 @@ export function LandingPage() {
               width={508}
               height={164}
               priority
-              className="brand-logo dark:hidden h-auto w-[155px] object-contain sm:w-[190px] lg:w-[220px]"
+              className="brand-logo dark:hidden h-auto w-[120px] xs:w-[135px] sm:w-[180px] lg:w-[220px] object-contain"
             />
             <Image
               src="/brand/log_with_name.png"
@@ -264,7 +264,7 @@ export function LandingPage() {
               width={508}
               height={164}
               priority
-              className="brand-logo hidden dark:block h-auto w-[155px] object-contain sm:w-[190px] lg:w-[220px]"
+              className="brand-logo hidden dark:block h-auto w-[120px] xs:w-[135px] sm:w-[180px] lg:w-[220px] object-contain"
             />
           </Link>
 
@@ -280,41 +280,41 @@ export function LandingPage() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-3 shrink-0">
             <ThemeToggle />
             <Button
               asChild
               size="lg"
-              className="h-11 rounded-full bg-slate-950 px-5 text-sm font-semibold text-white shadow-lg shadow-slate-950/15 hover:bg-slate-800 dark:bg-cyan-400 dark:text-slate-950 dark:hover:bg-cyan-300"
+              className="h-9 sm:h-11 rounded-full bg-slate-950 px-3 xs:px-4 sm:px-5 text-xs sm:text-sm font-semibold text-white shadow-lg shadow-slate-950/15 hover:bg-slate-800 dark:bg-cyan-400 dark:text-slate-950 dark:hover:bg-cyan-300 shrink-0"
             >
               <Link
                 href="/dashboard"
                 onClick={() => handleDashboardClick("header")}
               >
-                Open Dashboard
-                <ArrowRight className="size-4" />
+                <span className="hidden sm:inline">Open </span>Dashboard
+                <ArrowRight className="size-3.5 sm:size-4" />
               </Link>
             </Button>
           </div>
         </div>
       </header>
 
-      <section className="relative px-4 pb-20 pt-32 sm:px-6 sm:pt-36 lg:px-8 lg:pb-28 lg:pt-36">
-        <div className="mx-auto grid max-w-7xl items-start gap-14 lg:grid-cols-[minmax(0,0.98fr)_minmax(460px,1.02fr)]">
+      <section className="relative px-3.5 pb-16 pt-24 xs:px-4 sm:px-6 sm:pb-20 sm:pt-36 lg:px-8 lg:pb-28 lg:pt-36">
+        <div className="mx-auto grid max-w-7xl items-start gap-10 sm:gap-14 lg:grid-cols-[minmax(0,0.98fr)_minmax(420px,1.02fr)]">
           <div data-reveal className="relative z-10 max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200/70 bg-white/80 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm backdrop-blur dark:border-cyan-900/60 dark:bg-slate-900/75 dark:text-slate-200">
-              <Sparkles className="size-4 text-cyan-600 dark:text-cyan-300" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200/70 bg-white/80 px-3.5 py-1.5 text-xs sm:text-sm font-medium text-slate-700 shadow-sm backdrop-blur dark:border-cyan-900/60 dark:bg-slate-900/75 dark:text-slate-200">
+              <Sparkles className="size-3.5 sm:size-4 text-cyan-600 dark:text-cyan-300" />
               AI IDS platform
             </div>
 
-            <h1 className="mt-8 max-w-4xl text-5xl font-semibold tracking-tight text-slate-950 sm:text-6xl lg:text-7xl dark:text-white">
+            <h1 className="mt-6 sm:mt-8 max-w-4xl text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-slate-950 leading-[1.15] dark:text-white break-words">
               Explainable AI defense,
               <span className="mt-2 block bg-gradient-to-r from-slate-950 via-cyan-700 to-emerald-600 bg-clip-text text-transparent dark:from-white dark:via-cyan-300 dark:to-emerald-300">
                 built for network traffic analysis.
               </span>
             </h1>
 
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300">
+            <p className="mt-4 sm:mt-6 max-w-2xl text-base sm:text-lg leading-7 sm:leading-8 text-slate-600 dark:text-slate-300">
               XGuard AI combines streaming Kafka ingestion, FastAPI inference,
               SHAP explainability, alert history, and analyst-friendly
               monitoring in one AI intrusion detection system. It is designed to
@@ -323,42 +323,42 @@ export function LandingPage() {
               mode interface.
             </p>
 
-            <div className="mt-8 grid gap-3 text-sm text-slate-700 dark:text-slate-300 sm:grid-cols-2">
-              <div className="flex items-start gap-3 rounded-2xl border border-slate-200/70 bg-white/65 p-4 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/70">
-                <CheckCircle2 className="mt-0.5 size-5 text-emerald-500" />
-                <span>
+            <div className="mt-6 sm:mt-8 grid gap-3 text-sm text-slate-700 dark:text-slate-300 sm:grid-cols-2">
+              <div className="flex items-start gap-3 rounded-2xl border border-slate-200/70 bg-white/65 p-3.5 sm:p-4 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/70">
+                <CheckCircle2 className="mt-0.5 size-4 sm:size-5 shrink-0 text-emerald-500" />
+                <span className="text-xs sm:text-sm">
                   Live packet feed with alert counts, distribution charts, and
                   stream health in one analyst workspace.
                 </span>
               </div>
-              <div className="flex items-start gap-3 rounded-2xl border border-slate-200/70 bg-white/65 p-4 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/70">
-                <CheckCircle2 className="mt-0.5 size-5 text-emerald-500" />
-                <span>
+              <div className="flex items-start gap-3 rounded-2xl border border-slate-200/70 bg-white/65 p-3.5 sm:p-4 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/70">
+                <CheckCircle2 className="mt-0.5 size-4 sm:size-5 shrink-0 text-emerald-500" />
+                <span className="text-xs sm:text-sm">
                   SHAP drill-down for explainable incident review on every
                   selected prediction and flagged flow.
                 </span>
               </div>
-              <div className="flex items-start gap-3 rounded-2xl border border-slate-200/70 bg-white/65 p-4 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/70">
-                <CheckCircle2 className="mt-0.5 size-5 text-emerald-500" />
-                <span>
+              <div className="flex items-start gap-3 rounded-2xl border border-slate-200/70 bg-white/65 p-3.5 sm:p-4 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/70">
+                <CheckCircle2 className="mt-0.5 size-4 sm:size-5 shrink-0 text-emerald-500" />
+                <span className="text-xs sm:text-sm">
                   CSV log upload tools for exercising the backend pipeline with
                   packaged traffic during testing, demos, and validation.
                 </span>
               </div>
-              <div className="flex items-start gap-3 rounded-2xl border border-slate-200/70 bg-white/65 p-4 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/70">
-                <CheckCircle2 className="mt-0.5 size-5 text-emerald-500" />
-                <span>
+              <div className="flex items-start gap-3 rounded-2xl border border-slate-200/70 bg-white/65 p-3.5 sm:p-4 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/70">
+                <CheckCircle2 className="mt-0.5 size-4 sm:size-5 shrink-0 text-emerald-500" />
+                <span className="text-xs sm:text-sm">
                   Streaming, persistence, and review layers tied together across
                   FastAPI, Kafka, PostgreSQL, and Next.js.
                 </span>
               </div>
             </div>
 
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-8 sm:mt-10 flex flex-col gap-3 sm:flex-row sm:gap-4">
               <Button
                 asChild
                 size="lg"
-                className="h-12 rounded-full bg-cyan-500 px-6 text-sm font-semibold text-slate-950 shadow-[0_18px_40px_-24px_rgba(6,182,212,0.65)] hover:bg-cyan-400"
+                className="h-11 sm:h-12 w-full sm:w-auto rounded-full bg-cyan-500 px-5 sm:px-6 text-sm font-semibold text-slate-950 shadow-[0_18px_40px_-24px_rgba(6,182,212,0.65)] hover:bg-cyan-400 justify-center"
               >
                 <Link
                   href="/dashboard"
@@ -372,7 +372,7 @@ export function LandingPage() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="h-12 rounded-full border-slate-300 bg-white/75 px-6 text-sm font-semibold text-slate-900 shadow-sm backdrop-blur hover:bg-white dark:border-slate-700 dark:bg-slate-900/70 dark:text-white dark:hover:bg-slate-900"
+                className="h-11 sm:h-12 w-full sm:w-auto rounded-full border-slate-300 bg-white/75 px-5 sm:px-6 text-sm font-semibold text-slate-900 shadow-sm backdrop-blur hover:bg-white dark:border-slate-700 dark:bg-slate-900/70 dark:text-white dark:hover:bg-slate-900 justify-center"
               >
                 <a href="#capabilities">
                   Explore platform capabilities
@@ -381,18 +381,18 @@ export function LandingPage() {
               </Button>
             </div>
 
-            <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div className="mt-10 sm:mt-12 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4">
               {proofPoints.map((item, index) => (
                 <div
                   key={item.label}
                   data-reveal
-                  className="rounded-3xl border border-slate-200/70 bg-white/70 p-5 shadow-sm backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/72"
+                  className="rounded-2xl sm:rounded-3xl border border-slate-200/70 bg-white/70 p-3.5 sm:p-5 shadow-sm backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/72"
                   style={{ transitionDelay: `${100 + index * 60}ms` }}
                 >
-                  <p className="text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">
+                  <p className="text-xl sm:text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">
                     {item.value}
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
+                  <p className="mt-1 sm:mt-2 text-xs sm:text-sm leading-5 sm:leading-6 text-slate-600 dark:text-slate-400">
                     {item.label}
                   </p>
                 </div>
@@ -458,13 +458,13 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section id="workflow" className="px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-7xl gap-10 rounded-[2rem] border border-slate-200/70 bg-gradient-to-br from-white/90 via-cyan-50/50 to-emerald-50/40 p-8 shadow-[0_24px_80px_-48px_rgba(15,23,42,0.45)] backdrop-blur dark:border-slate-800/70 dark:from-slate-900/90 dark:via-slate-900/92 dark:to-slate-950/96 lg:grid-cols-[0.8fr_1.2fr] lg:p-12">
+      <section id="workflow" className="px-3.5 py-14 sm:px-6 sm:py-20 lg:px-8">
+        <div className="mx-auto grid max-w-7xl gap-8 rounded-[1.5rem] sm:rounded-[2rem] border border-slate-200/70 bg-gradient-to-br from-white/90 via-cyan-50/50 to-emerald-50/40 p-5 sm:p-8 lg:p-12 shadow-[0_24px_80px_-48px_rgba(15,23,42,0.45)] backdrop-blur dark:border-slate-800/70 dark:from-slate-900/90 dark:via-slate-900/92 dark:to-slate-950/96 lg:grid-cols-[0.8fr_1.2fr]">
           <div data-reveal className="max-w-xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-cyan-700 dark:text-cyan-300">
+            <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.28em] text-cyan-700 dark:text-cyan-300">
               Workflow
             </p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl dark:text-white">
+            <h2 className="mt-3 sm:mt-4 text-2xl xs:text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl dark:text-white">
               From network traffic to analyst action in four steps.
             </h2>
             <p className="mt-5 text-base leading-8 text-slate-600 dark:text-slate-400">
@@ -622,17 +622,17 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section id="cta" className="px-4 pb-24 pt-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl rounded-[2.25rem] border border-slate-200/80 bg-gradient-to-br from-slate-950 via-cyan-950 to-emerald-950 p-8 text-white shadow-[0_24px_80px_-42px_rgba(8,145,178,0.55)] sm:p-12 lg:p-16">
-          <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
+      <section id="cta" className="px-3.5 pb-20 pt-10 sm:px-6 sm:pb-24 sm:pt-12 lg:px-8">
+        <div className="mx-auto max-w-6xl rounded-[1.5rem] sm:rounded-[2.25rem] border border-slate-200/80 bg-gradient-to-br from-slate-950 via-cyan-950 to-emerald-950 p-6 text-white shadow-[0_24px_80px_-48px_rgba(8,145,178,0.55)] sm:p-12 lg:p-16">
+          <div className="grid gap-8 sm:gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
             <div data-reveal className="max-w-3xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-200">
+              <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.3em] text-cyan-200">
                 Deploy with confidence
               </p>
-              <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+              <h2 className="mt-3 sm:mt-4 text-2xl xs:text-3xl font-semibold tracking-tight sm:text-4xl">
                 Monitor traffic, review flagged flows, and explain model decisions from one AI IDS workspace.
               </h2>
-              <p className="mt-5 max-w-2xl text-base leading-8 text-slate-200/80">
+              <p className="mt-4 sm:mt-5 max-w-2xl text-sm sm:text-base leading-7 sm:leading-8 text-slate-200/80">
                 XGuard AI brings together streaming detection, alert history,
                 secure analyst controls, and SHAP-backed explainability for
                 teams moving toward production-ready network defense workflows.
@@ -643,7 +643,7 @@ export function LandingPage() {
               <Button
                 asChild
                 size="lg"
-                className="h-12 rounded-full bg-white px-6 text-sm font-semibold text-slate-950 hover:bg-slate-100"
+                className="h-11 sm:h-12 w-full sm:w-auto rounded-full bg-white px-5 sm:px-6 text-sm font-semibold text-slate-950 hover:bg-slate-100 justify-center"
               >
                 <Link
                   href="/dashboard"
@@ -657,7 +657,7 @@ export function LandingPage() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="h-12 rounded-full border-white/20 bg-white/5 px-6 text-sm font-semibold text-white hover:bg-white/10"
+                className="h-11 sm:h-12 w-full sm:w-auto rounded-full border-white/20 bg-white/5 px-5 sm:px-6 text-sm font-semibold text-white hover:bg-white/10 justify-center"
               >
                 <a href="#workflow">
                   See the workflow
@@ -783,25 +783,25 @@ function HeroPreview() {
     <div data-reveal className="relative lg:pt-8">
       <div className="absolute inset-8 rounded-[2.5rem] bg-cyan-500/15 blur-3xl dark:bg-cyan-400/8" />
 
-      <div className="relative rounded-[2rem] border border-white/70 bg-white/78 p-5 shadow-[0_26px_80px_-36px_rgba(15,23,42,0.35)] backdrop-blur dark:border-white/10 dark:bg-slate-950/78 sm:p-6">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-4 dark:border-slate-800/80">
+      <div className="relative rounded-[1.5rem] sm:rounded-[2rem] border border-white/70 bg-white/78 p-3.5 shadow-[0_26px_80px_-36px_rgba(15,23,42,0.35)] backdrop-blur dark:border-white/10 dark:bg-slate-950/78 sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 pb-3 sm:pb-4 dark:border-slate-800/80">
           <div className="flex items-center gap-3">
             <div className="flex gap-2">
               <span className="size-2.5 rounded-full bg-rose-400" />
               <span className="size-2.5 rounded-full bg-amber-400" />
               <span className="size-2.5 rounded-full bg-emerald-400" />
             </div>
-            <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+            <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400">
               Analyst Control Center
             </span>
           </div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 dark:border-emerald-900/70 dark:bg-emerald-950/40 dark:text-emerald-300">
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 sm:px-3 sm:py-1 text-xs font-semibold text-emerald-700 dark:border-emerald-900/70 dark:bg-emerald-950/40 dark:text-emerald-300">
             <span className="size-2 rounded-full bg-emerald-500" />
             Stream active
           </div>
         </div>
 
-        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <div className="mt-4 grid gap-2.5 sm:gap-3 grid-cols-1 sm:grid-cols-3">
           <PreviewBadge
             icon={Network}
             label="Live stream"
@@ -819,17 +819,17 @@ function HeroPreview() {
           />
         </div>
 
-        <div className="mt-5 grid gap-4">
-          <div className="min-w-0 rounded-[1.6rem] border border-slate-200/80 bg-gradient-to-br from-white via-cyan-50/55 to-white p-5 dark:border-slate-800 dark:from-slate-900/80 dark:via-slate-900/92 dark:to-slate-950/94 sm:p-6">
-            <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="mt-4 sm:mt-5 grid gap-4">
+          <div className="min-w-0 rounded-[1.25rem] sm:rounded-[1.6rem] border border-slate-200/80 bg-gradient-to-br from-white via-cyan-50/55 to-white p-3.5 sm:p-6 dark:border-slate-800 dark:from-slate-900/80 dark:via-slate-900/92 dark:to-slate-950/94">
+            <div className="flex flex-wrap items-start justify-between gap-3 sm:gap-4">
               <div className="max-w-2xl">
-                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                <p className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
                   Explainability review
                 </p>
-                <p className="mt-3 text-[1.7rem] font-semibold leading-tight text-slate-950 dark:text-white sm:text-[1.95rem]">
+                <p className="mt-2 sm:mt-3 text-lg xs:text-xl sm:text-[1.85rem] font-semibold leading-tight text-slate-950 dark:text-white">
                   Trace every high-risk flow with ranked SHAP evidence.
                 </p>
-                <p className="mt-3 text-sm leading-7 text-slate-500 dark:text-slate-500">
+                <p className="mt-2 sm:mt-3 text-xs sm:text-sm leading-6 sm:leading-7 text-slate-500 dark:text-slate-500">
                   Move from the live queue to the exact drivers behind a prediction without leaving the analyst workspace.
                 </p>
               </div>
@@ -1080,14 +1080,14 @@ function PreviewRow({
   tone: "safe" | "attack";
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-slate-50/80 px-3 py-3 text-xs dark:border-slate-800 dark:bg-slate-950/80">
-      <span className="font-mono text-slate-500 dark:text-slate-500">{time}</span>
+    <div className="flex items-center justify-between gap-2 sm:gap-3 rounded-2xl border border-slate-200/80 bg-slate-50/80 px-2.5 py-2.5 sm:px-3 sm:py-3 text-xs dark:border-slate-800 dark:bg-slate-950/80">
+      <span className="hidden xs:inline font-mono text-slate-500 dark:text-slate-500 shrink-0">{time}</span>
       <span className="min-w-0 flex-1 truncate font-mono text-slate-700 dark:text-slate-300">
         {src} <span className="text-slate-400">-&gt;</span> {dst}
       </span>
       <span
         className={cn(
-          "rounded-full px-2.5 py-1 font-semibold",
+          "rounded-full px-2 py-0.5 sm:px-2.5 sm:py-1 font-semibold text-[11px] sm:text-xs shrink-0",
           tone === "safe"
             ? "bg-emerald-500/10 text-emerald-600 dark:bg-emerald-400/10 dark:text-emerald-300"
             : "bg-rose-500/10 text-rose-600 dark:bg-rose-400/10 dark:text-rose-300"

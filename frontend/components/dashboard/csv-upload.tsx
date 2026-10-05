@@ -229,22 +229,22 @@ export function CsvUploadControls() {
               </label>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-2 text-xs">
-                {status === "success" && <CheckCircle2 className="size-4 text-emerald-500" />}
-                {status === "error" && <AlertCircle className="size-4 text-rose-500" />}
-                <span className={status === "error" ? "text-rose-600 dark:text-rose-300" : "text-inherit/80"}>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="flex items-center gap-2 text-xs min-w-0">
+                {status === "success" && <CheckCircle2 className="size-4 shrink-0 text-emerald-500" />}
+                {status === "error" && <AlertCircle className="size-4 shrink-0 text-rose-500" />}
+                <span className={cn("truncate", status === "error" ? "text-rose-600 dark:text-rose-300" : "text-inherit/80")}>
                   {message || (file ? "Ready to upload" : "")}
                 </span>
               </div>
               
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2 justify-end">
                 <Button
                   size="sm"
                   variant="outline"
                   onClick={handleClear}
                   disabled={uploading || clearing || stopping}
-                  className="border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 dark:border-rose-900/50 dark:text-rose-400 dark:hover:bg-rose-950/50 mr-auto"
+                  className="border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 dark:border-rose-900/50 dark:text-rose-400 dark:hover:bg-rose-950/50 text-xs px-2.5 sm:px-3"
                 >
                   <Trash2 className="size-3.5 mr-1" />
                   Clear All
@@ -255,7 +255,7 @@ export function CsvUploadControls() {
                     variant="outline"
                     onClick={handleStop}
                     disabled={stopping}
-                    className="border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 dark:border-rose-900/50 dark:text-rose-400 dark:hover:bg-rose-950/50"
+                    className="border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 dark:border-rose-900/50 dark:text-rose-400 dark:hover:bg-rose-950/50 text-xs px-2.5 sm:px-3"
                   >
                     {stopping ? "Stopping..." : "Stop Upload"}
                   </Button>
@@ -264,10 +264,10 @@ export function CsvUploadControls() {
                   size="sm"
                   onClick={handleUpload}
                   disabled={!file || uploading}
-                  className="bg-cyan-500 text-slate-50 hover:bg-cyan-400 dark:text-slate-950 min-w-[100px]"
+                  className="bg-cyan-500 text-slate-50 hover:bg-cyan-400 dark:text-slate-950 text-xs px-3 sm:px-4 min-w-[90px]"
                 >
                   {uploading ? (
-                     <span className="flex items-center gap-2">
+                     <span className="flex items-center gap-1.5">
                       <span className="h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
                       Uploading...
                      </span>

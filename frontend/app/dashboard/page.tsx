@@ -45,17 +45,17 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background p-8 font-sans text-foreground selection:bg-cyan-400/20 transition-colors duration-300">
-      <div className="mb-8 flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/" className="shrink-0">
+    <main className="min-h-screen bg-background p-3.5 sm:p-6 lg:p-8 font-sans text-foreground selection:bg-cyan-400/20 transition-colors duration-300 max-w-7xl mx-auto w-full overflow-x-hidden">
+      <div className="mb-6 sm:mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center justify-between gap-3">
+          <Link href="/" className="shrink-0 flex items-center gap-2">
             <Image
               src="/brand/log_with_name_light.png"
               alt="XGuard-AI"
               width={508}
               height={164}
               priority
-              className="brand-logo dark:hidden h-auto w-[180px] sm:w-[220px] xl:w-[260px]"
+              className="brand-logo dark:hidden h-auto w-[130px] xs:w-[155px] sm:w-[200px] xl:w-[240px] object-contain"
             />
             <Image
               src="/brand/log_with_name.png"
@@ -63,17 +63,25 @@ export default function DashboardPage() {
               width={508}
               height={164}
               priority
-              className="brand-logo hidden dark:block h-auto w-[180px] sm:w-[220px] xl:w-[260px]"
+              className="brand-logo hidden dark:block h-auto w-[130px] xs:w-[155px] sm:w-[200px] xl:w-[240px] object-contain"
             />
           </Link>
+          <Link
+            href="/"
+            className="sm:hidden text-xs text-muted-foreground hover:text-foreground font-medium px-2.5 py-1 rounded-md border border-border/70"
+          >
+            ← Home
+          </Link>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 rounded-full border border-border bg-card/50 px-4 py-2 shadow-sm backdrop-blur-sm transition-colors duration-300">
-            <div className="relative flex h-3 w-3">
+        <div className="flex items-center justify-between sm:justify-end gap-2.5 sm:gap-4">
+          <div className="flex items-center gap-2 rounded-full border border-border bg-card/50 px-3 py-1.5 sm:px-4 sm:py-2 shadow-sm backdrop-blur-sm transition-colors duration-300">
+            <div className="relative flex h-2.5 w-2.5 sm:h-3 sm:w-3">
               {connected && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>}
-              <span className={`relative inline-flex rounded-full h-3 w-3 ${connected ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
+              <span className={`relative inline-flex rounded-full h-2.5 w-2.5 sm:h-3 sm:w-3 ${connected ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
             </div>
-            <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground transition-colors duration-300">{connected ? "Kafka Stream Active" : "Disconnected"}</span>
+            <span className="text-[11px] sm:text-xs font-medium uppercase tracking-wider sm:tracking-widest text-muted-foreground transition-colors duration-300">
+              {connected ? "Kafka Stream Active" : "Disconnected"}
+            </span>
           </div>
           <ThemeToggle />
         </div>

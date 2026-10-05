@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google"
 
 import "./globals.css"
@@ -14,33 +14,45 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#030712" },
+  ],
+};
+
 export const metadata: Metadata = {
-  title: "XGuard-AI | Next-Gen Threat Detection",
-  description: "Advanced AI-powered network intrusion detection system providing real-time threat analysis and protection.",
-  keywords: ["IDS", "Intrusion Detection", "AI Security", "Network Security", "Cybersecurity", "XGuard-AI", "Threat Detection"],
-  authors: [{ name: "XGuard-AI Team" }],
-  creator: "XGuard-AI Team",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://xguard-ai.tech"),
+  title: "XGuard-AI | Next-Gen Threat Detection & Explainable AI Defense",
+  description: "Advanced AI-powered network intrusion detection system with streaming Kafka ingestion, 99.86% XGBoost accuracy, and real-time SHAP explainability for every alert.",
+  keywords: ["IDS", "Intrusion Detection", "AI Security", "Network Security", "Cybersecurity", "XGuard-AI", "Threat Detection", "SHAP", "XGBoost", "FastAPI", "Kafka"],
+  authors: [{ name: "Harshil Sitapara", url: "https://xguard-ai.tech" }],
+  creator: "Harshil Sitapara",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://xguard-ai.com",
-    title: "XGuard-AI | Next-Gen Threat Detection",
-    description: "Advanced AI-powered network intrusion detection system providing real-time threat analysis and protection.",
+    url: "https://xguard-ai.tech",
+    title: "XGuard-AI | Next-Gen Threat Detection & Explainable AI Defense",
+    description: "Built an AI intrusion detection system that doesn't just say 'attack.' It tells you WHY. Streaming Kafka, 99.86% accuracy XGBoost, and SHAP explainability.",
     siteName: "XGuard-AI",
     images: [
       {
-        url: "/brand/log_with_name.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "XGuard-AI Logo",
+        alt: "XGuard-AI - Next-Gen Threat Detection & Explainable AI Defense",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: "XGuard-AI | Next-Gen Threat Detection",
-    description: "Advanced AI-powered network intrusion detection system providing real-time threat analysis and protection.",
-    images: ["/brand/log_with_name.png"],
+    description: "Built an AI intrusion detection system that doesn't just say 'attack.' It tells you WHY. Streaming Kafka, 99.86% XGBoost, and SHAP explanations.",
+    images: ["/og-image.png"],
+    creator: "@HarshilSitapara",
   },
   icons: {
     icon: "/favicon.ico",

@@ -29,9 +29,9 @@ export function AttackChart({ alerts, attackDistribution = {} }: { alerts: Alert
       <CardHeader>
         <CardTitle className="text-sm font-medium">Traffic Distribution</CardTitle>
       </CardHeader>
-      <CardContent className="h-[350px] w-full">
+      <CardContent className="h-[280px] sm:h-[350px] w-full p-2 sm:p-6 pt-0 sm:pt-0">
         {data.length === 0 ? (
-          <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
+          <div className="h-full flex items-center justify-center text-muted-foreground text-xs sm:text-sm">
             Waiting for data...
           </div>
         ) : (
@@ -41,8 +41,8 @@ export function AttackChart({ alerts, attackDistribution = {} }: { alerts: Alert
                 data={data}
                 cx="50%"
                 cy="45%"
-                innerRadius={60}
-                outerRadius={100}
+                innerRadius={50}
+                outerRadius={80}
                 paddingAngle={data.length > 1 ? 2 : 0}
                 dataKey="value"
                 stroke="rgba(0,0,0,0)"
@@ -53,9 +53,9 @@ export function AttackChart({ alerts, attackDistribution = {} }: { alerts: Alert
               </Pie>
               <Tooltip 
                 contentStyle={{ backgroundColor: "var(--card)", borderColor: "var(--border)", borderRadius: "8px", color: "var(--foreground)" }}
-                itemStyle={{ color: "var(--foreground)" }}
+                itemStyle={{ color: "var(--foreground)", fontSize: "12px" }}
               />
-              <Legend verticalAlign="bottom" height={36} wrapperStyle={{ fontSize: '12px', color: 'var(--muted-foreground)' }}/>
+              <Legend verticalAlign="bottom" height={36} wrapperStyle={{ fontSize: '11px', color: 'var(--muted-foreground)' }}/>
             </PieChart>
           </ResponsiveContainer>
         )}
